@@ -1,8 +1,10 @@
 package service;
 
+import com.sun.jdi.connect.spi.Connection;
 import model.User;
 import repository.UserRepository;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -49,4 +51,17 @@ public class UserService {
 
 
 
-}}
+}
+public void delete() throws SQLException {
+        int result=userRepository.delete(2);
+    if (result != 0)
+        System.out.println("succesfully deleted to database");
+    else
+        System.out.println("oops!");
+}
+
+
+
+
+
+}
