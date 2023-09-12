@@ -1,10 +1,8 @@
 package service;
 
-import com.sun.jdi.connect.spi.Connection;
 import model.User;
 import repository.UserRepository;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -14,9 +12,7 @@ public class UserService {
     public UserService() throws SQLException {
     }
 
-    public void register() throws SQLException {
-
-        User user = new User(null, "abbas", "hooshangi", "abbasd", "assdfs");
+    public void register(User user) throws SQLException {
         int resault = userRepository.save(user);
         if (resault != 0)
             System.out.println(user.getFirstname() + "succesfully add to database");
@@ -24,17 +20,9 @@ public class UserService {
             System.out.println("oops!");
     }
 
-    public void login() throws SQLException {
-
-        System.out.println(" please enter your username");
-        String username = input.nextLine();
-        System.out.println(" please enter your password");
-        String password = input.nextLine();
+    public User login(String username) throws SQLException {
         User user = userRepository.login(username);
-        if ((user != null) && user.getPassword().equals(password))
-            System.out.println("login successfully");
-        else
-            System.out.println("bad code");
+        return user;
 
 
     }
