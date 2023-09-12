@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE IF NOT EXISTS authors
 (
     firstname VARCHAR(50) NOT NULL,
     lastname  VARCHAR(50) NOT NULL,
