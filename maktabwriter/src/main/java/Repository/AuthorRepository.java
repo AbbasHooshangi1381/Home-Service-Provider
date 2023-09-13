@@ -8,8 +8,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuthorRepository {
- Jdbcconnection jdbcconnection=new Jdbcconnection();
- Connection connection=jdbcconnection.getConnection();
+ static Jdbcconnection jdbcconnection;
+
+ static {
+  try {
+   jdbcconnection = new Jdbcconnection();
+  } catch (SQLException e) {
+   e.printStackTrace();
+  }
+ }
+
+ static Connection connection=jdbcconnection.getConnection();
 
  public AuthorRepository(Connection connection) throws SQLException {
  }
@@ -29,7 +38,7 @@ public class AuthorRepository {
 
  }
 
- public Author load(int authorId) throws SQLException {
+ public static Author load(int authorId) throws SQLException {
   String query = "SELECT * FROM authors WHERE author_id = ?";
   PreparedStatement statement = connection.prepareStatement(query);
   statement.setInt(1, authorId);
