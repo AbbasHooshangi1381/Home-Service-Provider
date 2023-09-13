@@ -4,13 +4,14 @@ import model.Author;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuthorRepository {
  Jdbcconnection jdbcconnection=new Jdbcconnection();
  Connection connection=jdbcconnection.getConnection();
 
- public AuthorRepository() throws SQLException {
+ public AuthorRepository(Connection connection) throws SQLException {
  }
 
  public int save(Author author) throws SQLException {
@@ -28,4 +29,20 @@ public class AuthorRepository {
 
  }
 
+ public Author load(int authorId) throws SQLException {
+  String query = "SELECT * FROM authors WHERE author_id = ?";
+  PreparedStatement statement = connection.prepareStatement(query);
+  statement.setInt(1, authorId);
+  ResultSet resultSet = statement.executeQuery();
+  if (resultSet.next()) {
+   int id = resultSet.getInt("author_id");
+   String firstName = resultSet.getString("first_name");
+   String lastName = resultSet.getString("last_name");
+   int age = resultSet.getInt("age");
+    new Author(id, firstName, lastName, age);
+
+  }
+
+  return null;
+ }
 }
