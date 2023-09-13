@@ -3,5 +3,5 @@ id INTEGER PRIMARY KEY,
 title VARCHAR (50),
 publication_year INTEGER ,
 author_id INTEGER ,
-FOREIGN KEY (author_id) REFERENCES author(id)
+FOREIGN KEY (author_id) REFERENCES authors(id)
 )
