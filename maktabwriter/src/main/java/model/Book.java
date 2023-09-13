@@ -1,10 +1,10 @@
 package model;
 
 public class Book {
-    private int bookId;
-    private String title;
-    private int year;
-    private Author author;
+     int bookId;
+     String title;
+     int year;
+     Author author;
 
     public Book(int bookId, String title, int year, Author author) {
         this.bookId = bookId;
