@@ -13,18 +13,18 @@ public class BookRepository {
     Jdbcconnection jdbcconnection = new Jdbcconnection();
     Connection connection = jdbcconnection.getConnection();
 
-    public BookRepository() throws SQLException {
+    public BookRepository(Connection connection) throws SQLException {
     }
 
-    public void save(Book book) throws SQLException {
+    public int save(Book book) throws SQLException {
         String query = "INSERT INTO books (book_id, title, year, author_id) VALUES (?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setInt(1, book.getBookId());
         statement.setString(2, book.getTitle());
         statement.setInt(3, book.getYear());
         statement.setInt(4, book.getAuthor().getAuthorId());
-        statement.executeUpdate();
-        System.out.println("Book saved successfully.");
+        int result=statement.executeUpdate();
+        return result;
 
 
     }
