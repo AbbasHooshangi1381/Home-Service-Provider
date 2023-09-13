@@ -29,4 +29,8 @@ public class Author {
     public int getAge() {
         return age;
     }
+
+    public int getAuthorId() {
+        return 0;
+    }
 }
