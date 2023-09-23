@@ -1,19 +1,14 @@
 package domain;
+
+import base.domain.Entity;
+
 @SuppressWarnings("unused")
 //Entity
-public class Role {
-    private long id;
+public class Role extends Entity {
+
     private String name;
     //many to many
     private Permission[] permissions;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

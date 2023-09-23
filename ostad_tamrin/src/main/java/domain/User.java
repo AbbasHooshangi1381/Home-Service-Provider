@@ -1,12 +1,13 @@
 package domain;
 
+import base.domain.Entity;
 import enumoration.UserType;
 
 import java.time.ZonedDateTime;
 @SuppressWarnings("unused")
 //Entity
-public class User {
-    private long id;
+public class User extends Entity {
+
     private String firstname;
     private String lastname;
     private String username;
@@ -33,14 +34,6 @@ public class User {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getFirstname() {
