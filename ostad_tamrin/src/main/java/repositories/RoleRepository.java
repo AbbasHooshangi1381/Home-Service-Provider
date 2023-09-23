@@ -1,18 +1,12 @@
 package repositories;
 
+import base.repository.BaseEntityRepository;
 import domain.Role;
 import domain.User;
 @SuppressWarnings("unused")
 
-public interface RoleRepository {
-    Role[] findall();
+public interface RoleRepository extends BaseEntityRepository {
 
-    Role findByIRd(Long id);
-
-
-    Role save(Role role);
-
-    Role update(Role role);
 
 
 }

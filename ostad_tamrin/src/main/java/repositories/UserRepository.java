@@ -1,19 +1,16 @@
 package repositories;
 
+import base.repository.BaseEntityRepository;
 import domain.User;
 @SuppressWarnings("unused")
-public interface UserRepository {
-    User[] findall();
+public interface UserRepository extends BaseEntityRepository {
+    User findByUsername(String name);
 
-    User findByIRd(Long id);
+    User [] findByUsernameAndLastname(String username);
 
-    Void deleteById(Long id);
+    boolean existByUsername(String username);
 
-    User save(User user);
 
-    User update(User user);
-
-    long count();
 
 
 

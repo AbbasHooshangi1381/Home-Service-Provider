@@ -1,18 +1,12 @@
 package repositories;
 
+import base.repository.BaseEntityRepository;
 import domain.Permission;
 import domain.User;
 @SuppressWarnings("unused")
 
-public interface PermissionRepository {
-    Permission[] findall();
+public interface PermissionRepository extends BaseEntityRepository {
 
-    Permission findByIRd(Long id);
-
-
-    Permission save(Permission permission);
-
-    Permission update(Permission permission);
 
 
 
