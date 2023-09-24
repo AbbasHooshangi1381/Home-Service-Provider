@@ -1,5 +1,5 @@
 package role;
-
+@SuppressWarnings("unused")
 public class Brand {
 
     private int id;
