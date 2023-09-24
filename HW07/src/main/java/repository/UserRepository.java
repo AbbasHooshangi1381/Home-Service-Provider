@@ -5,11 +5,12 @@ import connection.JdbcConnection;
 import role.User;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserRepository {
     JdbcConnection jdbcConnection = new JdbcConnection();
-    Connection connection = jdbcConnection.getConnection();
+    static Connection connection = jdbcConnection.getConnection();
 
     public UserRepository() throws SQLException {
     }
@@ -24,4 +25,30 @@ public class UserRepository {
         int result = preparedStatement.executeUpdate();
         return result;
     }
+    public static User login(String username) throws SQLException {
+        String loginQuery="SELECT * FROM user1 WHERE username=?";
+        PreparedStatement preparedStatement=connection.prepareStatement(loginQuery);
+        preparedStatement.setString(1,username);
+        ResultSet resultSet= preparedStatement.executeQuery();
+        if (resultSet.next()){
+            User user= new User(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("username"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password")
+            );
+            return user;
+        }
+        else
+            return null;
+
+    }
+
+
+
+
+
+
+
 }
