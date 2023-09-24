@@ -11,5 +11,7 @@ public class Main {
         UserService userService=new UserService();
         userService.register();
 
+        userService.login();
+
     }
 }
