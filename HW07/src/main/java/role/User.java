@@ -1,5 +1,5 @@
 package role;
-
+@SuppressWarnings("unused")
 public class User {
     private int id;
     private String name;
