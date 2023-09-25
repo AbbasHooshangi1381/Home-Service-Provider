@@ -1,18 +1,25 @@
 package repository;
 
-import com.sun.jdi.connect.spi.Connection;
+
 import connection.JdbcConnection;
 import role.User;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserRepository {
-    JdbcConnection jdbcConnection = new JdbcConnection();
-    static Connection connection = jdbcConnection.getConnection();
 
-    public UserRepository() throws SQLException {
+
+    private Connection connection;
+
+    public UserRepository(Connection connection) {
+        this.connection=connection;
+    }
+
+    public UserRepository() {
+
     }
 
     public int save(User user) throws SQLException {
@@ -25,7 +32,7 @@ public class UserRepository {
         int result = preparedStatement.executeUpdate();
         return result;
     }
-    public static User login(String username) throws SQLException {
+    public User login(String username) throws SQLException {
         String loginQuery="SELECT * FROM user1 WHERE username=?";
         PreparedStatement preparedStatement=connection.prepareStatement(loginQuery);
         preparedStatement.setString(1,username);
@@ -43,6 +50,34 @@ public class UserRepository {
         else
             return null;
 
+    }
+    public int updateName(String name) throws SQLException {
+        String query="UPDATE user1 SET name = ? WHERE id=2";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setString(1,name);
+        int result=preparedStatement.executeUpdate();
+        return result;
+    }
+    public int updateUsername(String username) throws SQLException {
+        String query="UPDATE user1 SET username = ? WHERE id=2";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setString(1,username);
+        int result=preparedStatement.executeUpdate();
+        return result;
+    }
+    public int updateEmail(String email) throws SQLException {
+        String query="UPDATE user1 SET email = ? WHERE id=2";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setString(1,email);
+        int result=preparedStatement.executeUpdate();
+        return result;
+    }
+    public int updatePassword(String password) throws SQLException {
+        String query="UPDATE user1 SET password = ? WHERE id=2";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setString(1,password);
+        int result=preparedStatement.executeUpdate();
+        return result;
     }
 
 

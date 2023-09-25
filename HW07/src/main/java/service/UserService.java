@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class UserService {
     private final UserRepository userRepository = new UserRepository();
+    Scanner input = new Scanner(System.in);
 
     public UserService() throws SQLException {
     }
@@ -29,12 +30,51 @@ public class UserService {
         System.out.println("enter your password");
         String password = input.nextLine();
 
-
-    User user = UserRepository.login(username);
+        UserRepository userRepository = new UserRepository();
+        User user = userRepository.login(username);
     if ((user != null)  && user.getPassword().equals(password) ){
         System.out.println(" login successfully ");
     }
 else
         System.out.println("wrong!");
 }
+public void changeName() throws SQLException {
+    System.out.println("put your new name");
+    String name=input.nextLine();
+    int result=userRepository.updateName(name);
+    if (result != 0) {
+        System.out.println( "successfully edited to data base");
+    } else
+        System.out.println(" Oops!");
 }
+    public void changeUsername() throws SQLException {
+        System.out.println("put your new username");
+        String username=input.nextLine();
+        int result=userRepository.updateName(username);
+        if (result != 0) {
+            System.out.println( "successfully edited username to data base");
+        } else
+            System.out.println(" Oops! username");
+    }
+    public void changeEmail() throws SQLException {
+        System.out.println("put your new email");
+        String email=input.nextLine();
+        int result=userRepository.updateName(email);
+        if (result != 0) {
+            System.out.println( "successfully edited email to data base");
+        } else
+            System.out.println(" Oops! email");
+    }
+    public void changePassword() throws SQLException {
+        System.out.println("put your new password");
+        String password=input.nextLine();
+        int result=userRepository.updateName(password);
+        if (result != 0) {
+            System.out.println( "successfully edited password to data base");
+        } else
+            System.out.println(" Oops! password ");
+    }
+
+
+}
+
