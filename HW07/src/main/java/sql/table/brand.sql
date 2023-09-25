@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS brand(
     id SERIAL PRIMARY KEY ,
-    name VARCHAR (50) NOT NULL,
+    name VARCHAR (50) NOT NULL UNIQUE ,
     website VARCHAR (50) NOT NULL ,
     description VARCHAR (250) NOT NULL
 
