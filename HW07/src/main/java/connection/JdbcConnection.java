@@ -1,21 +1,28 @@
 package connection;
 
-import com.sun.jdi.connect.spi.Connection;
 
+
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JdbcConnection {
 
-  private Connection connection  = (Connection) DriverManager.getConnection(
-           "jdbc:postgresql://localhost:5432/postgres","postgres","abbas1381.aa"
-   );
+  private static Connection connection;
+  static {
+
+   try {
+    connection   = DriverManager.getConnection(
+            "jdbc:postgresql://localhost:5432/postgres","postgres","abbas1381.aa"   );
+   } catch (SQLException e) {
+    e.printStackTrace();
+   }
 
 
+  }
 
- public JdbcConnection() throws SQLException {
- }
- public Connection getConnection(){
+
+ public static Connection getConnection(){
   return connection;
  }
 }
