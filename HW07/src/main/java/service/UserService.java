@@ -75,6 +75,15 @@ public void changeName() throws SQLException {
             System.out.println(" Oops! password ");
     }
 
+    public void delete() throws SQLException {
+        int result=userRepository.deleteUsers( 2);
+        if (result !=0){
+            System.out.println("successfully deleted");
+        }
+        else
+            System.out.println("not deleted !");
+    }
+
 
 }
 

@@ -38,8 +38,8 @@ public class BrandService {
         } else
             System.out.println(" Oops!");
     }
-    public void changeUsername() throws SQLException {
-        System.out.println("put your new username");
+    public void changeWebsite() throws SQLException {
+        System.out.println("put your new website");
         String website=input.nextLine();
         int result=brandRepository.updateWebsiteBrand(website);
         if (result != 0) {
@@ -55,6 +55,14 @@ public class BrandService {
             System.out.println( "successfully edited description to data base");
         } else
             System.out.println(" Oops! description");
+    }
+    public void delete() throws SQLException {
+        int result=brandRepository.deleteBrand( 2);
+        if (result !=0){
+            System.out.println("successfully deleted");
+        }
+        else
+            System.out.println("not deleted !");
     }
 
 
