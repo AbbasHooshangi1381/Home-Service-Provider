@@ -50,5 +50,13 @@ public class BrandRepository {
         return result;
     }
 
+    public int deleteBrand(int id) throws SQLException {
+        String query="DELETE FROM brand WHERE id=?";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setInt(1,id);
+        int result=preparedStatement.executeUpdate();
+        return result;
+    }
+
 
 }

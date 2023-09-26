@@ -80,6 +80,14 @@ public class UserRepository {
         return result;
     }
 
+    public int deleteUsers(int id) throws SQLException {
+        String query="DELETE FROM user1 WHERE id=?";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setInt(1,id);
+        int result=preparedStatement.executeUpdate();
+        return result;
+    }
+
 
 
 

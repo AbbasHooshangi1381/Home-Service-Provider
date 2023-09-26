@@ -60,5 +60,13 @@ public class ProductRepository {
         return count > 0;
     }
 
+    public int deleteProduct(int id) throws SQLException {
+        String query="DELETE FROM product WHERE id=?";
+        PreparedStatement preparedStatement= connection.prepareStatement(query);
+        preparedStatement.setInt(1,id);
+        int result=preparedStatement.executeUpdate();
+        return result;
+    }
+
 
 }
