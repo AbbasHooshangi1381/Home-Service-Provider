@@ -1,55 +1,61 @@
 package service;
 
+import connection.JdbcConnection;
 import repository.BrandRepository;
 import repository.CategoryRepository;
-import role.Brand;
 import role.Category;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class CategoryService {
     Scanner input = new Scanner(System.in);
+    private Connection connection = JdbcConnection.getConnection();
+    private final CategoryRepository categoryRepository = new CategoryRepository(connection);
 
-    private final CategoryRepository categoryRepository = new CategoryRepository();
-
-    public CategoryService() {
-    }
 
     public void registerCategory(Category category) throws SQLException {
-        int result = categoryRepository.save(category);
+        int result = categoryRepository.save(connection, category);
 
         if (result != 0) {
-            System.out.println(category.getName() + "successfully category added to data base");
-        } else
-            System.out.println(" wrong! category");
+            System.out.println(category.getName() + " successfully added to the database");
+        } else {
+            System.out.println("Something went wrong while saving the category");
+        }
     }
 
     public void changeNameCategory() throws SQLException {
-        System.out.println("put your new name");
+        System.out.println("Enter the new name for the category");
         String nameCategory = input.nextLine();
-        int result = categoryRepository.updateNameCategory(nameCategory);
+        int result = categoryRepository.updateNameCategory(connection, nameCategory);
+
         if (result != 0) {
-            System.out.println("successfully edited category to data base");
-        } else
-            System.out.println(" Oops! category");
+            System.out.println("Successfully updated the category name in the database");
+        } else {
+            System.out.println("Something went wrong while updating the category name");
+        }
     }
 
     public void changeDescription() throws SQLException {
-        System.out.println("put your new description");
+        System.out.println("Enter the new description for the category");
         String description = input.nextLine();
-        int result = categoryRepository.updateDescription(description);
+        int result = categoryRepository.updateDescription(connection, description);
+
         if (result != 0) {
-            System.out.println("successfully edited description to data base");
-        } else
-            System.out.println(" Oops! description");
+            System.out.println("Successfully updated the category description in the database");
+        } else {
+            System.out.println("Something went wrong while updating the category description");
+        }
     }
 
     public void delete() throws SQLException {
-        int result = categoryRepository.deleteCategory(2);
+        int result = categoryRepository.deleteCategory(connection, 2);
+
         if (result != 0) {
-            System.out.println("successfully deleted");
-        } else
-            System.out.println("not deleted !");
+            System.out.println("Successfully deleted the category from the database");
+        } else {
+            System.out.println("Something went wrong while deleting the category");
+        }
     }
 }

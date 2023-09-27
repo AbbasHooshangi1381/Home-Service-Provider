@@ -1,21 +1,22 @@
 package service;
 
+import connection.JdbcConnection;
 import repository.BrandRepository;
 import repository.ShareHolderRepository;
 import role.Brand;
 import role.ShareHolder;
 
 import java.rmi.NotBoundException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ShareHolderService {
+
+    private Connection connection= JdbcConnection.getConnection();
     Scanner input = new Scanner(System.in);
+    private final ShareHolderRepository shareHolderRepository = new ShareHolderRepository(connection);
 
-    private final ShareHolderRepository shareHolderRepository = new ShareHolderRepository();
-
-    public ShareHolderService() throws SQLException {
-    }
 
     public void registerShareHolder(){
         ShareHolder shareHolder = new ShareHolder("tahere mohammadi","09125489658","0926184587");

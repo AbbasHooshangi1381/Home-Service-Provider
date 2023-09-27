@@ -10,10 +10,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class UserService {
+public class    UserService {
     private Connection connection= JdbcConnection.getConnection();
     private final UserRepository userRepository = new UserRepository(connection);
     Scanner input = new Scanner(System.in);
+
+
 
 
     public void register(User user) throws SQLException {

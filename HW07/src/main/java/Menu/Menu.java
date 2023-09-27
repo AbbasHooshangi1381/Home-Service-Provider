@@ -90,13 +90,13 @@ public class Menu {
 
                 switch (select) {
                     case 1:
-                     //   brandService.registerBrand();
+                        //brandService.registerBrand();
                         break;
                     case 2:
-                    //    categoryService.registerCategory();
+                      // categoryService.registerCategory();
                         break;
                     case 3:
-                     //   userService.changeEmail();
+                       userService.changeEmail(user.getId());
                         break;
                     case 4:
                         userService.changePassword(user.getId());

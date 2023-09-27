@@ -14,8 +14,10 @@ public class ShareHolderRepository {
         this.connection=connection;
     }
 
-    public ShareHolderRepository() {
+    public ShareHolderRepository() throws SQLException {
+
     }
+
 
     public int save(ShareHolder shareHolder) throws SQLException {
         String addShareHolder = "INSERT INTO shareholder(name,phoneNumber,nationalCode)VALUES(?,?,?)";

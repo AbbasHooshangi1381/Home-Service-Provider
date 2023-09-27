@@ -15,6 +15,10 @@ public class UserRepository {
         this.connection=connection;
     }
 
+    public UserRepository () throws SQLException{
+
+    }
+
 
     public int save(User user) throws SQLException {
         String add = "INSERT INTO user1(name,username,email,password)VALUES(?,?,?,?)";
