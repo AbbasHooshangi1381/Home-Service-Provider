@@ -16,8 +16,7 @@ public class CategoryService {
     public CategoryService() {
     }
 
-    public void registerCategory() throws SQLException {
-        Category category = new Category("zahra", "this is category");
+    public void registerCategory(Category category) throws SQLException {
         int result = categoryRepository.save(category);
 
         if (result != 0) {

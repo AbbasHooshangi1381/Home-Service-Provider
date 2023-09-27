@@ -4,10 +4,7 @@ package repository;
 import connection.JdbcConnection;
 import role.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class UserRepository {
 
@@ -18,9 +15,6 @@ public class UserRepository {
         this.connection=connection;
     }
 
-    public UserRepository() {
-
-    }
 
     public int save(User user) throws SQLException {
         String add = "INSERT INTO user1(name,username,email,password)VALUES(?,?,?,?)";
@@ -32,6 +26,20 @@ public class UserRepository {
         int result = preparedStatement.executeUpdate();
         return result;
     }
+
+
+    public ResultSet ShowUsers() throws SQLException {
+        String add = "SELECT * FROM user1 ";
+        PreparedStatement preparedStatement = connection.prepareStatement(add);
+        ResultSet arrays= preparedStatement.executeQuery();
+
+        return arrays;
+    }
+
+
+
+
+
     public User login(String username) throws SQLException {
         String loginQuery="SELECT * FROM user1 WHERE username=?";
         PreparedStatement preparedStatement=connection.prepareStatement(loginQuery);
@@ -39,7 +47,7 @@ public class UserRepository {
         ResultSet resultSet= preparedStatement.executeQuery();
         if (resultSet.next()){
             User user= new User(
-                    resultSet.getInt("id"),
+                    //resultSet.getInt("id"),
                     resultSet.getString("name"),
                     resultSet.getString("username"),
                     resultSet.getString("email"),
@@ -51,31 +59,35 @@ public class UserRepository {
             return null;
 
     }
-    public int updateName(String name) throws SQLException {
-        String query="UPDATE user1 SET name = ? WHERE id=2";
+    public int updateName(String name,int id) throws SQLException {
+        String query="UPDATE user1 SET name = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,name);
+        preparedStatement.setInt(2,id);
         int result=preparedStatement.executeUpdate();
         return result;
     }
-    public int updateUsername(String username) throws SQLException {
-        String query="UPDATE user1 SET username = ? WHERE id=2";
+    public int updateUsername(String username,int id) throws SQLException {
+        String query="UPDATE user1 SET username = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,username);
+        preparedStatement.setInt(2,id);
         int result=preparedStatement.executeUpdate();
         return result;
     }
-    public int updateEmail(String email) throws SQLException {
-        String query="UPDATE user1 SET email = ? WHERE id=2";
+    public int updateEmail(String email,int id) throws SQLException {
+        String query="UPDATE user1 SET email = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,email);
+        preparedStatement.setInt(2,id);
         int result=preparedStatement.executeUpdate();
         return result;
     }
-    public int updatePassword(String password) throws SQLException {
-        String query="UPDATE user1 SET password = ? WHERE id=2";
+    public int updatePassword(String password,int id) throws SQLException {
+        String query="UPDATE user1 SET password = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,password);
+        preparedStatement.setInt(2,id);
         int result=preparedStatement.executeUpdate();
         return result;
     }
@@ -83,7 +95,7 @@ public class UserRepository {
     public int deleteUsers(int id) throws SQLException {
         String query="DELETE FROM user1 WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
-        preparedStatement.setInt(1,id);
+         preparedStatement.setInt(1,id);
         int result=preparedStatement.executeUpdate();
         return result;
     }

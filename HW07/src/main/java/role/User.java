@@ -1,24 +1,20 @@
 package role;
 @SuppressWarnings("unused")
 public class User {
-    private int id;
+    private Integer id = null;
     private String name;
     private String username;
     private String email;
     private String password;
 
 
-    public User() {
-    }
-
-    public User(int id, String name, String username, String email, String password) {
-        this.id = id;
+    public User( String name, String username, String email, String password) {
+   //     this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
     }
-
 
     public int getId() {
         return id;
@@ -58,5 +54,8 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public User createEntity(String name , String email , String password , String username){
+        return new User(name ,username,email,password);
     }
 }

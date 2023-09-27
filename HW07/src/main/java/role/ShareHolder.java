@@ -9,19 +9,10 @@ public class ShareHolder {
     public ShareHolder() {
     }
 
-    public ShareHolder(int id, String name, String phoneNumber, String nationalCode) {
-        this.id = id;
+    public ShareHolder( String name, String phoneNumber, String nationalCode) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.nationalCode = nationalCode;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -28,22 +28,22 @@ public class BrandRepository {
         return result;
     }
 
-    public int updateNameBrand(String name) throws SQLException {
-        String query="UPDATE brand SET name = ? WHERE id=2";
+    public int updateNameBrand(String name,int id) throws SQLException {
+        String query="UPDATE brand SET name = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,name);
         int result=preparedStatement.executeUpdate();
         return result;
     }
-    public int updateWebsiteBrand(String website) throws SQLException {
-        String query="UPDATE brand SET website = ? WHERE id=2";
+    public int updateWebsiteBrand(String website,int id) throws SQLException {
+        String query="UPDATE brand SET website = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,website);
         int result=preparedStatement.executeUpdate();
         return result;
     }
-    public int updateDescriptionBrand(String description) throws SQLException {
-        String query="UPDATE brand SET description = ? WHERE id=2";
+    public int updateDescriptionBrand(String description,int id) throws SQLException {
+        String query="UPDATE brand SET description = ? WHERE id=?";
         PreparedStatement preparedStatement= connection.prepareStatement(query);
         preparedStatement.setString(1,description);
         int result=preparedStatement.executeUpdate();

@@ -8,8 +8,6 @@ public class Brand {
     private String description;
 
 
-    public Brand() {
-    }
 
     public Brand(int id, String name, String website, String description) {
         this.id = id;
