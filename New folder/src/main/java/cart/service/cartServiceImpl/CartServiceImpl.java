@@ -16,6 +16,8 @@ public class CartServiceImpl extends BaseServiceImpl<Integer, Cart , CartReposit
 
     public CartServiceImpl(CartRepository repository) {
         super(repository);
+        this.repository = repository;
+
     }
 
 
@@ -42,6 +44,12 @@ public class CartServiceImpl extends BaseServiceImpl<Integer, Cart , CartReposit
 
     @Override
     public void delete(Integer integer) throws SQLException {
+
+    }
+
+    @Override
+    public void table() {
+
 
     }
 }

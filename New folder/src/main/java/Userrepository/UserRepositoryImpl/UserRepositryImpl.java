@@ -1,8 +1,8 @@
-package repository.UserRepositoryImpl;
+package Userrepository.UserRepositoryImpl;
 
 import base.repository.impl.BaseRepositoryImpl;
 import model.User;
-import repository.UserRepository;
+import Userrepository.UserRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,7 +43,7 @@ public class UserRepositryImpl extends BaseRepositoryImpl<Integer, User> impleme
                     resultSet.getString(3),
                     resultSet.getString(4),
                     resultSet.getString(5),
-                    resultSet.getInt(6));
+                    resultSet.getInt(2));
             customer.setId(resultSet.getInt(1)
 
             );
@@ -75,8 +75,20 @@ public class UserRepositryImpl extends BaseRepositoryImpl<Integer, User> impleme
     }
 
     @Override
-    public User login(String username) {
-        return null;
+    public User login(String username,String password) throws SQLException {
+        String checkUsers = "SELECT * FROM users WHERE username=? AND password=? ";
+        PreparedStatement preparedStatement = connection.prepareStatement(checkUsers);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return new User(
+                resultSet.getString(2),
+                resultSet.getString(3),
+                resultSet.getString(4),
+                resultSet.getString(5),
+                resultSet.getInt(1));
+
     }
 
 

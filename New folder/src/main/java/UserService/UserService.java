@@ -1,6 +1,7 @@
 package UserService;
 
 import base.service.BaseService;
+import model.Cart;
 import model.Product;
 import model.User;
 
@@ -13,5 +14,6 @@ public interface UserService extends BaseService<Integer, User> {
 
     void register(User user) throws SQLException;
 
-    User login(String username);
+    User  login(String username,String password) throws SQLException;
+
 }

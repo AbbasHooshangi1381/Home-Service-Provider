@@ -38,16 +38,12 @@ public class CartRepositoryImpl extends BaseRepositoryImpl<Integer, Cart> implem
 
     @Override
     public Cart mapResultSetToEntity(ResultSet resultSet) throws SQLException {
-        Cart customer = new Cart(
+        return new Cart(
+                resultSet.getInt(1),
                 resultSet.getInt(2),
-                resultSet.getString(3),
-                resultSet.getDouble(4),
-                resultSet.getInt(5),
-                resultSet.getInt(6),
-                resultSet.getInt(7),
-                resultSet.getInt(8));
-                customer.setId(resultSet.getInt(1));
-                return customer;
+                resultSet.getInt(3)
+               );
+
 
     }
 
@@ -55,8 +51,9 @@ public class CartRepositoryImpl extends BaseRepositoryImpl<Integer, Cart> implem
     public void fillParamForStatement(PreparedStatement preparedStatement, Cart entity, boolean isCountOnly)
             throws SQLException {
         preparedStatement.setInt(1, entity.getId());
-        preparedStatement.setInt(2, entity.getCart_id());
-        preparedStatement.setInt(3, entity.getProduct_id());
+    //    preparedStatement.setInt(2, entity.getCart_id());
+        preparedStatement.setInt(2, entity.getProduct_id());
+        preparedStatement.setInt(3, entity.getUser_id());
         preparedStatement.setInt(4, entity.getUser_id());
 
     }

@@ -1,3 +1,4 @@
+/*
 package main;
 
 import UserService.impl.UserServiceImpl;
@@ -17,7 +18,6 @@ public class Main {
        // UserServiceImpl userService=new UserServiceImpl(userRepositry);
 
 //        userService.save(user);
-        Menu menu=new Menu();
 
         //ADD USER
 
@@ -26,4 +26,4 @@ public class Main {
 
 
     }
-}
+}*/

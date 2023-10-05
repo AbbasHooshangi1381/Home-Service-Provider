@@ -3,9 +3,8 @@ package UserService.impl;
 import UserService.UserService;
 import base.service.impl.BaseServiceImpl;
 import connection.JdbcConnection;
-import model.Product;
 import model.User;
-import repository.UserRepository;
+import Userrepository.UserRepository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,9 +41,11 @@ public class UserServiceImpl extends BaseServiceImpl<Integer, User, UserReposito
 
 
     @Override
-    public User login(String username) {
-        User user = repository.login(username);
+    public User login(String username,String password) throws SQLException {
+        User user = repository.login(username,password);
         return user;    }
+
+
 }
 
 

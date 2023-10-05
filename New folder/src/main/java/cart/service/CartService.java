@@ -6,6 +6,8 @@ import model.User;
 
 public interface CartService extends BaseService<Integer, Cart> {
 
+    public void table();
+
 
 
 

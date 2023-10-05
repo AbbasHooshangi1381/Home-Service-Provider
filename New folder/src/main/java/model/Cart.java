@@ -12,14 +12,13 @@ public class Cart extends BaseEntity<Integer> {
 
 
 
-    public Cart(Number id, String name, Double price,
-                Integer stock, Integer product_id, Integer cart_id, Integer count) {
-        super(id, name, price, stock);
+    public Cart(  Integer product_id, Integer count , int userId) {
+        super(product_id);
         this.product_id = product_id;
-        this.cart_id = cart_id;
         this.count = count;
-        this.user_id = user_id;
+        this.user_id = userId;
     }
+
 
     public Integer getProduct_id() {
         return product_id;
