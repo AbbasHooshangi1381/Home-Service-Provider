@@ -24,17 +24,15 @@ public class Main2 {
             Map<Character, Integer> charCount1 = new HashMap<>();
             Map<Character, Integer> charCount2 = new HashMap<>();
 
-            // Calculate character counts for word1
+
             for (char c : word1.toCharArray()) {
                 charCount1.put(c, charCount1.getOrDefault(c, 0) + 1);
             }
 
-            // Calculate character counts for word2
             for (char c : word2.toCharArray()) {
                 charCount2.put(c, charCount2.getOrDefault(c, 0) + 1);
             }
 
-            // Check if the character counts match
             if (charCount1.size() != charCount2.size()) {
                 return false;
             }
