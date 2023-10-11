@@ -11,11 +11,12 @@ public class Main7{
       hashMapCode.put("ali","asghar");
       hashMapCode.put("naser","jafar");
 
-      hashMapCode.contain("ali");
+      System.out.println(hashMapCode.contain("ali"));
 
-      hashMapCode.emptyHashMap();
+      System.out.println(hashMapCode.emptyHashMap());
 
       List<String> allEntity=hashMapCode.all();
+      System.out.println(allEntity);
 
 
 
