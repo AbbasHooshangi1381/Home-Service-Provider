@@ -9,7 +9,7 @@ public class Main3 {
         TreeSet<Character> set2 = new TreeSet<>();
         Random random = new Random();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {  
             char c = (char) (random.nextInt(26) + 'a');
             set1.add(c);
         }
