@@ -1,12 +1,21 @@
 package question7;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Main7{
     public static void main(String[] args) {
-       AbbasHashmap hashmap=new AbbasHashmap();
+      Entry [] bag= new Entry[50];
+      HashMapCode hashMapCode=new HashMapCode(bag);
 
-        System.out.println(  Arrays.toString(hashmap.splitHashMap("{ali=20, ahmad=10, naser=30}")));
+      hashMapCode.put("ali","asghar");
+      hashMapCode.put("naser","jafar");
+
+      hashMapCode.contain("ali");
+
+      hashMapCode.emptyHashMap();
+
+      List<String> allEntity=hashMapCode.all();
 
 
 
