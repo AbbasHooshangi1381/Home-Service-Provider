@@ -4,74 +4,62 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HashMapCode {
-    private final int Size=50;
-    private Entry [] bag;
+    private int[] keys;
+    private Object[] values;
+    private int size;
 
-    public HashMapCode(Entry[] bag) {
-        this.bag = bag;
+    public HashMapCode() {
+        keys = new int[50];
+        values = new Object[50];
+        size = 0;
     }
 
-    public void put(String key , String value){
-        int indexOf=Math.abs(key.hashCode()%Size);
-        Entry entry=bag[indexOf];
+    public void put(int key, Object value) {
+        int index = getIndex(key);
+        keys[index] = key;
+        values[index] = value;
+        size++;
+    }
 
-        if (entry==null){
-            bag[indexOf]=new Entry(key,value);
-
-        }
-        else
-        { while (entry.getNext()!=null){
-            if (entry.getKey().equals(key)){
-                entry.setValue(value);
-                return;
+    public boolean containsKey(int key) {
+        for (int i = 0; i < size; i++) {
+            if (keys[i] == key) {
+                return true;
             }
-            entry=entry.getNext();
         }
+        return false;
     }
 
-}
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
-public boolean contain(String key){
-    int indexOf=Math.abs(key.hashCode()%Size);
-    Entry entry=bag[indexOf];
-
-    while (entry !=null){
-        if (entry.getKey().equals(key)){
-            return true ;
+    public Object[] getAllValues() {
+        Object[] allValues = new Object[size];
+        for (int i = 0; i < size; i++) {
+            allValues[i] = values[i];
         }
-        entry=entry.getNext();
+        return allValues;
     }
-    return false;
 
+    public void replace(int key, Object newValue) {
+        int index = getIndex(key);
+        values[index] = newValue;
+    }
 
-}
-
-public boolean emptyHashMap(){
-    for (Entry entry:bag) {
-        if (entry!=null){
-            return false;
+    private int getIndex(int key) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (keys[i] == key) {
+                index = i;
+                break;
+            }
         }
-    }
-    return true;
-
-}
-
-public List<String> all(){
-List <String> list=new ArrayList<>();
-    for (Entry entry:bag) {
-        while (entry!=null){
-            list.add(entry.getValue());
-            entry=entry.getNext();
+        if (index == -1) {
+            index = size;
         }
+        return index;
     }
-    return list;
-
-    }
-
-/*    public void replace(String key , String value){
-
-    }*/
-
 
 
 }
