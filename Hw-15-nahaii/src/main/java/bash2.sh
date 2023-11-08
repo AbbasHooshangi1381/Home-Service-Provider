@@ -22,19 +22,23 @@ replace_bash_word(){
   done
   echo "replacing is complete"
 }
+while true; do
+  echo " select one of the choice that written below"
+  echo "1. create"
+  echo "2. add hello word"
+  echo "3. replace"
 
-option=("create file" "add Hello word" "replace bash word to world word " "nothing")
+  read -r choice
 
-select option in "${option[@]}"; do
-  case $option in
-  "create file")
+  case "$choice" in
+  1)
   create_file
     ;;
-  "add 'hello word'")
+  2)
   add_hello_word
 ;;
 
-"replace 'bash word'")
+3)
 replace_bash_word
 ;;
 "nothing")
