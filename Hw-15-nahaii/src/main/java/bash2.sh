@@ -23,7 +23,6 @@ replace_bash_word(){
   echo "replacing is complete"
 }
 
-//by ai
 option=("create file" "add Hello word" "replace bash word to world word " "nothing")
 
 select option in "${option[@]}"; do
