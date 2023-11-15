@@ -62,6 +62,9 @@ public class Rational {
     }
 
     public Rational div(Rational num) {
+        if (num.numerator == 0) {
+            throw new ArithmeticException("Divisor cannot be zero.");
+        }
         double newNumerator = (double) this.numerator / num.numerator;
         double newDenominator = (double) this.denominator / num.denominator;
         return simplifyFraction((int) newNumerator, (int) newDenominator);
