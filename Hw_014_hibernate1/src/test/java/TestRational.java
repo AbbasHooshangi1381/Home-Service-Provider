@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestRational {
 
     @Test
@@ -31,7 +33,7 @@ public class TestRational {
     }
 
     @Test
-    private void mulMethod(){
+     void mulMethod(){
         Rational rational1 = new Rational(3, 4);
         Rational rational2 = new Rational(5, 6);
         Rational expectedMul = new Rational(15, 24);
@@ -55,16 +57,12 @@ public class TestRational {
         Assertions.assertEquals(expectedDiv.getDenominator(),div.getDenominator());
     }
 
-/*    @Test
-    private void toFloatMethod(){
-        Rational rational1 = new Rational(7, 2);
-        Rational expectedFloat = new Rational(3, 12);
 
-        Rational toFloat = rational1.toFloat(rational2);
-
-        Assertions.assertEquals(expectedFloat.getNumerator(),toFloat.getNumerator());
-        Assertions.assertEquals(expectedFloat.getDenominator(),toFloat.getDenominator());
-    }*/
+    @Test
+    public void testToFloatingPoint() {
+        Rational rational = new Rational(1, 2);
+        assertEquals(0.5, rational.toFloatingPoint(), 0.001);
+    }
 
 
 

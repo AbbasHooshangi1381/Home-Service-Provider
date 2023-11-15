@@ -1,6 +1,8 @@
 package Q2.config;
 
 import Q2.entity.Person;
+import Q2.entity.Student;
+import Q2.entity.Teacher;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -19,6 +21,8 @@ public class SessionFactoryProvider {
 
 
                 .addAnnotatedClass(Person.class)
+                .addAnnotatedClass(Student.class)
+                .addAnnotatedClass(Teacher.class)
                 .buildMetadata()
                 .buildSessionFactory();
     }

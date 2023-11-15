@@ -69,8 +69,8 @@ public class Rational {
         double newDenominator = (double) this.denominator / num.denominator;
         return simplifyFraction((int) newNumerator, (int) newDenominator);
     }
-    public float toFloat() {
-        return (float) numerator / denominator;
+    public double toFloatingPoint() {
+        return (double) (numerator) / (double) (denominator);
     }
 
     public void simplify() {

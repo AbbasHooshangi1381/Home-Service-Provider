@@ -2,41 +2,47 @@ package Q2.service.impl;
 
 import Q2.entity.Person;
 import Q2.repository.PersonRepository;
+import Q2.repository.impl.PersonRepositoryImpl;
 import Q2.service.PersonService;
 
 import java.util.List;
 
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl implements PersonService<Person> {
 
-    PersonRepository personRepository;
+    PersonRepositoryImpl PersonRepositoryImpl;
 
-    public PersonServiceImpl(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public PersonServiceImpl(PersonRepositoryImpl PersonRepositoryImpl) {
+        this.PersonRepositoryImpl = PersonRepositoryImpl;
     }
 
     @Override
     public void save(Person person) {
-    personRepository.save(person);
+        PersonRepositoryImpl.save(person);
     }
 
     @Override
     public void update(Person person, Integer id) {
-        personRepository.update(person,id);
+        PersonRepositoryImpl.update(person,id);
 
     }
 
     @Override
     public Person delete(Integer id) {
-        return personRepository.delete(id);
+        return PersonRepositoryImpl.delete(id);
     }
 
     @Override
     public List<Person> loadAll() {
-        return personRepository.loadAll();
+        return PersonRepositoryImpl.loadAll();
     }
 
     @Override
     public Person find(Integer id) {
-        return personRepository.find(id);
+        return PersonRepositoryImpl.find(id);
+    }
+
+    @Override
+    public boolean contains(Integer id) {
+        return PersonRepositoryImpl.contains(id);
     }
 }

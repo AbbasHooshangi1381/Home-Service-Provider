@@ -4,11 +4,12 @@ import Q2.entity.Person;
 
 import java.util.List;
 
-public interface PersonRepository {
-    void save(Person person);
-    void update(Person person,Integer id);
-    Person delete(Integer id);
-    List<Person> loadAll();
-    Person find(Integer id);
+public interface PersonRepository <T extends Person> {
+    void save(T t);
+    void update(T t,Integer id);
+    T delete(Integer id);
+    List<T> loadAll();
+    T find(Integer id);
+    boolean contains(Integer id);
 
 }

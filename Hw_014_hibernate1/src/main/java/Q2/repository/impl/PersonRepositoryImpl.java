@@ -8,7 +8,7 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-public class PersonRepositoryImpl implements PersonRepository {
+public class PersonRepositoryImpl implements PersonRepository<Person> {
 
     Session session;
 
@@ -17,7 +17,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public void save(Person person) {
+        public void save(Person person) {
         try {
             session.beginTransaction();
             session.save(person);
@@ -96,5 +96,21 @@ public class PersonRepositoryImpl implements PersonRepository {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean contains(Integer id) {
+        try {
+            session.beginTransaction();
+            Query<Person> query = session.createQuery("FROM Person WHERE  id=:id", Person.class);
+            query.setParameter("id", id);
+            Person retrievedPerson = query.uniqueResult();
+            session.getTransaction().commit();
+            return retrievedPerson != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.getTransaction().rollback();
+            return false;
+        }
     }
 }
