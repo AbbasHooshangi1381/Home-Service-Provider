@@ -10,6 +10,7 @@ import service.LessonService;
 import service.StudentService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StudentServiceImpl extends BaseServiceImpl<Student,Integer , StudentRepository> implements StudentService {
 
@@ -25,5 +26,8 @@ public class StudentServiceImpl extends BaseServiceImpl<Student,Integer , Studen
         return studentRepository.loadAll();
     }
 
-
+    @Override
+    public Optional<Student> findById(Integer integer) {
+        return super.findById(integer);
+    }
 }

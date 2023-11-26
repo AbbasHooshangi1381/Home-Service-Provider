@@ -12,6 +12,9 @@ import service.SelectedLessonService;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static org.hibernate.cfg.AvailableSettings.PASS;
 
 public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLesson, Integer> implements SelectedLessonRepository {
@@ -71,5 +74,36 @@ public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLes
         Query query = entityManager.createQuery("SELECT l FROM Lesson l WHERE l.lessonName = :lessonName");
         query.setParameter("lessonName", lessonName);
         return (Lesson) query.getSingleResult();
+    }
+
+    public boolean lessonNotPassed(String lessonName) {
+        Query query = entityManager.createQuery("SELECT l FROM Lesson l WHERE " +
+                "l.lessonName = :lessonName AND l.lessonStatus = :lessonStatus");
+        query.setParameter("lessonName", lessonName);
+        query.setParameter("lessonStatus", "PASS"); // Assuming "PASS" is the correct value
+        List<Lesson> lessons = query.getResultList();
+
+        if (!lessons.isEmpty()) {
+                System.out.println("This lesson has already passed.");
+                return false;
+            } else {
+                System.out.println("This lesson is upcoming.");
+                return true;
+        }
+    }
+
+    @Override
+    public boolean lessonAlreadyChosen(String lessonName) {
+        Query query = entityManager.createQuery("SELECT l FROM Lesson l WHERE l.lessonName = :lessonName");
+        query.setParameter("lessonName", lessonName);
+        List<Lesson> lessons = query.getResultList();
+
+        if (!lessons.isEmpty()) {
+            System.out.println("The lesson has already been chosen.");
+            return true;
+        } else {
+            System.out.println("The lesson has not been chosen before.");
+            return false;
+        }
     }
 }

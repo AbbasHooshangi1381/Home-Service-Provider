@@ -21,7 +21,6 @@ public class SelectedLesson extends BaseEntity<Integer> {
 
 
     private Integer countOfUnit;
-    private Integer grade;
     private Integer term;
     @ManyToOne
     @JoinColumn(name = "student_id")

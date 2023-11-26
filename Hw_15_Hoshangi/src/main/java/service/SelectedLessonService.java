@@ -13,4 +13,7 @@ public interface SelectedLessonService extends BaseService<SelectedLesson, Integ
 
     void CanNotSelectLesson(String LessonName);
 
+    boolean lessonNotPassed(String lessonName);
+
+    boolean lessonAlreadyChosen(String lessonName);
 }

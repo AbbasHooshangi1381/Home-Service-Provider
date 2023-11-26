@@ -14,4 +14,10 @@ public interface SelectedLessonRepository extends BaseRepository<SelectedLesson,
     Boolean CanNotSelectLesson(String LessonName);
 
     Lesson getLessonByName(String lessonName);
+
+    boolean lessonNotPassed(String lessonName);
+
+    boolean lessonAlreadyChosen(String lessonName);
+
+
 }

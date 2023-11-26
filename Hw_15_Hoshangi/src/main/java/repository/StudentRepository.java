@@ -10,8 +10,11 @@ import java.util.Optional;
 
 public interface StudentRepository extends BaseRepository<Student,Integer> {
 
+    @Override
+    Optional<Student> findById(Integer integer);
 
     List<Student> loadAll();
+
 
 
 

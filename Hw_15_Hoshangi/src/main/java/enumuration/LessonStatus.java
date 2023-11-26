@@ -2,7 +2,11 @@ package enumuration;
 
 public enum LessonStatus {
     PASS,
-    FAIL
-
+    FAIL;
+    public void LessonStatusLoop() {
+        for (LessonStatus status : LessonStatus.values()) {
+            System.out.println(status);
+        }
+    }
 
 }

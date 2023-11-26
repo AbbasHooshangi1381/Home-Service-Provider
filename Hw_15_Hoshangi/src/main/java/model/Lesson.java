@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @NoArgsConstructor
@@ -23,7 +24,7 @@ public class Lesson extends BaseEntity<Integer> {
     private Integer UnitCount;
 
     private String field;
-
+    @Size(min = 0, max = 20, message = "your number is out of range")
     private Integer grade;
 
     @Enumerated(value = EnumType.STRING)

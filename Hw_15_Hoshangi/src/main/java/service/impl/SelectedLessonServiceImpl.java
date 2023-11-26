@@ -36,4 +36,14 @@ public class SelectedLessonServiceImpl extends BaseServiceImpl<SelectedLesson,In
     public void CanNotSelectLesson(String LessonName) {
         selectedLessonRepository.CanNotSelectLesson(LessonName);
     }
+
+    @Override
+    public boolean lessonNotPassed(String lessonName) {
+      return selectedLessonRepository.lessonNotPassed(lessonName);
+    }
+
+    @Override
+    public boolean lessonAlreadyChosen(String lessonName) {
+        return selectedLessonRepository.lessonAlreadyChosen(lessonName);
+    }
 }

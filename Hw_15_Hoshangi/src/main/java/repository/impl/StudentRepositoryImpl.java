@@ -8,6 +8,7 @@ import repository.StudentRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 public class StudentRepositoryImpl extends BaseRepositoryImpl<Student , Integer> implements StudentRepository {
 
@@ -39,5 +40,8 @@ public class StudentRepositoryImpl extends BaseRepositoryImpl<Student , Integer>
         return query.getResultList();
     }
 
-
+    @Override
+    public Optional<Student> findById(Integer integer) {
+        return super.findById(integer);
+    }
 }
