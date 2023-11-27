@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import static javax.swing.text.html.parser.DTDConstants.ID;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -25,17 +27,16 @@ public class TermOfTeacher extends BaseEntity<Integer> {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    public TermOfTeacher(Integer integer, Integer term, Integer unit,
-                         Double salary, RateOfTeacher rateOfTeacher, Teacher teacher) {
-        super(integer);
+    public TermOfTeacher(Integer integer, String userName, String password, Integer term, Integer unit, Double salary, RateOfTeacher rateOfTeacher, Teacher teacher) {
+        super(integer, userName, password);
         this.term = term;
         this.unit = unit;
-        this.salary = calculate(term);
+        this.salary = calculate(term,rateOfTeacher,ID);
         this.rateOfTeacher = rateOfTeacher;
         this.teacher = teacher;
     }
 
-    public Double calculate(Integer term){
+    public double calculate(Integer term , RateOfTeacher rateOfTeacher, Integer ID){
         double salary=0;
         if (rateOfTeacher.equals(RateOfTeacher.doctor)){
             salary=5000000+(unit*1000000);

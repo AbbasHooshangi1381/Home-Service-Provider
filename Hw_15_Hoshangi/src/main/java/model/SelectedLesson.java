@@ -26,4 +26,9 @@ public class SelectedLesson extends BaseEntity<Integer> {
     @JoinColumn(name = "student_id")
     private Student student;
 
+    @ManyToOne
+    @JoinColumn(name = "lesson_id")
+    private Lesson lesson;
+
+
 }

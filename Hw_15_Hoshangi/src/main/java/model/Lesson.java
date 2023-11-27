@@ -31,11 +31,10 @@ public class Lesson extends BaseEntity<Integer> {
     LessonStatus lessonStatus;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher")
     private Teacher teacher;
 
-    @OneToMany
-    @JoinColumn(name = "selectedlesson_id")
+    @OneToMany(mappedBy="lesson")
     List<SelectedLesson> selectedLessonList;
 
 }

@@ -1,7 +1,7 @@
 package repository;
 
 import base.repository.BaseRepository;
-import model.Student;
+import model.Lesson;
 import model.Teacher;
 
 import java.util.List;
@@ -14,10 +14,10 @@ public interface TeacherRepository extends BaseRepository<Teacher,Integer> {
     @Override
     Optional<Teacher> findById(Integer integer);
 
-    void addGrade(Integer ID , Integer score);
+    Lesson addGrade(Integer ID , Integer score);
 
 
-    Double calculateSalary(Integer term);
+    //double calculateSalary(Integer term);
 
 
 

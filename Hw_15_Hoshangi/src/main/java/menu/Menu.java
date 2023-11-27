@@ -6,15 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import model.Employer;
-import model.Lesson;
-import model.Student;
-import model.Teacher;
+import model.*;
 import service.LessonService;
 import service.impl.LessonServiceImpl;
 import service.impl.StudentServiceImpl;
 import service.impl.TeacherServiceImpl;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 @Getter
@@ -24,19 +22,20 @@ import java.util.Scanner;
 
 public class Menu {
     static Teacher teacher = new Teacher();
-    static RateOfTeacher rateOfTeacher;
+    static RateOfTeacher rate;
     TeacherServiceImpl teacherService;
     LessonStatus lessonStatus;
     StudentServiceImpl studentService;
     LessonServiceImpl lessonService;
+    TermOfTeacher termOfTeacher;
     Scanner scanner = new Scanner(System.in);
 
     public void publicMenu() {
 
         System.out.println("Who are you?");
-        System.out.println("employer");
-        System.out.println("student");
-        System.out.println("teacher");
+        System.out.println("employer-->1");
+        System.out.println("student-->2");
+        System.out.println("teacher-->3");
         int selectOption1 = scanner.nextInt();
         scanner.nextLine();
         switch (selectOption1) {
@@ -71,11 +70,11 @@ public class Menu {
                         Integer countOfUnit = scanner.nextInt();
 
                         System.out.println("rateOfTeacher of teacher : ");
-                        rateOfTeacher.iterateRateOfTeacherEnum();
+                        rate.iterateRateOfTeacherEnum();
                         String teacherRate = scanner.next().toUpperCase();
                         teacher.setRateOfTeacher(RateOfTeacher.valueOf(teacherRate));
 
-                        Teacher teacher = new Teacher(firstname, lastname, userName, password, phoneNumber, countOfUnit, null, null);
+                        Teacher teacher = new Teacher(firstname, lastname, userName, password, phoneNumber, countOfUnit,RateOfTeacher.coTeacher,null,null);
 
                     case 2:
                         System.out.println("Firstname of Student : ");
@@ -179,10 +178,9 @@ public class Menu {
 
             case 3:
                 System.out.println("enter your id to find teacher : -->1");
-                System.out.println("show all lessons :-->2");
-                System.out.println("select unit : -->3");
-                System.out.println("selected lesson with grade of it : -->4");
-                System.out.println("Exit : -->5");
+                System.out.println("import grade of student : -->2");
+                System.out.println("salary pay : -->3");
+                System.out.println("Exit : -->4");
                 int selectOption4 = scanner.nextInt();
                 scanner.nextLine();
                 switch (selectOption4){
@@ -191,10 +189,50 @@ public class Menu {
                     Integer select_id = scanner.nextInt();
                     teacherService.findById(select_id);
 
+
                     case 2:
 
+                        System.out.println(" enter id of student");
+                        Integer enter_id =scanner.nextInt();
+
+                        System.out.println(" enter grade of student");
+                        Integer enter_grade =scanner.nextInt();
+
+                        teacherService.addGrade(enter_id,enter_grade);
 
 
+                    case 3:
+                        System.out.println("Enter the number of terms: ");
+                        Integer term = scanner.nextInt();
+
+                        System.out.println("Enter the teacher's role (doctor / coTeacher): ");
+                        String role = scanner.next();
+
+                        System.out.println("Enter your ID ");
+                        Integer ID = scanner.nextInt();
+
+                        if (role.equalsIgnoreCase("doctor")) {
+                            rate = RateOfTeacher.doctor;
+                        } else if (role.equalsIgnoreCase("coTeacher")) {
+                            rate = RateOfTeacher.coTeacher;
+                        } else {
+                            System.out.println("Invalid role!");
+                            break;
+                        }
+
+                        Optional<Teacher> byId = teacherService.findById(ID);
+
+                        double salary = termOfTeacher.calculate(term, rate,ID);
+                        System.out.println("Salary: "+ byId+"-----"+ salary);
+
+                        break;
+
+                    case 4:
+                        System.out.println("finished");
+                        break;
+                    default:
+                        System.out.println("Wrong option selected!");
+                        break;
 
 
                 }
@@ -203,7 +241,7 @@ public class Menu {
 
 
 
-
+/*
         System.out.println(" please choose ");
         System.out.println("1.save or update");
         System.out.println("2.delete");
@@ -214,6 +252,6 @@ public class Menu {
         scanner.nextLine();
 
         System.out.println(" load all");
-        teacherService.findAll();
+        teacherService.findAll();*/
     }
 }

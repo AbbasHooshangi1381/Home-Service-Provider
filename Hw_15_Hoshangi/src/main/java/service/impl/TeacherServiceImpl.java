@@ -1,20 +1,17 @@
 package service.impl;
 
 import base.service.BaseServiceImpl;
-import enumuration.RateOfTeacher;
+import model.Lesson;
 import model.Teacher;
-import model.User;
 import repository.TeacherRepository;
-import repository.UserRepository;
+import repository.impl.TeacherRepositoryimpl;
 import service.TeacherService;
-import service.UserService;
 
-import java.util.Locale;
 import java.util.Optional;
-import java.util.Scanner;
 
 public class TeacherServiceImpl extends BaseServiceImpl<Teacher,Integer , TeacherRepository> implements TeacherService {
     Teacher teacher;
+    TeacherRepositoryimpl teacherRepositoryimpl;
     public TeacherServiceImpl(TeacherRepository repository) {
         super(repository);
     }
@@ -25,9 +22,14 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher,Integer , Teache
         return super.findById(integer);
     }
 
-    @Override
+  /*  @Override
     public Double calculateSalary(Integer term) {
         return teacher.calculateSalary(term);
+    }*/
+
+    @Override
+    public Lesson addGrade(Integer ID, Integer score) {
+        return teacherRepositoryimpl.addGrade(ID,score);
     }
 }
 

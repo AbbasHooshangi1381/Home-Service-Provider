@@ -22,26 +22,19 @@ public class Teacher extends BaseEntity<Integer> {
 
     private String firstname;
     private String lastName;
-    private String userName;
-    private String password;
+ //   private String userName;
+//    private String password;
     private String phoneNumber;
     private Integer countOfUnit;
+
     @Enumerated(value = EnumType.STRING)
     RateOfTeacher rateOfTeacher;
+
     @OneToMany(mappedBy = "teacher")
     List<TermOfTeacher>list;
-    @OneToMany(mappedBy = "lesson")
+
+    @OneToMany(mappedBy = "teacher")
     private List<Lesson>lesson;
 
 
-
-
-    public Double calculateSalary(Integer term){
-        double salary=0;
-        if (rateOfTeacher.equals(RateOfTeacher.doctor)){
-            salary=5000000 + (countOfUnit * 1000000);
-        }else if (rateOfTeacher.equals(RateOfTeacher.coTeacher)) {
-            salary = countOfUnit * 1000000;
-        }return salary;
-    }
 }

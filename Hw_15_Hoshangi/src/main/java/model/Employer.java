@@ -19,8 +19,8 @@ public class Employer extends BaseEntity<Integer> {
 
     private String firstname;
     private String lastName;
-    private String userName;
-    private String password;
+ //   private String userName;
+  //  private String password;
     private Integer salary;
 
 

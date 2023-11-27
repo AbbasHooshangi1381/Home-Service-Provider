@@ -1,7 +1,6 @@
 package repository.impl;
 
 import base.repository.BaseRepositoryImpl;
-import enumuration.RateOfTeacher;
 import model.Lesson;
 import model.Teacher;
 
@@ -41,9 +40,14 @@ public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> 
     }
 
     @Override
-    public void addGrade(Integer ID , Integer score) {
-        Query query = entityManager.createQuery("INSERT INTO Lesso(grade) WHERE ID=:ID");
-
+    public Lesson addGrade(Integer ID , Integer score) {
+        Lesson lesson=entityManager.find(Lesson.class,ID);
+        if (lesson != null) {
+            lesson.setGrade(score);
+        } else {
+            System.out.println(" you added grade in past");
+        }
+        return lesson;
 
     }
 
@@ -55,12 +59,12 @@ public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> 
             return query.getResultList();
         }
 
-    @Override
-    public Double calculateSalary(Integer term) {
+   /* @Override
+    public double calculateSalary(Integer term) {
         double salary=0;
         Query query = entityManager.createQuery("SELECT t FROM Teacher t WHERE t.firstname= :firstname and t.rateOfTeacher =:rateOfTeacher");
         query.setParameter("rateOfTeacher","doctor");
         Object singleResult = query.getSingleResult();
         return (Double) singleResult;
-    }
+    }*/
 }
