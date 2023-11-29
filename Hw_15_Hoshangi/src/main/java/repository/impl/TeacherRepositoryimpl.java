@@ -39,7 +39,7 @@ public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> 
         return super.findById(integer);
     }
 
-    @Override
+ /*   @Override
     public Lesson addGrade(Integer ID , Integer score) {
         Lesson lesson=entityManager.find(Lesson.class,ID);
         if (lesson != null) {
@@ -49,7 +49,7 @@ public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> 
         }
         return lesson;
 
-    }
+    }*/
 
 
     @Override

@@ -17,7 +17,9 @@ public interface SelectedLessonRepository extends BaseRepository<SelectedLesson,
 
     boolean lessonNotPassed(String lessonName);
 
-    boolean lessonAlreadyChosen(String lessonName);
+    boolean lessonAlreadyChosen(String SelectedLessonName);
+
+    SelectedLesson addGrade(Integer ID , Integer score);
 
 
 }

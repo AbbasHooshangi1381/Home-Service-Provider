@@ -13,4 +13,8 @@ public interface StudentService extends BaseService<Student, Integer> {
 
     @Override
     Optional<Student> findById(Integer integer);
+
+    void addCourseToStudent(Integer studentId, Lesson lesson);
+
+    double getAverageMarksForStudent(Integer studentId);
 }

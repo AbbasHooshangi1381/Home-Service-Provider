@@ -43,7 +43,13 @@ public class SelectedLessonServiceImpl extends BaseServiceImpl<SelectedLesson,In
     }
 
     @Override
-    public boolean lessonAlreadyChosen(String lessonName) {
-        return selectedLessonRepository.lessonAlreadyChosen(lessonName);
+    public boolean lessonAlreadyChosen(String SelectedLessonName) {
+        return selectedLessonRepository.lessonAlreadyChosen(SelectedLessonName);
+    }
+
+    @Override
+    public SelectedLesson addGrade(Integer ID, Integer score) {
+
+        return selectedLessonRepository.addGrade(ID,score);
     }
 }

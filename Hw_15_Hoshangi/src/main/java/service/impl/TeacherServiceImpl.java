@@ -2,6 +2,7 @@ package service.impl;
 
 import base.service.BaseServiceImpl;
 import model.Lesson;
+import model.SelectedLesson;
 import model.Teacher;
 import repository.TeacherRepository;
 import repository.impl.TeacherRepositoryimpl;
@@ -27,9 +28,9 @@ public class TeacherServiceImpl extends BaseServiceImpl<Teacher,Integer , Teache
         return teacher.calculateSalary(term);
     }*/
 
-    @Override
-    public Lesson addGrade(Integer ID, Integer score) {
+  /*  @Override
+    public SelectedLesson addGrade(Integer ID, Integer score) {
         return teacherRepositoryimpl.addGrade(ID,score);
-    }
+    }*/
 }
 

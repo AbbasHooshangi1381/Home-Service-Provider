@@ -10,7 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 import static javax.swing.text.html.parser.DTDConstants.ID;
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -18,23 +18,22 @@ import static javax.swing.text.html.parser.DTDConstants.ID;
 @Entity
 public class TermOfTeacher extends BaseEntity<Integer> {
 
+    @Column(nullable = false)
     private Integer term;
+
+    @Column(nullable = false)
     private Integer unit;
+
+    @Column(nullable = false)
     private Double salary;
+
     @Enumerated(value = EnumType.STRING)
     RateOfTeacher rateOfTeacher;
+
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    public TermOfTeacher(Integer integer, String userName, String password, Integer term, Integer unit, Double salary, RateOfTeacher rateOfTeacher, Teacher teacher) {
-        super(integer, userName, password);
-        this.term = term;
-        this.unit = unit;
-        this.salary = calculate(term,rateOfTeacher,ID);
-        this.rateOfTeacher = rateOfTeacher;
-        this.teacher = teacher;
-    }
 
     public double calculate(Integer term , RateOfTeacher rateOfTeacher, Integer ID){
         double salary=0;

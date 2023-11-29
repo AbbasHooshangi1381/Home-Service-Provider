@@ -19,13 +19,12 @@ import java.util.List;
 @Entity
 public class Lesson extends BaseEntity<Integer> {
 
+    @Column(nullable = false)
     private String lessonName;
 
-    private Integer UnitCount;
+    @Column(nullable = false)
+    private Integer UnitCountOfLesson;
 
-    private String field;
-    @Size(min = 0, max = 20, message = "your number is out of range")
-    private Integer grade;
 
     @Enumerated(value = EnumType.STRING)
     LessonStatus lessonStatus;
@@ -38,3 +37,5 @@ public class Lesson extends BaseEntity<Integer> {
     List<SelectedLesson> selectedLessonList;
 
 }
+
+

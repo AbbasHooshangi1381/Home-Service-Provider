@@ -6,21 +6,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "employer")
 @Entity
 public class Employer extends BaseEntity<Integer> {
 
+    @Column(nullable = false)
     private String firstname;
+
+    @Column(nullable = false)
     private String lastName;
- //   private String userName;
-  //  private String password;
+
+    @Column(nullable = false)
     private Integer salary;
 
 

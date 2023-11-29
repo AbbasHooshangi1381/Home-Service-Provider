@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -20,12 +21,16 @@ import java.util.List;
 
 public class Teacher extends BaseEntity<Integer> {
 
+    @Column(nullable = false)
     private String firstname;
+
+    @Column(nullable = false)
     private String lastName;
- //   private String userName;
-//    private String password;
+
+    @Min(value = 8, message = "number should not be less than 8")
+    @Max(value = 12, message = "number should not be greater than 12")
+    @Column(nullable = false)
     private String phoneNumber;
-    private Integer countOfUnit;
 
     @Enumerated(value = EnumType.STRING)
     RateOfTeacher rateOfTeacher;
@@ -35,6 +40,5 @@ public class Teacher extends BaseEntity<Integer> {
 
     @OneToMany(mappedBy = "teacher")
     private List<Lesson>lesson;
-
 
 }

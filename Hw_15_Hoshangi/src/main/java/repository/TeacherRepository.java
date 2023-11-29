@@ -14,7 +14,7 @@ public interface TeacherRepository extends BaseRepository<Teacher,Integer> {
     @Override
     Optional<Teacher> findById(Integer integer);
 
-    Lesson addGrade(Integer ID , Integer score);
+    //SelectedLessonRepository addGrade(Integer ID , Integer score);
 
 
     //double calculateSalary(Integer term);

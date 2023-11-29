@@ -93,9 +93,9 @@ public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLes
     }
 
     @Override
-    public boolean lessonAlreadyChosen(String lessonName) {
-        Query query = entityManager.createQuery("SELECT l FROM Lesson l WHERE l.lessonName = :lessonName");
-        query.setParameter("lessonName", lessonName);
+    public boolean lessonAlreadyChosen(String SelectedLessonName) {
+        Query query = entityManager.createQuery("SELECT s FROM SelectedLesson s WHERE s.SelectedLessonName = :SelectedLessonName");
+        query.setParameter("SelectedLessonName", SelectedLessonName);
         List<Lesson> lessons = query.getResultList();
 
         if (!lessons.isEmpty()) {
@@ -106,4 +106,17 @@ public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLes
             return false;
         }
     }
+
+    @Override
+    public SelectedLesson addGrade(Integer ID, Integer score) {
+        SelectedLesson selectedLesson=entityManager.find(SelectedLesson.class,ID);
+        if (selectedLesson != null) {
+            selectedLesson.setGrade(score);
+        } else {
+            System.out.println(" you added grade in past");
+        }
+        return selectedLesson;
+    }
+
+
 }

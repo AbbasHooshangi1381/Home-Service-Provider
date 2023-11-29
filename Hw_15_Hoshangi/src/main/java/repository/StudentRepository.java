@@ -15,6 +15,9 @@ public interface StudentRepository extends BaseRepository<Student,Integer> {
 
     List<Student> loadAll();
 
+    double getAverageMarksForStudent(Integer studentId);
+
+    void addCourseToStudent(Integer studentId, Lesson lesson);
 
 
 
