@@ -1,17 +1,17 @@
 package repository.impl;
 
 import base.repository.BaseRepositoryImpl;
-import model.Employer;
+import lombok.NoArgsConstructor;
 import model.Lesson;
-import repository.EmployerRepository;
 import repository.LessonRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
+@NoArgsConstructor
 
 public class LessonRepositoryImpl extends BaseRepositoryImpl<Lesson, Integer> implements LessonRepository {
+
 
     public LessonRepositoryImpl(EntityManager entityManager) {
         super(entityManager);
@@ -39,8 +39,5 @@ public class LessonRepositoryImpl extends BaseRepositoryImpl<Lesson, Integer> im
                 entityManager.createQuery("select L from  Lesson  L ", Lesson.class);
         return query.getResultList();
     }
-
-
-
 
 }

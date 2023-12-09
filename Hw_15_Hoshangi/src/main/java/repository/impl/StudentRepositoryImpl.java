@@ -1,6 +1,7 @@
 package repository.impl;
 
 import base.repository.BaseRepositoryImpl;
+import lombok.NoArgsConstructor;
 import model.Lesson;
 import model.SelectedLesson;
 import model.Student;
@@ -11,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
+@NoArgsConstructor
 
 public class StudentRepositoryImpl extends BaseRepositoryImpl<Student, Integer> implements StudentRepository {
 
@@ -88,5 +90,10 @@ public class StudentRepositoryImpl extends BaseRepositoryImpl<Student, Integer> 
     @Override
     public Optional<Student> findById(Integer integer) {
         return super.findById(integer);
+    }
+
+    @Override
+    public Student login(String userName, String password) {
+        return super.login(userName, password);
     }
 }

@@ -19,6 +19,6 @@ public interface StudentRepository extends BaseRepository<Student,Integer> {
 
     void addCourseToStudent(Integer studentId, Lesson lesson);
 
-
-
+    @Override
+    Student login(String userName, String password);
 }

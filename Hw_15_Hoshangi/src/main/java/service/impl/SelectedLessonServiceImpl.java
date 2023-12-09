@@ -1,12 +1,14 @@
 package service.impl;
 
 import base.service.BaseServiceImpl;
+import lombok.NoArgsConstructor;
 import model.Lesson;
 import model.SelectedLesson;
 import repository.LessonRepository;
 import repository.SelectedLessonRepository;
 import service.LessonService;
 import service.SelectedLessonService;
+//@NoArgsConstructor
 
 public class SelectedLessonServiceImpl extends BaseServiceImpl<SelectedLesson,Integer , SelectedLessonRepository>
         implements SelectedLessonService {

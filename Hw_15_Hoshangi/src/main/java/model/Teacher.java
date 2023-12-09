@@ -35,10 +35,17 @@ public class Teacher extends BaseEntity<Integer> {
     @Enumerated(value = EnumType.STRING)
     RateOfTeacher rateOfTeacher;
 
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy="teacher",cascade = CascadeType.ALL)
     List<TermOfTeacher>list;
 
-    @OneToMany(mappedBy = "teacher")
-    private List<Lesson>lesson;
+    @OneToMany(mappedBy="teacher",cascade = CascadeType.ALL)
+     List<Lesson>lesson;
 
+    public Teacher(Integer integer, String userName, String password, String firstname, String lastName, String phoneNumber, RateOfTeacher rateOfTeacher) {
+        super(integer, userName, password);
+        this.firstname = firstname;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.rateOfTeacher = rateOfTeacher;
+    }
 }

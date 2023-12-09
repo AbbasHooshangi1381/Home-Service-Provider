@@ -1,6 +1,7 @@
 package service.impl;
 
 import base.service.BaseServiceImpl;
+import lombok.NoArgsConstructor;
 import model.Employer;
 import model.Student;
 import repository.EmployerRepository;
@@ -11,6 +12,7 @@ import service.EmployerService;
 
 import java.util.List;
 
+
 public class EmployerServiceImpl extends BaseServiceImpl<Employer,Integer , EmployerRepository> implements EmployerService {
 
     EmployerRepositoryImpl employerRepository;
@@ -19,6 +21,11 @@ public class EmployerServiceImpl extends BaseServiceImpl<Employer,Integer , Empl
         super(repository);
     }
 
+
+    @Override
+    public Employer login(String userName, String password) {
+        return super.login(userName, password);
+    }
 
     @Override
     public Integer salary(Integer id) {

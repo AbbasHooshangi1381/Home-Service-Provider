@@ -2,20 +2,16 @@ package repository.impl;
 
 import base.repository.BaseRepositoryImpl;
 import enumuration.LessonStatus;
+import lombok.NoArgsConstructor;
 import model.Lesson;
 import model.SelectedLesson;
-import model.Student;
 import repository.SelectedLessonRepository;
-import repository.StudentRepository;
-import service.SelectedLessonService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import java.time.LocalDate;
 import java.util.List;
-
-import static org.hibernate.cfg.AvailableSettings.PASS;
+@NoArgsConstructor
 
 public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLesson, Integer> implements SelectedLessonRepository {
 
@@ -24,6 +20,7 @@ public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLes
     public SelectedLessonRepositoryImpl(EntityManager entityManager) {
         super(entityManager);
     }
+
 
     @Override
     public Class<SelectedLesson> getEntityClass() {
@@ -84,11 +81,11 @@ public class SelectedLessonRepositoryImpl extends BaseRepositoryImpl<SelectedLes
         List<Lesson> lessons = query.getResultList();
 
         if (!lessons.isEmpty()) {
-                System.out.println("This lesson has already passed.");
-                return false;
-            } else {
-                System.out.println("This lesson is upcoming.");
-                return true;
+            System.out.println("This lesson has already passed.");
+            return false;
+        } else {
+            System.out.println("This lesson is upcoming.");
+            return true;
         }
     }
 

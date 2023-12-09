@@ -1,6 +1,7 @@
 package service.impl;
 
 import base.service.BaseServiceImpl;
+import lombok.NoArgsConstructor;
 import model.Lesson;
 import model.SelectedLesson;
 import model.Student;
@@ -37,6 +38,11 @@ public class StudentServiceImpl extends BaseServiceImpl<Student, Integer, Studen
     @Override
     public void addCourseToStudent(Integer studentId, Lesson lesson) {
         studentRepository.addCourseToStudent(studentId, lesson);
+    }
+
+    @Override
+    public Student login(String userName, String password) {
+        return super.login(userName, password);
     }
 
     @Override

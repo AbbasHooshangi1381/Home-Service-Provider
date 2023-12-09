@@ -1,22 +1,24 @@
 package repository.impl;
 
 import base.repository.BaseRepositoryImpl;
-import model.Lesson;
+import lombok.NoArgsConstructor;
 import model.Teacher;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+@NoArgsConstructor
 
 public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> implements repository.TeacherRepository {
 
-    Teacher teacher;
+
 
     public TeacherRepositoryimpl(EntityManager entityManager) {
         super(entityManager);
     }
+
 
     @Override
     public Class<Teacher> getEntityClass() {
@@ -54,10 +56,10 @@ public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> 
 
     @Override
     public List<Teacher> loadAll() {
-            TypedQuery<Teacher> query=
-                    entityManager.createQuery("select s from  Teacher  s ", Teacher.class);
-            return query.getResultList();
-        }
+        TypedQuery<Teacher> query=
+                entityManager.createQuery("select s from  Teacher  s ", Teacher.class);
+        return query.getResultList();
+    }
 
    /* @Override
     public double calculateSalary(Integer term) {
@@ -67,4 +69,14 @@ public class TeacherRepositoryimpl extends BaseRepositoryImpl<Teacher, Integer> 
         Object singleResult = query.getSingleResult();
         return (Double) singleResult;
     }*/
+
+    @Override
+    public Teacher login(String userName, String password) {
+        return super.login(userName, password);
+    }
+
+    @Override
+    public Collection<Teacher> findAll() {
+        return super.findAll();
+    }
 }

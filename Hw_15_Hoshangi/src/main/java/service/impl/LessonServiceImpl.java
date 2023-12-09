@@ -1,13 +1,12 @@
 package service.impl;
 
 import base.service.BaseServiceImpl;
+import lombok.NoArgsConstructor;
 import model.Lesson;
-import model.Teacher;
 import repository.LessonRepository;
-import repository.TeacherRepository;
+import repository.SelectedLessonRepository;
 import repository.impl.LessonRepositoryImpl;
 import service.LessonService;
-import service.TeacherService;
 
 import java.util.List;
 

@@ -16,5 +16,8 @@ public interface StudentService extends BaseService<Student, Integer> {
 
     void addCourseToStudent(Integer studentId, Lesson lesson);
 
+    @Override
+    Student login(String userName, String password);
+
     double getAverageMarksForStudent(Integer studentId);
 }

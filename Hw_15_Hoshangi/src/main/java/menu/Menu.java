@@ -1,5 +1,6 @@
 package menu;
 
+import application.ApplicationContext;
 import enumuration.LessonStatus;
 import enumuration.RateOfTeacher;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import model.*;
+import repository.TeacherRepository;
 import service.LessonService;
 import service.SelectedLessonService;
 import service.StudentService;
@@ -26,8 +28,8 @@ import java.util.Scanner;
 @AllArgsConstructor
 
 public class Menu {
-    static Teacher teacher;
-    static RateOfTeacher rate;
+    /*Teacher teacher;
+    RateOfTeacher rate;
     TeacherServiceImpl teacherService;
     LessonStatus lessonStatus;
     StudentServiceImpl studentService;
@@ -36,12 +38,33 @@ public class Menu {
     SelectedLessonService selectedLessonService;
     TermOfTeacher termOfTeacher;
     EmployerServiceImpl emp;
-    Student student;
+    Student student;*/
     Scanner scanner = new Scanner(System.in);
 
     public void publicMenu() {
 
-        System.out.println("Who are you?");
+                /*System.out.println("please enter your userName :");
+                String inputUserName = scanner.nextLine();
+
+                System.out.println("please enter your password :");
+                String inputPassword = scanner.nextLine();
+
+                boolean loggedIn = false;
+
+                if (checkStudentLogin(inputUserName, inputPassword)) {
+                    System.out.println("Student logged in successfully!");
+                    loggedIn = true;
+                } else if (checkTeacherLogin(inputUserName, inputPassword)) {
+                    System.out.println("Teacher logged in successfully!");
+                    loggedIn = true;
+                } else if (checkEmployerLogin(inputUserName, inputPassword)) {
+                    System.out.println("Employee logged in successfully!");
+                    loggedIn = true;
+                } else {
+                    System.out.println("Invalid username or password!");
+                }
+                if (loggedIn) {*/
+        System.out.println("Who are you again ?");
         System.out.println("employer-->1");
         System.out.println("student-->2");
         System.out.println("teacher-->3");
@@ -69,111 +92,36 @@ public class Menu {
                         System.out.println("Teacher PhoneNumber: ");
                         String teacherPhoneNumber = scanner.nextLine();
 
-                        RateOfTeacher selectedRate = selectRateOfTeacher();
-                        System.out.println("Selected Rate: " + selectedRate);
+  /*                      RateOfTeacher selectedRate = selectRateOfTeacher();
+                        System.out.println("Selected Rate: " + selectedRate);*/
 
                         Teacher teacher = new Teacher();
                         teacher.setFirstname(teacherFirstName);
                         teacher.setLastName(teacherLastName);
                         teacher.setPhoneNumber(teacherPhoneNumber);
-                        teacher.setRateOfTeacher(selectedRate);
-                        teacherService.saveOrUpdate(teacher);
+                      //  teacher.setRateOfTeacher(selectedRate);
+                        ApplicationContext.getTeacherService().saveOrUpdate(teacher);
 
 
-/*                        List<TermOfTeacher> termOfTeachers = new ArrayList<>();
-
-                        boolean addTermOfTeacher = true;
-                        while (addTermOfTeacher) {
-                            System.out.print("Term: ");
-                            int term = scanner.nextInt();
-                            scanner.nextLine(); // خط خالی را تخطی کنید
-
-                            System.out.print("Unit: ");
-                            int unit = scanner.nextInt();
-                            scanner.nextLine(); // خط خالی را تخطی کنید
-
-                            System.out.print("Salary: ");
-                            double salary = scanner.nextDouble();
-                            scanner.nextLine(); // خط خالی را تخطی کنید
-
-                            System.out.print("Rate of Teacher: ");
-                            RateOfTeacher termOfTeacherRate = RateOfTeacher.valueOf(scanner.nextLine().toUpperCase());
-
-                            TermOfTeacher termOfTeacher = new TermOfTeacher();
-                            termOfTeacher.setTerm(term);
-                            termOfTeacher.setUnit(unit);
-                            termOfTeacher.setSalary(salary);
-                            termOfTeacher.setRateOfTeacher(termOfTeacherRate);
-                            termOfTeacher.setTeacher(teacher);
-
-                            termOfTeachers.add(termOfTeacher);
-
-                            System.out.print("Add another TermOfTeacher? (yes/no): ");
-                            String addAnother = scanner.nextLine();
-                            addTermOfTeacher = addAnother.equalsIgnoreCase("yes");
-                        }*/
-
-/*                        teacher.set(termOfTeachers);
-
-
-
-                        System.out.println("Lesson Name: ");
-                        String lessonName = scanner.nextLine();
-
-                        System.out.println("Unit Count of Lesson: ");
-                        int unitCountOfLesson = scanner.nextInt();
-                        scanner.nextLine(); // خط خالی را تخطی کنید
-
-                        System.out.println("Lesson Status: ");
-                        LessonStatus lessonStatus = LessonStatus.valueOf(scanner.nextLine().toUpperCase());
+                        Teacher teacher1 = new Teacher();
+                        teacher1.setId(1);
 
                         Lesson lesson = new Lesson();
-                        lesson.setLessonName(lessonName);
-                        lesson.setUnitCountOfLesson(unitCountOfLesson);
-                        lesson.setLessonStatus(lessonStatus);
-                        lesson.setTeacher(teacher);
+                        lesson.setId(1);
 
-
-
-                        List<SelectedLesson> selectedLessons = new ArrayList<>();
-
-                        boolean addSelectedLesson = true;
-                        while (addSelectedLesson) {
-                            System.out.println("SelectedLesson Name: ");
-                            String selectedLessonName = scanner.nextLine();
-
-                            System.out.println("SelectedLesson Unit: ");
-                            Integer selectedLessonUnit = scanner.nextInt();
-                            scanner.nextLine();
-
-                            System.out.println("SelectedLesson Status: ");
-                            LessonStatus selectedLessonStatus = LessonStatus.valueOf(scanner.nextLine().toUpperCase());
-
-                            SelectedLesson selectedLesson = new SelectedLesson();
-                            selectedLesson.setSelectedLessonName(selectedLessonName);
-                            selectedLesson.setSelectedLessonUnit(selectedLessonUnit);
-                            selectedLesson.setSelectedLessonStatus(selectedLessonStatus);
-                            selectedLesson.setLesson(lesson);
-
-                            selectedLessons.add(selectedLesson);
-
-                            System.out.println("Add another SelectedLesson? (yes/no): ");
-                            String addAnother = scanner.nextLine();
-                            addSelectedLesson = addAnother.equalsIgnoreCase("yes");
-                        }
-
-                        lesson.setSelectedLessonList(selectedLessons);
-
-
-                        List<Lesson> lessons = new ArrayList<>();
-                        lessons.add(lesson);
-                        teacher.setLesson(lessons);
-
-                        break;*/
+                        TermOfTeacher termOfTeacher = new TermOfTeacher();
+                        termOfTeacher.setId(1);
                         break;
 
-                    case 2:
-                        // ورود اطلاعات دانش‌آموز
+                                    /*Lesson lesson = new Lesson(5, "daefe", "fefe", "efefew", 5, LessonStatus.PASS, teacher1);
+                                    lessonService.saveOrUpdate(lesson);*/
+
+
+                                   /* SelectedLesson selectedLesson = new SelectedLesson();
+                                    selectedLesson.setId(1);*/
+
+
+  /*                  case 2:
                         System.out.println("Student Firstname: ");
                         String studentFirstname = scanner.nextLine();
 
@@ -189,65 +137,7 @@ public class Menu {
                         student.setStudentCode(studentCode);
                         studentServicee.saveOrUpdate(student);
                         break;
-                    // ورود اطلاعات SelectedLesson
-                    //    List<SelectedLesson> selectedLessons1 = new ArrayList<>();
 
-/*                        boolean addSelectedLesson1 = true;
-                        while (addSelectedLesson1) {
-                            System.out.println("SelectedLesson Name: ");
-                            String selectedLessonName = scanner.nextLine();
-
-                            System.out.println("SelectedLesson Unit: ");
-                            int selectedLessonUnit = scanner.nextInt();
-                            scanner.nextLine(); // خط خالی را تخطی کنید
-
-                            System.out.println("SelectedLesson Status: ");
-                            LessonStatus selectedLessonStatus = LessonStatus.valueOf(scanner.nextLine().toUpperCase());
-
-                            System.out.println("Term: ");
-                            int term = scanner.nextInt();
-                            scanner.nextLine(); // خط خالی را تخطی کنید
-
-                            System.out.println("Grade: ");
-                            int grade = scanner.nextInt();
-                            scanner.nextLine(); // خط خالی را تخطی کنید
-
-                            SelectedLesson selectedLesson = new SelectedLesson();
-                            selectedLesson.setSelectedLessonName(selectedLessonName);
-                            selectedLesson.setSelectedLessonUnit(selectedLessonUnit);
-                            selectedLesson.setSelectedLessonStatus(selectedLessonStatus);
-                            selectedLesson.setTerm(term);
-                            selectedLesson.setGrade(grade);
-                            selectedLesson.setStudent(student);
-
-                            selectedLessons1.add(selectedLesson);
-
-                            System.out.println("Add another SelectedLesson? (yes/no): ");
-                            String addAnother = scanner.nextLine();
-                            addSelectedLesson1 = addAnother.equalsIgnoreCase("yes");
-                        }
-
-                        // ورود اطلاعات درس
-                        System.out.println("Lesson Name: ");
-                        String lessonName1 = scanner.nextLine();
-
-                        System.out.println("Unit Count of Lesson: ");
-                        int unitCountOfLesson1 = scanner.nextInt();
-                        scanner.nextLine(); // خط خالی را تخطی کنید
-
-                        System.out.println("Lesson Status: ");
-                        LessonStatus lessonStatus1 = LessonStatus.valueOf(scanner.nextLine().toUpperCase());
-
-                        Lesson lesson1 = new Lesson();
-                        lesson1.setLessonName(lessonName1);
-                        lesson1.setUnitCountOfLesson(unitCountOfLesson1);
-                        lesson1.setLessonStatus(lessonStatus1);
-                        // lesson1.setTeacher(teacher); // تنظیم معلم برای درس
-
-                        // تنظیم SelectedLesson های وارد شده برای دانش‌آموز
-                        student.setSelectedLessonList(selectedLessons1);
-
-                        break;*/
 
                     case 3:
                         Employer employer = new Employer();
@@ -260,11 +150,6 @@ public class Menu {
                         String Employerlastname = scanner.next();
                         employer.setLastName(Employerlastname);
                         emp.saveOrUpdate(employer);
-/*                        System.out.println("userName of Employer : ");
-                        String EmployeruserName = scanner.next();
-
-                        System.out.println("password of Employer : ");
-                        String Employerpassword = scanner.next();*/
                         break;
 
                     case 4:
@@ -278,59 +163,10 @@ public class Menu {
                         lessonStatus.LessonStatusLoop();
                         LessonStatus status = LessonStatus.valueOf(scanner.next().toUpperCase());
 
-                        Lesson lesson = new Lesson();
-                        lesson.setLessonName(lessonName);
-                        lesson.setUnitCountOfLesson(unitCountOfLesson);
-                        lesson.setLessonStatus(status);
-                        lesson.setTeacher(new Teacher());
-                        lesson.setSelectedLessonList(new ArrayList<>());
-                        lessonService.saveOrUpdate(lesson);
+              *//*          Teacher teacher1=new Teacher();
+                        teacher1.setId(1);*//*
 
 
-                        /*System.out.println("Add Selected Lesson? (Yes/No)");
-                        String addSelectedLesson = scanner.next().toUpperCase();
-                        while (addSelectedLesson.equals("Yes")) {
-                            SelectedLesson selectedLesson = new SelectedLesson();
-
-                            System.out.println("countOfUnit: ");
-                            int countOfUnit = scanner.nextInt();
-                            selectedLesson.setCountOfUnit(countOfUnit);
-
-                            System.out.println("term: ");
-                            int term = scanner.nextInt();
-                            selectedLesson.setTerm(term);
-
-                            System.out.println("grade: ");
-                            int grade = scanner.nextInt();
-                            selectedLesson.setGrade(grade);
-
-                            selectedLesson.setStudent(new Student());
-                            selectedLesson.setLesson(lesson);
-                            lesson.getSelectedLessonList().add(selectedLesson);
-
-                            System.out.println("Add another Selected Lesson? (Yes/No)");
-                            addSelectedLesson = scanner.next().toUpperCase();
-
-
-                            Teacher teacher = new Teacher();
-
-                            System.out.println("Teacher Firstname: ");
-                            String teacherFirstName = scanner.nextLine();
-                            teacher.setFirstname(teacherFirstName);
-
-                            System.out.println("Teacher Lastname: ");
-                            String teacherLastName = scanner.nextLine();
-                            teacher.setLastName(teacherLastName);
-
-                            System.out.println("Teacher PhoneNumber: ");
-                            String teacherPhoneNumber = scanner.nextLine();
-                            teacher.setPhoneNumber(teacherPhoneNumber);
-
-                            System.out.println("Teacher Rate: ");
-                            RateOfTeacher teacherRate2 = RateOfTeacher.valueOf(scanner.next().toUpperCase());
-                            teacher.setRateOfTeacher(teacherRate2);
-
-                            teacher.getLesson().add(lesson);*/
                         break;
 
 
@@ -445,20 +281,25 @@ public class Menu {
         }
 
 
-
-/*
-        System.out.println(" please choose ");
-        System.out.println("1.save or update");
-        System.out.println("2.delete");
-        System.out.println("3.load all");
-
-
-        int select = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println(" load all");
-        teacherService.findAll();*/
     }
+    //}
+
+
+    public boolean checkStudentLogin(String username, String password) {
+        Student login = studentService.login(username, password);
+        return login != null;
+    }
+
+    public boolean checkTeacherLogin(String username, String password) {
+        Teacher login = teacherService.login(username, password);
+        return login != null;
+    }
+
+    public boolean checkEmployerLogin(String username, String password) {
+        Employer login = emp.login(username, password);
+        return login != null;
+    }
+
 
     public static RateOfTeacher selectRateOfTeacher() {
         Scanner scanner = new Scanner(System.in);
@@ -479,5 +320,5 @@ public class Menu {
         }
 
         return rates[selectedOption - 1];
-    }
-}
+    }*/
+}}}}
