@@ -22,6 +22,8 @@ public class Card extends BaseEntity<Integer> {
     @Enumerated
     NameOfBank nameOfBank;
 
+    Integer amountOfCard;
+
     LocalDate expiredDate;
 
     Integer cvv2;

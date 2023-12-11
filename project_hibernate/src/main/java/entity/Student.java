@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +39,10 @@ public class Student extends BaseEntity<Integer> {
     String enterYear;
     Boolean gettingLoan;
     Boolean HavingDorm;
+   // Boolean havingWife;
+    Date lastLoanDate;
+    String city;
+
 
     String userName=nationalCode;
     String password;
@@ -64,7 +69,7 @@ public class Student extends BaseEntity<Integer> {
                    String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, String enterYear,
                    Boolean gettingLoan, Boolean havingDorm, String userName, String password,
                    UniversityType universityType, SectionOfStudy sectionOfStudy, DayOrNight dayOrNight,
-                   MarriedOrSingle marriedOrSingle) {
+                   MarriedOrSingle marriedOrSingle,Date lastLoanDate,String city) {
         super(integer);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -83,6 +88,8 @@ public class Student extends BaseEntity<Integer> {
         this.sectionOfStudy = sectionOfStudy;
         this.dayOrNight = dayOrNight;
         this.marriedOrSingle = marriedOrSingle;
+        this.lastLoanDate=lastLoanDate;
+        this.city=city;
     }
 
     public void setPassword(String password) {

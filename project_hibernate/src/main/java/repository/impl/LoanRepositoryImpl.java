@@ -2,9 +2,13 @@ package repository.impl;
 
 import base.repository.impl.BaseEntityRepositoryImpl;
 import entity.Card;
+import entity.Loan;
 import entity.Student;
 import entity.enumuration.City;
+import entity.enumuration.MarriedOrSingle;
 import entity.enumuration.SectionOfStudy;
+import entity.enumuration.UniversityType;
+import repository.LoanRepository;
 import repository.StudentRepository;
 
 import javax.persistence.EntityManager;
@@ -13,39 +17,14 @@ import java.util.Date;
 
 import static entity.enumuration.City.*;
 
-
-public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Student> implements StudentRepository {
-    public StudentRepositoryImpl(EntityManager entityManager) {
+public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> implements LoanRepository {
+    public LoanRepositoryImpl(EntityManager entityManager) {
         super(entityManager);
     }
 
     @Override
-    public Class<Student> getEntityClass() {
-        return Student.class;
-    }
-
-
-/*    @Override
-    public Boolean canUseEducationLoan(Integer id) {
-        Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.ASSOCIATE_DEGREE ||
-                        student.getSectionOfStudy() == SectionOfStudy.MASTERS) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-    @Override
-    public Boolean isLoanDateEligible(Date lastLoanDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(lastLoanDate);
-        calendar.add(Calendar.MONTH, 6);
-        Date nextEligibleDate = calendar.getTime();
-        Date currentDate = new Date();
-
-        return currentDate.compareTo(nextEligibleDate) >= 0;
+    public Class<Loan> getEntityClass() {
+        return Loan.class;
     }
 
     @Override
@@ -62,6 +41,19 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
             entityManager.persist(card);
         }
         System.out.println("The amount of loan is added to your card.");
+    }
+
+
+
+    @Override
+    public Boolean isLoanDateEligible(Date lastLoanDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(lastLoanDate);
+        calendar.add(Calendar.MONTH, 6);
+        Date nextEligibleDate = calendar.getTime();
+        Date currentDate = new Date();
+
+        return currentDate.compareTo(nextEligibleDate) >= 0;
     }
 
 
@@ -100,37 +92,44 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
         System.out.println("The amount of loan is added to your card.");
     }
 
+    ////////////////////////////////////////////////////
+
     @Override
-    public void addHousingLoanOfStudentCollumn1(Integer id, Integer term, String city) {
+    public void addHousingLoanOfStudentCollumn1(Integer id, String city) {
         Student student = entityManager.find(Student.class, id);
-        if (student != null && !student.getTerm().equals(term) && student.getCity().equals(checkCityType1(city))) {
+
+        if (student != null  && student.getCity().equals(checkCityType1(city))
+        && !student.getGettingLoan() && !student.getHavingDorm() &&
+                student.getMarriedOrSingle()==MarriedOrSingle.MARRIED) {
             Card card = new Card();
             card.setStudent(student);
             card.setAmountOfCard(32000000);
             student.setLastLoanDate(new Date());
             entityManager.persist(card);
             System.out.println("The amount of loan is added to your card.");
-        } else if (student != null && !student.getTerm().equals(term)) {
-            checkCityType2(city);
-            {
+
+
+        } else if (student != null && student.getCity().equals(checkCityType2(city))){
+
                 Card card = new Card();
                 card.setStudent(student);
                 card.setAmountOfCard(26000000);
                 student.setLastLoanDate(new Date());
                 entityManager.persist(card);
                 System.out.println("The amount of loan is added to your card.");
-            }
+
         } else {
-            if (!student.getTerm().equals(term)) {
                 Card card = new Card();
                 card.setStudent(student);
                 card.setAmountOfCard(19500000);
-                student.setLastLoanDate(new Date());
+            assert student != null;
+            student.setLastLoanDate(new Date());
                 entityManager.persist(card);
                 System.out.println("The amount of loan is added to your card.");
             }
         }
-    }
+
+
     public City[] checkCityType1(String city) {
         return new City[]{ GILAN, ISFAHAN, AZERBAIJAN_EAST, FARS, KHUZESTAN, QOM, KHORASAN_RAZAVI, ALBORZ };
     }
@@ -139,6 +138,59 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
         return new City[]{ TEHRAN };
     }
 
+    ////////////////////////////////////////////////////
+
+
+
+    @Override
+    public void addPaymentOfUniversity(Integer id) {
+        Student student = entityManager.find(Student.class, id);
+        if (student != null &&
+                (student.getSectionOfStudy() == SectionOfStudy.ASSOCIATE_DEGREE ||
+                        student.getSectionOfStudy() == SectionOfStudy.MASTERS) &&
+                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))&&
+        student.getUniversityType()== UniversityType.Non_Governmental_University) {
+            Card card = new Card();
+            card.setStudent(student);
+            card.setAmountOfCard(1900000);
+            student.setLastLoanDate(new Date());
+            entityManager.persist(card);
+        }
+        System.out.println("The amount of loan is added to your card.");
     }
 
+    @Override
+    public void addPaymentOfUniversity2(Integer id) {
+        Student student = entityManager.find(Student.class, id);
+        if (student != null &&
+                (student.getSectionOfStudy() == SectionOfStudy.PROFESSIONAL_DOCTOR ||
+                        student.getSectionOfStudy() == SectionOfStudy.CONTINUOUS_PHD) &&
+                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))&&
+                student.getUniversityType()== UniversityType.Non_Governmental_University) {
+            Card card = new Card();
+            card.setStudent(student);
+            card.setAmountOfCard(22500000);
+            student.setLastLoanDate(new Date());
+            entityManager.persist(card);
+        }
+        System.out.println("The amount of loan is added to your card.");
+    }
+
+    @Override
+    public void addPaymentOfUniversity3(Integer id) {
+        Student student = entityManager.find(Student.class, id);
+        if (student != null &&
+                (student.getSectionOfStudy() == SectionOfStudy.UNCONTINUOUS_PHD) &&
+                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))&&
+                student.getUniversityType()== UniversityType.Non_Governmental_University) {
+            Card card = new Card();
+            card.setStudent(student);
+            card.setAmountOfCard(2600000);
+            student.setLastLoanDate(new Date());
+            entityManager.persist(card);
+        }
+        System.out.println("The amount of loan is added to your card.");
+    }
+
+    }
 
