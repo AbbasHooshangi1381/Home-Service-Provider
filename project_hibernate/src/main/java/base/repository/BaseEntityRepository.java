@@ -15,6 +15,8 @@ public interface BaseEntityRepository<ID extends Serializable, T extends BaseEnt
 
     Collection<T> findAll();
 
+    Optional<T> login(String username, String password);
+
     Optional<T> findById(ID id);
 
     void beginTransaction();

@@ -5,6 +5,7 @@ import base.repository.BaseEntityRepository;
 
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
@@ -52,6 +53,20 @@ public abstract class BaseEntityRepositoryImpl<ID extends Serializable, T extend
         return Optional.ofNullable(entityManager.find(getEntityClass(),id));
     }
 
+    @Override
+    public Optional<T> login(String username, String password) {
+        try {
+            return Optional.ofNullable(entityManager.createQuery("SELECT u FROM "
+                            + getEntityClass().getSimpleName()
+                            + " u WHERE u.username = :username AND u.password = :password", getEntityClass())
+                    .setParameter("username", username)
+                    .setParameter("password", password)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
     public abstract Class<T> getEntityClass();
 
     @Override
@@ -71,4 +86,5 @@ public abstract class BaseEntityRepositoryImpl<ID extends Serializable, T extend
         if (entityManager.getTransaction().isActive())
             entityManager.getTransaction().rollback();
     }
+
 }

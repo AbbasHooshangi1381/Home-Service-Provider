@@ -36,6 +36,11 @@ public class BaseEntityServiceImpl<ID extends Serializable, T extends BaseEntity
     }
 
     @Override
+    public Optional<T> login(String username, String password) {
+        return baseRepository.login(username, password);
+    }
+
+    @Override
     public void beginTransaction() {
         baseRepository.beginTransaction();
     }

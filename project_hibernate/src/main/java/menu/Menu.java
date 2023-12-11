@@ -6,6 +6,7 @@ import entity.enumuration.MarriedOrSingle;
 import entity.enumuration.SectionOfStudy;
 import entity.enumuration.UniversityType;
 import lombok.ToString;
+import util.ApplicationContext;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -153,26 +154,46 @@ public class Menu {
     }
 
 
-
     public static void login() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the current time (yyyy-MM-dd): ");
-        String inputTime = scanner.nextLine();
+        boolean isTrue = true;
+        while (isTrue) {
 
-        LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ISO_DATE);
+            System.out.print("Enter the current time (yyyy-MM-dd): ");
+            String inputTime = scanner.nextLine();
 
-        LocalDate firstStartDate = LocalDate.parse("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate firstEndDate = firstStartDate.plusWeeks(1);
+            System.out.println("enter username :");
+            String username = scanner.nextLine();
 
-        LocalDate secondStartDate = LocalDate.parse("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate secondEndDate = secondStartDate.plusWeeks(1);
+            System.out.println("enter password :");
+            String password = scanner.nextLine();
 
-        if (currentTime.isAfter(firstStartDate) && currentTime.isBefore(firstEndDate)) {
-            //       System.out.println("User can login to the system - First registration window.");
-        } else if (currentTime.isAfter(secondStartDate) && currentTime.isBefore(secondEndDate)) {
-            //       System.out.println("User can login to the system - Second registration window.");
-        } else {
-            System.out.println("User is outside the allowed time periods.");
+            LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ISO_DATE);
+
+            LocalDate firstStartDate = LocalDate.parse("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate firstEndDate = firstStartDate.plusWeeks(1);
+
+            LocalDate secondStartDate = LocalDate.parse("yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate secondEndDate = secondStartDate.plusWeeks(1);
+
+            if (currentTime.isAfter(firstStartDate) && currentTime.isBefore(firstEndDate)) {
+                //       System.out.println("User can login to the system - First registration window.");
+            } else if (currentTime.isAfter(secondStartDate) && currentTime.isBefore(secondEndDate)) {
+                //       System.out.println("User can login to the system - Second registration window.");
+            } else {
+                System.out.println("User is outside the allowed time periods.");
+            }
+
+
+            optionalStudent= ApplicationContext.getStudentServiceImpl().login(username,password);
+
+            if (optionalStudent.isPresent()){
+                //refrence to static method in menu
+                isTrue = false;
+            } else {
+                System.out.println("username and password UnCorrect !!!!\n");
+                System.out.println("Please Again ... ");
+
+
         }
     }
 }

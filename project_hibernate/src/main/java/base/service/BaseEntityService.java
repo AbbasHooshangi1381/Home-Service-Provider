@@ -15,6 +15,8 @@ public interface BaseEntityService<ID extends Serializable,T extends BaseEntity<
 
     Optional<T> findById(ID id);
 
+    Optional<T> login(String username, String password);
+
     void beginTransaction();
 
     void commitTransaction();
