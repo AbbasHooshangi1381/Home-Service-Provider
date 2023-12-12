@@ -33,4 +33,7 @@ public class Loan extends BaseEntity<Integer> {
     @Enumerated
     HowToPay howToPay;
 
+    @OneToOne
+    LoanCategory loanCategory;
+
 }

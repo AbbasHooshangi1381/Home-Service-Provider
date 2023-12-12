@@ -22,10 +22,6 @@ public class LoanCategory extends BaseEntity<Integer> {
 
     Integer countOfRemainingOfLoanInstallment;
 
-
-    @OneToOne
-    Loan loan;
-
     @Enumerated
     LoanType loanType;
 

@@ -25,9 +25,9 @@ public class Installment extends BaseEntity<Integer> {
 
     Double amountOfEachInstallment;
 
-    LocalDate timeOfPayInstallment;
+    LocalDate timeOfPayInstallment;// لیست پرداخت شده ها را به وسیله این فیلد نشان میدهیم
 
-    LocalDate timeOfDepositingInstallmentByUser;
+    LocalDate timeOfDepositingInstallmentByUser;//لبست پرداخت نشده ها را در به وسیله این می بینیم + مبلغ و تاریخ سر رسید
 
     @ManyToOne
     Loan loan;

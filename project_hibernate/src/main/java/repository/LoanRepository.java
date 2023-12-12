@@ -3,6 +3,8 @@ package repository;
 import base.domin.BaseEntity;
 import base.repository.BaseEntityRepository;
 import entity.Loan;
+import entity.enumuration.City;
+import entity.enumuration.UniversityType;
 
 import java.util.Date;
 
@@ -18,12 +20,12 @@ public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addHousingLoanOfStudent(Integer id , String city);
+    void addHousingLoanOfStudent(Integer id , City city);
 
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addPaymentOfUniversity(Integer id);
+    void addPaymentOfUniversity(Integer id , UniversityType universityType);
 
 }
