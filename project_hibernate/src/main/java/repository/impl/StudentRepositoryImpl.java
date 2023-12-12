@@ -23,7 +23,7 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
     public Class<Student> getEntityClass() {
         return Student.class;
     }
-
+}
 
 /*    @Override
     public Boolean canUseEducationLoan(Integer id) {
@@ -37,7 +37,7 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
             return false;
         }
     }*/
-    @Override
+/*    @Override
     public Boolean isLoanDateEligible(Date lastLoanDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(lastLoanDate);
@@ -139,6 +139,6 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
         return new City[]{ TEHRAN };
     }
 
-    }
+    }*/
 
 

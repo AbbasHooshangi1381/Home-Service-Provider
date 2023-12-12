@@ -20,7 +20,8 @@ public class LoanCategory extends BaseEntity<Integer> {
 
     Integer numberOfContract;
 
-    Double AmountOfRemainingOfLoan;
+    Integer countOfRemainingOfLoanInstallment;
+
 
     @OneToOne
     Loan loan;

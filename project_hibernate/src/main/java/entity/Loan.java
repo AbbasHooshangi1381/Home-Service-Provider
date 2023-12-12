@@ -1,11 +1,13 @@
 package entity;
 
 import base.domin.BaseEntity;
+import entity.enumuration.HowToPay;
 import entity.enumuration.LoanType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,7 +19,9 @@ import java.util.List;
 public class Loan extends BaseEntity<Integer> {
 
 
-    Integer countOfLoan;
+    Integer countOfLoan;//////
+
+    LocalDate dateOfStartLoan;
 
     @ManyToOne
     @JoinColumn(name = "students_id")
@@ -26,6 +30,7 @@ public class Loan extends BaseEntity<Integer> {
     @OneToMany
     List<Installment>installments;
 
-
+    @Enumerated
+    HowToPay howToPay;
 
 }

@@ -30,17 +30,32 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
     @Override
     public void addEducationLoanToCard(Integer id) {
         Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.ASSOCIATE_DEGREE ||
-                        student.getSectionOfStudy() == SectionOfStudy.MASTERS) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))) {
+        if (student != null && isLoanDateEligible(student.getLastLoanDate())) {
             Card card = new Card();
             card.setStudent(student);
-            card.setAmountOfCard(1900000);
-            student.setLastLoanDate(new Date());
-            entityManager.persist(card);
+
+            SectionOfStudy sectionOfStudy = student.getSectionOfStudy();
+            int amount = 0;
+
+            if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE || sectionOfStudy == SectionOfStudy.MASTERS) {
+                amount = 1900000;
+            } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD) {
+                amount = 22500000;
+            } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
+                amount = 2600000;
+            }
+
+            if (amount != 0) {
+                card.setAmountOfCard(amount);
+                student.setLastLoanDate(new Date());
+                entityManager.persist(card);
+
+                System.out.println("The amount of loan is added to your card.");
+                return;
+            }
         }
-        System.out.println("The amount of loan is added to your card.");
+
+        System.out.println("Failed to add the amount of loan to your card.");
     }
 
 
@@ -56,46 +71,10 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
         return currentDate.compareTo(nextEligibleDate) >= 0;
     }
 
-
-    //student of master, professional doctorate, continuous doctorate
-
-
-    @Override
-    public void addEducationLoanToCardCollumn2(Integer id) {
-        Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.PROFESSIONAL_DOCTOR ||
-                        student.getSectionOfStudy() == SectionOfStudy.CONTINUOUS_PHD) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))) {
-            Card card = new Card();
-            card.setStudent(student);
-            card.setAmountOfCard(22500000);
-            student.setLastLoanDate(new Date());
-            entityManager.persist(card);
-        }
-        System.out.println("The amount of loan is added to your card.");
-    }
-
-
-    @Override
-    public void addEducationLoanToCardCollumn3(Integer id) {
-        Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.UNCONTINUOUS_PHD) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))) {
-            Card card = new Card();
-            card.setStudent(student);
-            card.setAmountOfCard(2600000);
-            student.setLastLoanDate(new Date());
-            entityManager.persist(card);
-        }
-        System.out.println("The amount of loan is added to your card.");
-    }
-
     ////////////////////////////////////////////////////
 
     @Override
-    public void addHousingLoanOfStudentCollumn1(Integer id, String city) {
+    public void addHousingLoanOfStudent(Integer id, String city) {
         Student student = entityManager.find(Student.class, id);
 
         if (student != null  && student.getCity().equals(checkCityType1(city))
@@ -145,52 +124,35 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
     @Override
     public void addPaymentOfUniversity(Integer id) {
         Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.ASSOCIATE_DEGREE ||
-                        student.getSectionOfStudy() == SectionOfStudy.MASTERS) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))&&
-        student.getUniversityType()== UniversityType.Non_Governmental_University) {
+        if (student != null && student.getUniversityType() == UniversityType.Non_Governmental_University &&
+                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))) {
             Card card = new Card();
             card.setStudent(student);
-            card.setAmountOfCard(1900000);
-            student.setLastLoanDate(new Date());
-            entityManager.persist(card);
-        }
-        System.out.println("The amount of loan is added to your card.");
-    }
 
-    @Override
-    public void addPaymentOfUniversity2(Integer id) {
-        Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.PROFESSIONAL_DOCTOR ||
-                        student.getSectionOfStudy() == SectionOfStudy.CONTINUOUS_PHD) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))&&
-                student.getUniversityType()== UniversityType.Non_Governmental_University) {
-            Card card = new Card();
-            card.setStudent(student);
-            card.setAmountOfCard(22500000);
-            student.setLastLoanDate(new Date());
-            entityManager.persist(card);
-        }
-        System.out.println("The amount of loan is added to your card.");
-    }
+            SectionOfStudy sectionOfStudy = student.getSectionOfStudy();
+            int amount = 0;
 
-    @Override
-    public void addPaymentOfUniversity3(Integer id) {
-        Student student = entityManager.find(Student.class, id);
-        if (student != null &&
-                (student.getSectionOfStudy() == SectionOfStudy.UNCONTINUOUS_PHD) &&
-                (student.getLastLoanDate() == null || isLoanDateEligible(student.getLastLoanDate()))&&
-                student.getUniversityType()== UniversityType.Non_Governmental_University) {
-            Card card = new Card();
-            card.setStudent(student);
-            card.setAmountOfCard(2600000);
-            student.setLastLoanDate(new Date());
-            entityManager.persist(card);
+            if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE || sectionOfStudy == SectionOfStudy.MASTERS) {
+                amount = 1900000;
+            } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD) {
+                amount = 22500000;
+            } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
+                amount = 2600000;
+            }
+
+            if (amount != 0) {
+                card.setAmountOfCard(amount);
+                student.setLastLoanDate(new Date());
+                entityManager.persist(card);
+
+                System.out.println("The amount of loan is added to your card.");
+                return;
+            }
         }
-        System.out.println("The amount of loan is added to your card.");
+
+        System.out.println("Failed to add the amount of loan to your card.");
     }
 
     }
+
 

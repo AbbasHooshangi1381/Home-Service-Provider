@@ -1,7 +1,6 @@
 package entity;
 
 import base.domin.BaseEntity;
-import entity.enumuration.DayOrNight;
 import entity.enumuration.MarriedOrSingle;
 import entity.enumuration.SectionOfStudy;
 import entity.enumuration.UniversityType;
@@ -10,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.Date;
@@ -39,10 +37,8 @@ public class Student extends BaseEntity<Integer> {
     String enterYear;
     Boolean gettingLoan;
     Boolean HavingDorm;
-   // Boolean havingWife;
     Date lastLoanDate;
     String city;
-
 
     String userName=nationalCode;
     String password;
@@ -52,9 +48,6 @@ public class Student extends BaseEntity<Integer> {
 
     @Enumerated
     SectionOfStudy sectionOfStudy;
-
-    @Enumerated
-    DayOrNight dayOrNight;
 
     @Enumerated
     MarriedOrSingle marriedOrSingle;
@@ -68,7 +61,7 @@ public class Student extends BaseEntity<Integer> {
     public Student(Integer integer, String firstName, String lastName, String motherName, String birthCertificateNumber,
                    String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, String enterYear,
                    Boolean gettingLoan, Boolean havingDorm, String userName, String password,
-                   UniversityType universityType, SectionOfStudy sectionOfStudy, DayOrNight dayOrNight,
+                   UniversityType universityType, SectionOfStudy sectionOfStudy,
                    MarriedOrSingle marriedOrSingle,Date lastLoanDate,String city) {
         super(integer);
         this.firstName = firstName;
@@ -86,7 +79,6 @@ public class Student extends BaseEntity<Integer> {
         this.password = password;
         this.universityType = universityType;
         this.sectionOfStudy = sectionOfStudy;
-        this.dayOrNight = dayOrNight;
         this.marriedOrSingle = marriedOrSingle;
         this.lastLoanDate=lastLoanDate;
         this.city=city;

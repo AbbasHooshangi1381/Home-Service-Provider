@@ -22,6 +22,8 @@ public class Card extends BaseEntity<Integer> {
     @Enumerated
     NameOfBank nameOfBank;
 
+    Integer numberOfCard;
+
     Integer amountOfCard;
 
     LocalDate expiredDate;
@@ -33,4 +35,20 @@ public class Card extends BaseEntity<Integer> {
 
     Student student;
 
+    public Card(Integer integer, NameOfBank nameOfBank, Integer amountOfCard, LocalDate expiredDate,
+                Integer cvv2,Integer numberOfCard) {
+        super(integer);
+        this.nameOfBank = nameOfBank;
+        this.amountOfCard = 9000000;
+        this.expiredDate = expiredDate;
+        this.cvv2 = cvv2;
+        this.numberOfCard=numberOfCard;
+    }
+
+    public Card(Integer integer,  LocalDate expiredDate, Integer cvv2,Integer numberOfCard) {
+        super(integer);
+        this.expiredDate = expiredDate;
+        this.cvv2 = cvv2;
+        this.numberOfCard=numberOfCard;
+    }
 }

@@ -7,7 +7,7 @@ import entity.enumuration.City;
 import java.util.Date;
 
 public interface StudentRepository extends BaseEntityRepository<Integer, Student> {
-
+/*
     //---------------student of  ASSOCIATE_DEGREE, MASTERS----------------------------------
 
      void addEducationLoanToCard(Integer id);
@@ -26,6 +26,6 @@ public interface StudentRepository extends BaseEntityRepository<Integer, Student
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addHousingLoanOfStudentCollumn1(Integer id , Integer term , String city);
+    void addHousingLoanOfStudentCollumn1(Integer id , Integer term , String city);*/
 
 }

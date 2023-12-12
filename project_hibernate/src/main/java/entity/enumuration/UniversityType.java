@@ -2,7 +2,8 @@ package entity.enumuration;
 
 public enum UniversityType {
 
-    State_University, Non_Governmental_University
+    NIGHTLY_GOVERMENT,DAILY_GOVERMENT,NON_PROFIT_UNIVERSITIES,PAARDIS,EXCESS_CAPACITY,
+    PAYAM_NOOR,ELMI_CARBORDI,AZAD_UNIVERSITY
 
 
 

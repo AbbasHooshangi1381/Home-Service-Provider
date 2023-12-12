@@ -14,15 +14,11 @@ public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
 
     Boolean isLoanDateEligible(Date lastLoanDate);
 
-    void addEducationLoanToCardCollumn2(Integer id);
-
-    void addEducationLoanToCardCollumn3(Integer id);
-
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addHousingLoanOfStudentCollumn1(Integer id , String city);
+    void addHousingLoanOfStudent(Integer id , String city);
 
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
@@ -30,7 +26,4 @@ public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
 
     void addPaymentOfUniversity(Integer id);
 
-    void addPaymentOfUniversity2(Integer id);
-
-    void addPaymentOfUniversity3(Integer id);
 }

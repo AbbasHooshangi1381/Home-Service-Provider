@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,11 @@ public class Installment extends BaseEntity<Integer> {
 
     String timePaid;
 
-    Double countOfPaid;
+    Double amountOfEachInstallment;
+
+    LocalDate timeOfPayInstallment;
+
+    LocalDate timeOfDepositingInstallmentByUser;
 
     @ManyToOne
     Loan loan;
@@ -30,6 +35,5 @@ public class Installment extends BaseEntity<Integer> {
     @Enumerated
     LoanStatus loanStatus;
 
-    @Enumerated
-    HowToPay howToPay;
+
 }
