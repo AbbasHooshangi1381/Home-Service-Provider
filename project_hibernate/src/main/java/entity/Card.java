@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Card extends BaseEntity<Integer> {
 
@@ -35,7 +34,7 @@ public class Card extends BaseEntity<Integer> {
 
     Student student;
 
-    public Card(Integer integer, NameOfBank nameOfBank, Integer amountOfCard, LocalDate expiredDate,
+   public Card(Integer integer, NameOfBank nameOfBank, Integer amountOfCard, LocalDate expiredDate,
                 Integer cvv2,Integer numberOfCard) {
         super(integer);
         this.nameOfBank = nameOfBank;
@@ -45,10 +44,13 @@ public class Card extends BaseEntity<Integer> {
         this.numberOfCard=numberOfCard;
     }
 
-    public Card(Integer integer,  LocalDate expiredDate, Integer cvv2,Integer numberOfCard) {
+    public Card(Integer integer, NameOfBank nameOfBank, Integer numberOfCard, LocalDate expiredDate, Integer cvv2) {
         super(integer);
+        this.nameOfBank = nameOfBank;
+        this.numberOfCard = numberOfCard;
         this.expiredDate = expiredDate;
         this.cvv2 = cvv2;
-        this.numberOfCard=numberOfCard;
     }
+
+
 }

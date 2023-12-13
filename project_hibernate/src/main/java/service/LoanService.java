@@ -3,6 +3,8 @@ package service;
 import base.service.BaseEntityService;
 import entity.Loan;
 import entity.Student;
+import entity.enumuration.City;
+import entity.enumuration.UniversityType;
 
 import java.util.Date;
 
@@ -17,13 +19,12 @@ public interface LoanService extends BaseEntityService<Integer, Loan> {
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addHousingLoanOfStudent(Integer id , String city);
+    void addHousingLoanOfStudent(Integer id , City city);
 
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addPaymentOfUniversity(Integer id);
-
+    void addPaymentOfUniversity(Integer id , UniversityType universityType);
 
 }

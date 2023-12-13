@@ -3,6 +3,8 @@ package service.impl;
 import base.service.impl.BaseEntityServiceImpl;
 import entity.Loan;
 import entity.Student;
+import entity.enumuration.City;
+import entity.enumuration.UniversityType;
 import repository.LoanRepository;
 import repository.StudentRepository;
 import service.LoanService;
@@ -28,13 +30,13 @@ public class LoanServiceImpl extends BaseEntityServiceImpl<Integer, Loan, LoanRe
 
 
     @Override
-    public void addHousingLoanOfStudent(Integer id, String city) {
+    public void addHousingLoanOfStudent(Integer id, City city) {
         baseRepository.addHousingLoanOfStudent(id, city);
     }
 
     @Override
-    public void addPaymentOfUniversity(Integer id) {
-        baseRepository.addPaymentOfUniversity(id);
+    public void addPaymentOfUniversity(Integer id, UniversityType universityType) {
+        baseRepository.addPaymentOfUniversity(id, universityType);
     }
 
 

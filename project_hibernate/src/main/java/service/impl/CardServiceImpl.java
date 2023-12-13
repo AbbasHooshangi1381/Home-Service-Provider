@@ -10,6 +10,7 @@ import service.LoanService;
 
 public class CardServiceImpl  extends BaseEntityServiceImpl<Integer, Card, CardRepository>
         implements CardService {
+
     public CardServiceImpl(CardRepository baseRepository) {
         super(baseRepository);
     }

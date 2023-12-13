@@ -60,9 +60,9 @@ public class Student extends BaseEntity<Integer> {
 
     public Student(Integer integer, String firstName, String lastName, String motherName, String birthCertificateNumber,
                    String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, String enterYear,
-                   Boolean gettingLoan, Boolean havingDorm, String userName, String password,
+                   Boolean gettingLoan, Boolean havingDorm, Date lastLoanDate,String userName, String password,
                    UniversityType universityType, SectionOfStudy sectionOfStudy,
-                   MarriedOrSingle marriedOrSingle,Date lastLoanDate,String city) {
+                   MarriedOrSingle marriedOrSingle,String city) {
         super(integer);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -75,12 +75,12 @@ public class Student extends BaseEntity<Integer> {
         this.enterYear = enterYear;
         this.gettingLoan = gettingLoan;
         HavingDorm = havingDorm;
+        this.lastLoanDate=lastLoanDate;
         this.userName = nationalCode;
         this.password = password;
         this.universityType = universityType;
         this.sectionOfStudy = sectionOfStudy;
         this.marriedOrSingle = marriedOrSingle;
-        this.lastLoanDate=lastLoanDate;
         this.city=city;
     }
 
