@@ -10,6 +10,7 @@ import repository.StudentRepository;
 import service.LoanService;
 import service.StudentService;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class LoanServiceImpl extends BaseEntityServiceImpl<Integer, Loan, LoanRepository>
@@ -24,7 +25,7 @@ public class LoanServiceImpl extends BaseEntityServiceImpl<Integer, Loan, LoanRe
     }
 
     @Override
-    public Boolean isLoanDateEligible(Date lastLoanDate) {
+    public Boolean isLoanDateEligible(LocalDate lastLoanDate) {
         return baseRepository.isLoanDateEligible(lastLoanDate);
     }
 
@@ -37,6 +38,11 @@ public class LoanServiceImpl extends BaseEntityServiceImpl<Integer, Loan, LoanRe
     @Override
     public void addPaymentOfUniversity(Integer id, UniversityType universityType) {
         baseRepository.addPaymentOfUniversity(id, universityType);
+    }
+
+    @Override
+    public void graduatedStudent(Integer id) {
+        baseRepository.graduatedStudent(id);
     }
 
 

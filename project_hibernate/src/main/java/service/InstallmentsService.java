@@ -5,5 +5,6 @@ import entity.Installment;
 import entity.Loan;
 
 public interface InstallmentsService extends BaseEntityService<Integer, Installment> {
-    double installment(Integer id, Integer year);
+    void showInstallments(Integer id );
+     void graduatedStudent(Integer id);
 }

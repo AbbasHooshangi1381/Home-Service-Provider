@@ -6,6 +6,7 @@ import entity.Loan;
 import entity.enumuration.City;
 import entity.enumuration.UniversityType;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
@@ -14,7 +15,7 @@ public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
 
     void addEducationLoanToCard(Integer id);
 
-    Boolean isLoanDateEligible(Date lastLoanDate);
+    Boolean isLoanDateEligible(LocalDate lastLoanDate);
 
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
@@ -27,5 +28,7 @@ public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
     //-----------------------------------------------------------------------------------------------------------//
 
     void addPaymentOfUniversity(Integer id , UniversityType universityType);
+
+    void graduatedStudent(Integer id);
 
 }

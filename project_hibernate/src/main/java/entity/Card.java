@@ -44,8 +44,8 @@ public class Card extends BaseEntity<Integer> {
         this.numberOfCard=numberOfCard;
     }
 
-    public Card(Integer integer, NameOfBank nameOfBank, Integer numberOfCard, LocalDate expiredDate, Integer cvv2) {
-        super(integer);
+    public Card( NameOfBank nameOfBank, Integer numberOfCard, LocalDate expiredDate, Integer cvv2) {
+
         this.nameOfBank = nameOfBank;
         this.numberOfCard = numberOfCard;
         this.expiredDate = expiredDate;

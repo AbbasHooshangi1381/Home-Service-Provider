@@ -15,7 +15,12 @@ public class InstallmentsServiceImpl extends BaseEntityServiceImpl<Integer, Inst
     }
 
     @Override
-    public double installment(Integer id, Integer year) {
-        return baseRepository.installment(id,year);
+    public void showInstallments(Integer id) {
+         baseRepository.showInstallments(id);
+    }
+
+    @Override
+    public void graduatedStudent(Integer id) {
+        baseRepository.graduatedStudent(id);
     }
 }

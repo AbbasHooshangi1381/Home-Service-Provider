@@ -1,6 +1,7 @@
 package entity;
 
 import base.domin.BaseEntity;
+import entity.enumuration.EducationStatus;
 import entity.enumuration.MarriedOrSingle;
 import entity.enumuration.SectionOfStudy;
 import entity.enumuration.UniversityType;
@@ -37,7 +38,7 @@ public class Student extends BaseEntity<Integer> {
     String enterYear;
     Boolean gettingLoan;
     Boolean HavingDorm;
-    Date lastLoanDate;
+    LocalDate lastLoanDate;
     String city;
 
     String userName=nationalCode;
@@ -50,6 +51,9 @@ public class Student extends BaseEntity<Integer> {
     SectionOfStudy sectionOfStudy;
 
     @Enumerated
+    EducationStatus educationStatus;
+
+    @Enumerated
     MarriedOrSingle marriedOrSingle;
 
     @OneToMany(mappedBy = "student")
@@ -58,12 +62,12 @@ public class Student extends BaseEntity<Integer> {
     @OneToMany(mappedBy = "student")
     List<Loan> loans;
 
-    public Student(Integer integer, String firstName, String lastName, String motherName, String birthCertificateNumber,
+    public Student( String firstName, String lastName, String motherName, String birthCertificateNumber,
                    String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, String enterYear,
-                   Boolean gettingLoan, Boolean havingDorm, Date lastLoanDate,String userName, String password,
+                   Boolean gettingLoan, Boolean havingDorm, LocalDate lastLoanDate,String userName, String password,
                    UniversityType universityType, SectionOfStudy sectionOfStudy,
                    MarriedOrSingle marriedOrSingle,String city) {
-        super(integer);
+        //super(integer);
         this.firstName = firstName;
         this.lastName = lastName;
         this.motherName = motherName;

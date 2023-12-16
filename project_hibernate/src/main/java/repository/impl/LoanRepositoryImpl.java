@@ -12,12 +12,16 @@ import repository.LoanRepository;
 import repository.StudentRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 
 import static entity.enumuration.City.*;
 import static entity.enumuration.UniversityType.*;
+import static menu.Menu.registerLoanNotGraduated;
+import static menu.Menu.showRepaymentOptions;
 
 public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> implements LoanRepository {
     public LoanRepositoryImpl(EntityManager entityManager) {
@@ -49,7 +53,7 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
 
             if (amount != 0) {
                 card.setAmountOfCard(amount);
-                student.setLastLoanDate(new Date());
+                student.setLastLoanDate(LocalDate.now());
                 entityManager.persist(card);
 
                 System.out.println("The amount of loan is added to your card.");
@@ -63,12 +67,9 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
 
 
     @Override
-    public Boolean isLoanDateEligible(Date lastLoanDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(lastLoanDate);
-        calendar.add(Calendar.MONTH, 6);
-        Date nextEligibleDate = calendar.getTime();
-        Date currentDate = new Date();
+    public Boolean isLoanDateEligible(LocalDate lastLoanDate) {
+        LocalDate nextEligibleDate = lastLoanDate.plusMonths(6);
+        LocalDate currentDate = LocalDate.now();
 
         return currentDate.compareTo(nextEligibleDate) >= 0;
     }
@@ -85,7 +86,7 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
             Card card = new Card();
             card.setStudent(student);
             card.setAmountOfCard(32000000);
-            student.setLastLoanDate(new Date());
+            student.setLastLoanDate(LocalDate.now());
             entityManager.persist(card);
             System.out.println("The amount of loan is added to your card.");
 
@@ -94,7 +95,7 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
             Card card = new Card();
             card.setStudent(student);
             card.setAmountOfCard(26000000);
-            student.setLastLoanDate(new Date());
+            student.setLastLoanDate(LocalDate.now());
             entityManager.persist(card);
             System.out.println("The amount of loan is added to your card.");
 
@@ -104,7 +105,7 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
             card.setStudent(student);
             card.setAmountOfCard(19500000);
             assert student != null;
-            student.setLastLoanDate(new Date());
+            student.setLastLoanDate(LocalDate.now());
             entityManager.persist(card);
             System.out.println("The amount of loan is added to your card.");
 
@@ -145,7 +146,7 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
 
             if (amount != 0) {
                 card.setAmountOfCard(amount);
-                student.setLastLoanDate(new Date());
+                student.setLastLoanDate(LocalDate.now());
                 entityManager.persist(card);
 
                 System.out.println("The amount of loan is added to your card.");
@@ -156,8 +157,49 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
         System.out.println("Failed to add the amount of loan to your card.");
     }
 
+    @Override
+    public void graduatedStudent(Integer id) {
+            Query query = entityManager.createQuery("SELECT s.enterYear FROM Student s WHERE s.id = :id");
+            query.setParameter("id", id);
 
+            Object enterYear = query.getSingleResult();
 
-}
+            if (enterYear != null) {
+                int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+                int graduated = 0;
+
+                int yearsOfGraduation = currentYear - Integer.parseInt(enterYear.toString());
+
+                if (yearsOfGraduation >= 4 && yearsOfGraduation < 6) {
+                    graduated = Integer.parseInt(enterYear.toString()) + 4;
+                } else if (yearsOfGraduation >= 2 && yearsOfGraduation < 4) {
+                    graduated = Integer.parseInt(enterYear.toString()) + 2;
+                } else if (yearsOfGraduation >= 6 && yearsOfGraduation < 8) {
+                    graduated = Integer.parseInt(enterYear.toString()) + 6;
+                } else if (yearsOfGraduation >= 8 && yearsOfGraduation < 10) {
+                    graduated = Integer.parseInt(enterYear.toString()) + 8;
+                } else if (yearsOfGraduation >= 10 && yearsOfGraduation < 11) {
+                    graduated = Integer.parseInt(enterYear.toString()) + 10;
+                }
+
+                if (graduated != 0) {
+                    int remainingYears = graduated - currentYear;
+
+                    if (remainingYears > 0) {
+
+                        System.out.println("You can request a loan at the moment.");
+                        registerLoanNotGraduated();
+                    } else {
+                        System.out.println(" repayment page is disable for you ! ");
+
+                    }
+                }
+            } else {
+                System.out.println("Invalid student ID.");
+            }
+        }
+
+    }
+
 
 
