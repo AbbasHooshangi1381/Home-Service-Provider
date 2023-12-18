@@ -7,7 +7,7 @@ public enum SectionOfStudy {
 
     ASSOCIATE_DEGREE, MASTERS, PROFESSIONAL_DOCTOR, CONTINUOUS_PHD, UNCONTINUOUS_PHD;
 
-    final List<SectionOfStudy> sectionOfStudyList = Arrays.asList(SectionOfStudy.values());
+    //List<SectionOfStudy> sectionOfStudyList = Arrays.asList(SectionOfStudy.values());
 
 
 

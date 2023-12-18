@@ -7,6 +7,8 @@ import repository.InstallmentRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -22,29 +24,46 @@ public class InstalmentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
         return Installment.class;
     }
 
+
     @Override
-    public void showInstallments(Integer id) {
-        Query query = entityManager.createQuery("select l.countOfLoan from Loan l where l.id=:id");
+    public List<Installment> showInstallments(Integer id) {
+        Query query = entityManager.createQuery("SELECT l.countOfLoan FROM Loan l WHERE l.student.id = :id");
         query.setParameter("id", id);
 
         List<Integer> resultList = query.getResultList();
+        List<Installment> installments = new ArrayList<>();
+
         if (!resultList.isEmpty()) {
             Integer amountOfLoan = resultList.get(0);
-            double amountOfLoanWithProfit = amountOfLoan * 0.004;
-            double calculateAmountOfLoanPlusAmountOfProfit = amountOfLoanWithProfit + amountOfLoan;
-            double installmentsOfYear1 = calculateAmountOfLoanPlusAmountOfProfit / 31;
+            double amountOfLoanWithProfit = amountOfLoan * 0.04;
+            int installmentCounter = 1;
 
             for (int i = 1; i <= 5; i++) {
-                double installmentAmount = installmentsOfYear1 * Math.pow(2, i - 1);
-                System.out.println("Installment amount for year " + i + ": " + installmentAmount);
+                System.out.println("Year " + i + ":");
+                for (int j = 1; j <= 12; j++) {
+                    double installmentAmount = amountOfLoanWithProfit * Math.pow(2, i - 1) / 12;
+                    System.out.println("Month " + j + ": " + installmentAmount);
+                    Installment installment = new Installment();
+                    installment.setAmountOfEachInstallment(installmentAmount);
+                    installment.setTimeOfPayInstallment(LocalDate.of(i, j, 1));
+                    installment.setLoanStatus(LoanStatus.INCOMPLETE_PAID);
+                    installment.setPayNumber(installmentCounter);
+
+                    entityManager.persist(installment);
+                    installments.add(installment);
+
+                    installmentCounter++;
+                }
             }
         } else {
             System.out.println("No loan found with the provided ID");
         }
+
+        return installments;
     }
 
     @Override
-    public void graduatedStudent(Integer id) {
+    public String graduatedStudent(Integer id) {
         Query query = entityManager.createQuery("SELECT s.enterYear FROM Student s WHERE s.id = :id");
         query.setParameter("id", id);
 
@@ -72,29 +91,66 @@ public class InstalmentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
                 int remainingYears = graduated - currentYear;
 
                 if (remainingYears > 0) {
-                    System.out.println("You have " + remainingYears + " years remaining until graduation.");
-                    System.out.println("You cannot request a loan at the moment.");
+                    String message = "You have " + remainingYears + " years remaining until graduation. You cannot request a loan at the moment.";
+                    return message;
                 } else {
-                    System.out.println("You can access to the repayment page.");
                     showRepaymentOptions();
+                    String message = "You can access the repayment page.";
+                    return message;
                 }
             } else {
-                System.out.println("You can not see the repayment menu!!");
+                String message = "You cannot see the repayment menu!!";
+                return message;
             }
         } else {
-            System.out.println("Invalid student ID.");
+            String message = "Invalid student ID.";
+            return message;
         }
     }
 
     @Override
-    public List<Installment> unpaidInstallments(Integer id) {
-        Query query = entityManager.createQuery("SELECT i FROM Installment i WHERE i.id = :id AND" +
-                " i.loanStatus = :loanStatus");
-        query.setParameter("id", id);
+    public List<Installment> unpaidInstallments(Integer payNumber, Integer studentId) {
+        Query query = entityManager.createQuery(" FROM Installment i WHERE i.payNumber = :payNumber" +
+                " AND i.loanStatus = :loanStatus AND i.loan.student.id=:studentId");
+        query.setParameter("payNumber", payNumber);
         query.setParameter("loanStatus", LoanStatus.INCOMPLETE_PAID);
+        query.setParameter("studentId", studentId);
 
-        List<Installment> unpaidInstallmentsList = query.getResultList();
-        return unpaidInstallmentsList;
+        return query.getResultList();
+
+    }
+
+    @Override
+    public Boolean payInstallments(Integer payNumber, Integer studentId) {
+        Query query = entityManager.createQuery(" FROM Installment i WHERE i.payNumber = :payNumber");
+        query.setParameter("payNumber", payNumber);
+
+        List resultList = query.getResultList();
+
+        if (resultList != null) {
+            Query query1 = entityManager.createQuery("update Installment i set i.loanStatus =:paid where " +
+                    "i.loan.student.id=:studentId AND i.payNumber=:payNumber");
+            query1.setParameter("paid", LoanStatus.COMPLETE_PAID);
+            query1.setParameter("payNumber", payNumber);
+            query1.setParameter("studentId", studentId);
+            query1.executeUpdate();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public List<Installment> paidInstallments(Integer payNumber, Integer studentId) {
+        Query query = entityManager.createQuery(" FROM Installment i WHERE i.payNumber = :payNumber" +
+                " AND i.loanStatus = :loanStatus AND i.loan.student.id=:studentId");
+        query.setParameter("payNumber", payNumber);
+        query.setParameter("loanStatus", LoanStatus.COMPLETE_PAID);
+        query.setParameter("studentId", studentId);
+
+        return query.getResultList();
+
+
     }
 
 }

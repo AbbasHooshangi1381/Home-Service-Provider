@@ -41,8 +41,8 @@ public class LoanServiceImpl extends BaseEntityServiceImpl<Integer, Loan, LoanRe
     }
 
     @Override
-    public void graduatedStudent(Integer id) {
-        baseRepository.graduatedStudent(id);
+    public Boolean graduatedStudentForMenu(Integer id) {
+       return baseRepository.graduatedStudentForMenu(id);
     }
 
 

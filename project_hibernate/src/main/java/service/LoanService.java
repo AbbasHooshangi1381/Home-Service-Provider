@@ -28,7 +28,7 @@ public interface LoanService extends BaseEntityService<Integer, Loan> {
 
     void addPaymentOfUniversity(Integer id , UniversityType universityType);
 
-    void graduatedStudent(Integer id);
+    Boolean graduatedStudentForMenu(Integer id);
 
 
 }

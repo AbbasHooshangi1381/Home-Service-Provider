@@ -29,6 +29,6 @@ public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
 
     void addPaymentOfUniversity(Integer id , UniversityType universityType);
 
-    void graduatedStudent(Integer id);
+    Boolean graduatedStudentForMenu(Integer id);
 
 }

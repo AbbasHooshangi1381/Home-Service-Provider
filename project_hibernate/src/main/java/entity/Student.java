@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static menu.Menu.generateRandomPassword;
+
 @Entity
 @Getter
 @Setter
@@ -30,12 +32,12 @@ public class Student extends BaseEntity<Integer> {
     String firstName;
     String lastName;
     String motherName;
-    String BirthCertificateNumber;
+    Integer BirthCertificateNumber;
     String nationalCode;
     LocalDate dateOfBirth;
     String universityName;
     Integer term;
-    String enterYear;
+    Integer enterYear;
     Boolean gettingLoan;
     Boolean HavingDorm;
     LocalDate lastLoanDate;
@@ -59,29 +61,29 @@ public class Student extends BaseEntity<Integer> {
     @OneToMany(mappedBy = "student")
     List<Card> cards;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "students")
     List<Loan> loans;
 
-    public Student( String firstName, String lastName, String motherName, String birthCertificateNumber,
-                   String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, String enterYear,
-                   Boolean gettingLoan, Boolean havingDorm, LocalDate lastLoanDate,String userName, String password,
+    public Student( String firstName, String lastName, String motherName, Integer birthCertificateNumber,
+                   String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, Integer enterYear,
+                   Boolean gettingLoan, Boolean havingDorm, LocalDate lastLoanDate,
                    UniversityType universityType, SectionOfStudy sectionOfStudy,
                    MarriedOrSingle marriedOrSingle,String city) {
         //super(integer);
         this.firstName = firstName;
         this.lastName = lastName;
         this.motherName = motherName;
-        BirthCertificateNumber = birthCertificateNumber;
+        this.BirthCertificateNumber = birthCertificateNumber;
         this.nationalCode = nationalCode;
         this.dateOfBirth = dateOfBirth;
         this.universityName = universityName;
         this.term = term;
         this.enterYear = enterYear;
         this.gettingLoan = gettingLoan;
-        HavingDorm = havingDorm;
+        this.HavingDorm = havingDorm;
         this.lastLoanDate=lastLoanDate;
         this.userName = nationalCode;
-        this.password = password;
+        this.password = generateRandomPassword();
         this.universityType = universityType;
         this.sectionOfStudy = sectionOfStudy;
         this.marriedOrSingle = marriedOrSingle;

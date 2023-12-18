@@ -7,9 +7,13 @@ import java.util.List;
 
 public interface InstallmentRepository extends BaseEntityRepository<Integer, Installment> {
 
-     void showInstallments(Integer id);
+    List<Installment> showInstallments(Integer id);
 
-    void graduatedStudent(Integer id);
+    String graduatedStudent(Integer id);
 
-    List<Installment>unpaidInstallments(Integer id);
+    List<Installment> unpaidInstallments(Integer payNumber, Integer studentId);
+
+    Boolean payInstallments(Integer payNumber, Integer studentId);
+
+    List<Installment> paidInstallments(Integer payNumber, Integer studentId);
 }

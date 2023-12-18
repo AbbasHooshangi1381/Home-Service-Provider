@@ -4,6 +4,7 @@ import base.domin.BaseEntity;
 import entity.enumuration.NameOfBank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -21,12 +22,15 @@ public class Card extends BaseEntity<Integer> {
     @Enumerated
     NameOfBank nameOfBank;
 
+    @Range(min = 12, max = 14, message = "your number card is not true !!")
     Integer numberOfCard;
 
+    @Range(min = 0, max = 990000000, message = "you dont have amount !!")
     Integer amountOfCard;
 
     LocalDate expiredDate;
 
+    @Range(min = 3, max = 4, message = "your cvv2 is not true !!")
     Integer cvv2;
 
     @ManyToOne

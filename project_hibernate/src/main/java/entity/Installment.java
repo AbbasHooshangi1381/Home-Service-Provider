@@ -21,7 +21,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Installment extends BaseEntity<Integer> {
 
-    String timePaid;
+   // Boolean timePaid;
+
+    Integer payNumber;
 
     Double amountOfEachInstallment;
 

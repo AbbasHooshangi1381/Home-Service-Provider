@@ -8,19 +8,37 @@ import repository.LoanRepository;
 import service.InstallmentsService;
 import service.LoanService;
 
+import java.util.List;
+
 public class InstallmentsServiceImpl extends BaseEntityServiceImpl<Integer, Installment, InstallmentRepository>
         implements InstallmentsService {
     public InstallmentsServiceImpl(InstallmentRepository baseRepository) {
         super(baseRepository);
     }
 
+
     @Override
-    public void showInstallments(Integer id) {
-         baseRepository.showInstallments(id);
+    public List<Installment> showInstallments(Integer id) {
+        return baseRepository.showInstallments(id);
     }
 
     @Override
-    public void graduatedStudent(Integer id) {
-        baseRepository.graduatedStudent(id);
+    public String graduatedStudent(Integer id) {
+        return baseRepository.graduatedStudent(id);
+    }
+
+    @Override
+    public List<Installment> unpaidInstallments(Integer payNumber, Integer studentId) {
+        return baseRepository.unpaidInstallments(payNumber,studentId);
+    }
+
+    @Override
+    public Boolean payInstallments(Integer payNumber, Integer studentId) {
+        return baseRepository.payInstallments(payNumber,studentId);
+    }
+
+    @Override
+    public List<Installment> paidInstallments(Integer payNumber, Integer studentId) {
+        return baseRepository.paidInstallments(payNumber,studentId);
     }
 }

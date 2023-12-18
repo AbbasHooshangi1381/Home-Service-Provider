@@ -2,12 +2,10 @@ package repository.impl;
 
 import base.repository.impl.BaseEntityRepositoryImpl;
 import entity.Card;
+import entity.Installment;
 import entity.Loan;
 import entity.Student;
-import entity.enumuration.City;
-import entity.enumuration.MarriedOrSingle;
-import entity.enumuration.SectionOfStudy;
-import entity.enumuration.UniversityType;
+import entity.enumuration.*;
 import repository.LoanRepository;
 import repository.StudentRepository;
 
@@ -32,14 +30,17 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
     public Class<Loan> getEntityClass() {
         return Loan.class;
     }
+    Loan loan=new Loan();
+    Card card = new Card();
+    Installment installment=new Installment();
 
     @Override
     public void addEducationLoanToCard(Integer id) {
         Student student = entityManager.find(Student.class, id);
         if (student != null && isLoanDateEligible(student.getLastLoanDate())) {
-            Card card = new Card();
-            card.setStudent(student);
 
+            card.setStudent(student);
+            installment.setLoanStatus(LoanStatus.INCOMPLETE_PAID);
             SectionOfStudy sectionOfStudy = student.getSectionOfStudy();
             int amount = 0;
 
@@ -52,6 +53,8 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
             }
 
             if (amount != 0) {
+                loan.setCountOfLoan(amount);
+                loan.setDateOfStartLoan(LocalDate.now());
                 card.setAmountOfCard(amount);
                 student.setLastLoanDate(LocalDate.now());
                 entityManager.persist(card);
@@ -83,8 +86,11 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
         if (student != null && checkCityType1(city) && !student.getGettingLoan() &&
                 !student.getHavingDorm() && student.getMarriedOrSingle() == MarriedOrSingle.MARRIED) {
 
-            Card card = new Card();
+
+            installment.setLoanStatus(LoanStatus.INCOMPLETE_PAID);
             card.setStudent(student);
+            loan.setCountOfLoan(32000000);
+            loan.setDateOfStartLoan(LocalDate.now());
             card.setAmountOfCard(32000000);
             student.setLastLoanDate(LocalDate.now());
             entityManager.persist(card);
@@ -94,6 +100,8 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
 
             Card card = new Card();
             card.setStudent(student);
+            loan.setCountOfLoan(26000000);
+            loan.setDateOfStartLoan(LocalDate.now());
             card.setAmountOfCard(26000000);
             student.setLastLoanDate(LocalDate.now());
             entityManager.persist(card);
@@ -103,6 +111,8 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
 
             Card card = new Card();
             card.setStudent(student);
+            loan.setCountOfLoan(19500000);
+            loan.setDateOfStartLoan(LocalDate.now());
             card.setAmountOfCard(19500000);
             assert student != null;
             student.setLastLoanDate(LocalDate.now());
@@ -145,6 +155,8 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
             }
 
             if (amount != 0) {
+                loan.setCountOfLoan(amount);
+                loan.setDateOfStartLoan(LocalDate.now());
                 card.setAmountOfCard(amount);
                 student.setLastLoanDate(LocalDate.now());
                 entityManager.persist(card);
@@ -158,46 +170,48 @@ public class LoanRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Loan> 
     }
 
     @Override
-    public void graduatedStudent(Integer id) {
-            Query query = entityManager.createQuery("SELECT s.enterYear FROM Student s WHERE s.id = :id");
-            query.setParameter("id", id);
+    public Boolean graduatedStudentForMenu(Integer id) {
+        Query query = entityManager.createQuery("SELECT s.enterYear FROM Student s WHERE s.id = :id");
+        query.setParameter("id", id);
 
-            Object enterYear = query.getSingleResult();
+        Object enterYear = query.getSingleResult();
 
-            if (enterYear != null) {
-                int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-                int graduated = 0;
+        if (enterYear != null) {
+            int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+            int graduated = 0;
 
-                int yearsOfGraduation = currentYear - Integer.parseInt(enterYear.toString());
+            int yearsOfGraduation = currentYear - Integer.parseInt(enterYear.toString());
 
-                if (yearsOfGraduation >= 4 && yearsOfGraduation < 6) {
-                    graduated = Integer.parseInt(enterYear.toString()) + 4;
-                } else if (yearsOfGraduation >= 2 && yearsOfGraduation < 4) {
-                    graduated = Integer.parseInt(enterYear.toString()) + 2;
-                } else if (yearsOfGraduation >= 6 && yearsOfGraduation < 8) {
-                    graduated = Integer.parseInt(enterYear.toString()) + 6;
-                } else if (yearsOfGraduation >= 8 && yearsOfGraduation < 10) {
-                    graduated = Integer.parseInt(enterYear.toString()) + 8;
-                } else if (yearsOfGraduation >= 10 && yearsOfGraduation < 11) {
-                    graduated = Integer.parseInt(enterYear.toString()) + 10;
-                }
+            if (yearsOfGraduation >= 4 && yearsOfGraduation < 6) {
+                graduated = Integer.parseInt(enterYear.toString()) + 4;
+            } else if (yearsOfGraduation >= 2 && yearsOfGraduation < 4) {
+                graduated = Integer.parseInt(enterYear.toString()) + 2;
+            } else if (yearsOfGraduation >= 6 && yearsOfGraduation < 8) {
+                graduated = Integer.parseInt(enterYear.toString()) + 6;
+            } else if (yearsOfGraduation >= 8 && yearsOfGraduation < 10) {
+                graduated = Integer.parseInt(enterYear.toString()) + 8;
+            } else if (yearsOfGraduation >= 10 && yearsOfGraduation < 11) {
+                graduated = Integer.parseInt(enterYear.toString()) + 10;
+            }
 
-                if (graduated != 0) {
-                    int remainingYears = graduated - currentYear;
+            if (graduated != 0) {
+                int remainingYears = graduated - currentYear;
 
-                    if (remainingYears > 0) {
-
-                        System.out.println("You can request a loan at the moment.");
-                        registerLoanNotGraduated();
-                    } else {
-                        System.out.println(" repayment page is disable for you ! ");
-
-                    }
+                if (remainingYears > 0) {
+                    System.out.println("You can request a loan at the moment.");
+                    registerLoanNotGraduated();
+                    return true;
+                } else {
+                    System.out.println("Repayment page is disabled for you!");
+                    return false;
                 }
             } else {
                 System.out.println("Invalid student ID.");
             }
         }
+
+        return false;
+    }
 
     }
 
