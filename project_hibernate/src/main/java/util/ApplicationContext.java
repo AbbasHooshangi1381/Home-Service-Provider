@@ -1,21 +1,9 @@
 package util;
 
-import repository.CardRepository;
-import repository.InstallmentRepository;
-import repository.LoanRepository;
-import repository.StudentRepository;
-import repository.impl.CardRepositoryImpl;
-import repository.impl.InstalmentRepositoryImpl;
-import repository.impl.LoanRepositoryImpl;
-import repository.impl.StudentRepositoryImpl;
-import service.CardService;
-import service.InstallmentsService;
-import service.LoanService;
-import service.StudentService;
-import service.impl.CardServiceImpl;
-import service.impl.InstallmentsServiceImpl;
-import service.impl.LoanServiceImpl;
-import service.impl.StudentServiceImpl;
+import repository.*;
+import repository.impl.*;
+import service.*;
+import service.impl.*;
 
 import javax.persistence.EntityManager;
 
@@ -29,10 +17,12 @@ public class ApplicationContext {
     private static final CardService cardService;
     private static final InstallmentRepository installmentRepository;
     private static final InstallmentsService installmentService;
+    private static final WifeAndHomeRepository wifeAndHomeRepository;
+    private static final WifeAndHomeService wifeAndHomeService;
 
 
     static {
-        entityManager = EntityManerFactoryProvider.getEntityManagerFactory().createEntityManager();
+        entityManager = EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager();
         studentRepository = new StudentRepositoryImpl(entityManager);
         studentService = new StudentServiceImpl(studentRepository);
         loanRepository = new LoanRepositoryImpl(entityManager);
@@ -41,6 +31,8 @@ public class ApplicationContext {
         cardService = new CardServiceImpl(cardRepository);
         installmentRepository = new InstalmentRepositoryImpl(entityManager);
         installmentService = new InstallmentsServiceImpl(installmentRepository);
+        wifeAndHomeRepository=new WifeAndHomeRepositoryImpl(entityManager);
+        wifeAndHomeService=new WifeAndHomeServiceImpl(wifeAndHomeRepository);
     }
 
     public static StudentService getStudentServiceImpl() {
@@ -57,5 +49,9 @@ public class ApplicationContext {
 
     public static InstallmentsService getInstallmentService() {
         return installmentService;
+    }
+
+    public static WifeAndHomeService getWifeAndHomeService() {
+        return wifeAndHomeService;
     }
 }

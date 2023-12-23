@@ -3,11 +3,13 @@ package service.impl;
 import base.service.impl.BaseEntityServiceImpl;
 import entity.Installment;
 import entity.Loan;
+import entity.Student;
 import repository.InstallmentRepository;
 import repository.LoanRepository;
 import service.InstallmentsService;
 import service.LoanService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class InstallmentsServiceImpl extends BaseEntityServiceImpl<Integer, Installment, InstallmentRepository>
@@ -23,14 +25,10 @@ public class InstallmentsServiceImpl extends BaseEntityServiceImpl<Integer, Inst
     }
 
     @Override
-    public String graduatedStudent(Integer id) {
-        return baseRepository.graduatedStudent(id);
+    public List<Installment> unpaidInstallments(Integer id) {
+        return baseRepository.unpaidInstallments(id);
     }
 
-    @Override
-    public List<Installment> unpaidInstallments(Integer payNumber, Integer studentId) {
-        return baseRepository.unpaidInstallments(payNumber,studentId);
-    }
 
     @Override
     public Boolean payInstallments(Integer payNumber, Integer studentId) {
@@ -38,7 +36,7 @@ public class InstallmentsServiceImpl extends BaseEntityServiceImpl<Integer, Inst
     }
 
     @Override
-    public List<Installment> paidInstallments(Integer payNumber, Integer studentId) {
-        return baseRepository.paidInstallments(payNumber,studentId);
+    public List<Installment> paidInstallments( Integer studentId) {
+        return baseRepository.paidInstallments(studentId);
     }
 }

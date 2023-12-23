@@ -5,6 +5,7 @@ import base.repository.BaseEntityRepository;
 import base.service.BaseEntityService;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public class BaseEntityServiceImpl<ID extends Serializable, T extends BaseEntity<ID>, R extends BaseEntityRepository<ID, T>> implements BaseEntityService<ID, T> {
@@ -38,6 +39,11 @@ public class BaseEntityServiceImpl<ID extends Serializable, T extends BaseEntity
     @Override
     public Optional<T> login(String username, String password) {
         return baseRepository.login(username, password);
+    }
+
+    @Override
+    public List<T> saveAll(List<T> entities) {
+        return baseRepository.saveAll(entities);
     }
 
     @Override

@@ -5,11 +5,7 @@ import entity.enumuration.City;
 import entity.enumuration.LoanType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -23,10 +19,10 @@ public class LoanCategory extends BaseEntity<Integer> {
 
     Integer countOfRemainingOfLoanInstallment;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     LoanType loanType;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     City city;
 
 }

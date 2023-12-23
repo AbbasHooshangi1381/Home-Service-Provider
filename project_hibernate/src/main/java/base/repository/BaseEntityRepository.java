@@ -4,6 +4,7 @@ import base.domin.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -18,6 +19,8 @@ public interface BaseEntityRepository<ID extends Serializable, T extends BaseEnt
     Optional<T> login(String username, String password);
 
     Optional<T> findById(ID id);
+
+    List<T> saveAll(List<T> entities);
 
     void beginTransaction();
 

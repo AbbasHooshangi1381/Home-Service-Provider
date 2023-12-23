@@ -19,18 +19,17 @@ import java.util.List;
 public class Loan extends BaseEntity<Integer> {
 
 
-    Integer countOfLoan;
+    Double countOfLoan;
 
     LocalDate dateOfStartLoan;
 
     @ManyToOne
-    @JoinColumn(name = "students_id")
-    Student students;
+    Student student;
 
     @OneToMany(mappedBy = "loan")
     List<Installment>installments;
 
-    @Enumerated
+    @Enumerated(value = EnumType.STRING)
     HowToPay howToPay;
 
     @OneToOne

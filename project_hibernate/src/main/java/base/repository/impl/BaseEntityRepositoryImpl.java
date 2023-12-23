@@ -7,7 +7,9 @@ import base.repository.BaseEntityRepository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
@@ -26,12 +28,27 @@ public abstract class BaseEntityRepositoryImpl<ID extends Serializable, T extend
         return entity;
     }
 
+
+
     private T saveWithoutTransaction(T entity) {
         if (entity.getId() == null)
             entityManager.persist(entity);
         else
             entity = entityManager.merge(entity);
         return entity;
+    }
+
+    @Override
+    public List<T> saveAll(List<T> entities) {
+        beginTransaction();
+
+        List<T> savedEntities = new ArrayList<>();
+
+        for (T entity : entities) {
+            T savedEntity = saveWithoutTransaction(entity);
+            savedEntities.add(savedEntity);
+        }
+        return entities;
     }
 
     @Override
@@ -54,12 +71,12 @@ public abstract class BaseEntityRepositoryImpl<ID extends Serializable, T extend
     }
 
     @Override
-    public Optional<T> login(String username, String password) {
+    public Optional<T> login(String userName, String password) {
         try {
             return Optional.ofNullable(entityManager.createQuery("SELECT u FROM "
                             + getEntityClass().getSimpleName()
-                            + " u WHERE u.username = :username AND u.password = :password", getEntityClass())
-                    .setParameter("username", username)
+                            + " u WHERE u.userName = :userName AND u.password = :password", getEntityClass())
+                    .setParameter("userName", userName)
                     .setParameter("password", password)
                     .getSingleResult());
         } catch (NoResultException e) {

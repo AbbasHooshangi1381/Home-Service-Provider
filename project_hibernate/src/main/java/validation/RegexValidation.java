@@ -38,12 +38,21 @@ public class RegexValidation {
         return matcher.matches();
     }
 
-    public static boolean validationEnterYear(Integer enterYear) {
-        Pattern pattern = Pattern.compile("^\\d{4}$");
-        Matcher matcher = pattern.matcher(enterYear.toString());
+    public static boolean validateDate(String date) {
+        Pattern pattern = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
+        Matcher matcher = pattern.matcher(date);
         return matcher.matches();
     }
 
+    public static boolean validationNumberOfCard(String numberOfCard){
+        Pattern pattern =Pattern.compile("[0-9]{16}");
+        return numberOfCard.matches(pattern.pattern());
+    }
 
+    public static boolean validationNumberOfCvv2(Integer cvv2) {
+        Pattern pattern = Pattern.compile("[0-9]{3,4}");
+        Matcher matcher = pattern.matcher(cvv2.toString());
+        return matcher.matches();
+    }
 
 }

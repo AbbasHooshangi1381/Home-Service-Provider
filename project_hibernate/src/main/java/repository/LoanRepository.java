@@ -1,34 +1,34 @@
 package repository;
 
-import base.domin.BaseEntity;
 import base.repository.BaseEntityRepository;
 import entity.Loan;
+import entity.Student;
 import entity.enumuration.City;
 import entity.enumuration.UniversityType;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Optional;
 
 public interface LoanRepository extends BaseEntityRepository<Integer, Loan> {
 
     //---------------student of  ASSOCIATE_DEGREE, MASTERS----------------------------------
 
-    void addEducationLoanToCard(Integer id);
+  //  void addEducationLoanToCard(Integer id);
 
-    Boolean isLoanDateEligible(LocalDate lastLoanDate);
-
-    //-----------------------------------------------------------------------------------------------------------//
-    //-----------------------------------------------------------------------------------------------------------//
-    //-----------------------------------------------------------------------------------------------------------//
-
-    void addHousingLoanOfStudent(Integer id , City city);
+ //   boolean isLoanDateEligible(LocalDate lastLoanDate);
 
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
     //-----------------------------------------------------------------------------------------------------------//
 
-    void addPaymentOfUniversity(Integer id , UniversityType universityType);
+  //  void addHousingLoanOfStudent(Integer id , City city);
 
-    Boolean graduatedStudentForMenu(Integer id);
+    //-----------------------------------------------------------------------------------------------------------//
+    //-----------------------------------------------------------------------------------------------------------//
+    //-----------------------------------------------------------------------------------------------------------//
+
+  //  void addPaymentOfUniversity(Integer id , UniversityType universityType);
+
+    LocalDate graduatedStudentForMenu(Integer id);
 
 }

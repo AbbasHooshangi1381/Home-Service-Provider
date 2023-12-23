@@ -2,18 +2,18 @@ package repository;
 
 import base.repository.BaseEntityRepository;
 import entity.Installment;
+import entity.Student;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface InstallmentRepository extends BaseEntityRepository<Integer, Installment> {
 
     List<Installment> showInstallments(Integer id);
 
-    String graduatedStudent(Integer id);
-
-    List<Installment> unpaidInstallments(Integer payNumber, Integer studentId);
+    List<Installment>  unpaidInstallments(Integer id);
 
     Boolean payInstallments(Integer payNumber, Integer studentId);
 
-    List<Installment> paidInstallments(Integer payNumber, Integer studentId);
+    List<Installment> paidInstallments(Integer studentId);
 }
