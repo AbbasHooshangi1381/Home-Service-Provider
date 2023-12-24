@@ -2,23 +2,13 @@ package menu;
 
 import entity.*;
 import entity.enumuration.*;
-import lombok.SneakyThrows;
 import lombok.ToString;
-import repository.impl.LoanRepositoryImpl;
-import service.impl.LoanServiceImpl;
 import util.ApplicationContext;
 import util.DatesApp;
-import util.SecurityContext;
 import validation.RegexValidation;
-
-import javax.persistence.EntityManager;
-import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static menu.RegisterOrRefundMenu.registerOrRefund;
 import static menu.SignInMenu.signup;
 import static validation.RegexValidation.validateDate;
@@ -27,8 +17,6 @@ import static validation.RegexValidation.validateDate;
 @ToString
 public class Menu {
     public static Optional<Student> optionalStudent;
-    public static Optional<Loan> optionalLoan;
-
     public static final Scanner scanner = new Scanner(System.in);
 
     public static void firstMenu() throws SQLException {
@@ -63,7 +51,7 @@ public class Menu {
 
 //////////////////////////////////////////////////sign in start/////////////////////////////////////////////////////////
 
-    public static void signIn() {
+    public static void signIn() throws SQLException {
         boolean isTrue = true;
         while (isTrue) {
             System.out.println("enter username :");
@@ -81,6 +69,7 @@ public class Menu {
             } else {
                 System.out.println("username and password UnCorrect !!!!\n");
                 System.out.println("Please Again ... ");
+                firstMenu();
 
             }
 
@@ -95,22 +84,23 @@ public class Menu {
             SectionOfStudy sectionOfStudy = optionalStudent.get().getSectionOfStudy();
 
 
-            if (sectionOfStudy.equals(SectionOfStudy.ASSOCIATE_DEGREE)) {
+            if (sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_SENIOR) ||
+                    sectionOfStudy.equals(SectionOfStudy.CONTINUES_SENIOR)) {
                 LocalDate newDateForAssociateDegree = localDate.plusYears(4);
                 if (DatesApp.dateOfSystem.isAfter(newDateForAssociateDegree)) {
                     showRepaymentOptions();
                 } else {
                     System.out.println("you can not access to repayment menu.");
                 }
-            } else if (sectionOfStudy.equals(SectionOfStudy.MASTERS) ||
-                    sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_SENIOR)) {
+            } else if (sectionOfStudy.equals(SectionOfStudy.ASSOCIATE_DEGREE) ||
+                    sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_MASTER)) {
                 LocalDate newDateForMaster = localDate.plusYears(2);
                 if (DatesApp.dateOfSystem.isAfter(newDateForMaster)) {
                     showRepaymentOptions();
                 } else {
                     System.out.println("you can not access to repayment menu.");
                 }
-            } else if (sectionOfStudy.equals(SectionOfStudy.CONTINUES_SENIOR)) {
+            } else if (sectionOfStudy.equals(SectionOfStudy.CONTINUES_MASTER)) {
                 LocalDate newDateForContinuesSenior = localDate.plusYears(6);
                 if (DatesApp.dateOfSystem.isAfter(newDateForContinuesSenior)) {
                     showRepaymentOptions();
@@ -129,6 +119,7 @@ public class Menu {
 
         }
     }
+
     public static void showRepaymentOptions() {
         System.out.println("Repayment Options:");
         System.out.println("1. Installments that paid in past");
@@ -156,6 +147,7 @@ public class Menu {
         scanner.nextLine();
 
         ApplicationContext.getInstallmentService().payInstallments(payNumber, id);
+        System.out.println("you pay installemnt with the payNumber :"+payNumber);
     }
 
     public static void paidInstallments() {
@@ -170,12 +162,10 @@ public class Menu {
     public static void unPaidInstallments() {
         if (optionalStudent.isPresent()) {
             Integer id = optionalStudent.get().getId();
-            ApplicationContext.getInstallmentService().unpaidInstallments(id).stream().collect(Collectors.toList());
+            ApplicationContext.getInstallmentService().unpaidInstallments(id).forEach(System.out::println);
 
         }
     }
-    //////////////////////////////////////////////////installment is start/////////////////////////////////////////////////////////
-
 
     //////////////////////////////////////////////////validation is start/////////////////////////////////////////////////////////
     //////////////////////////////////////////////////validation is start/////////////////////////////////////////////////////////

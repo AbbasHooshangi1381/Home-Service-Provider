@@ -102,6 +102,23 @@ public class SignInMenu {
                 }
             }
 
+            System.out.println("Are you getting Housing Loan Until Now in this grade of university? " +
+                    "(write just (true) or (false))");
+            boolean gettingHoisingLoan = false;
+
+            while (true) {
+                String input = scanner.next().trim().toLowerCase();
+
+                if (input.equals("true")) {
+                    gettingHoisingLoan = true;
+                    break;
+                } else if (input.equals("false")) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter either 'true' or 'false'.");
+                }
+            }
+
 
             System.out.println("Are you getting Dorm? (write just (true) or (false))");
             boolean havingDorm = false;
@@ -113,7 +130,6 @@ public class SignInMenu {
                     havingDorm = true;
                     break;
                 } else if (input.equals("false")) {
-                    havingDorm = false;
                     break;
                 } else {
                     System.out.println("Invalid input. Please enter either 'true' or 'false'.");
@@ -139,18 +155,19 @@ public class SignInMenu {
             }
 
 
-            System.out.println("choose section of study : \n 1.ASSOCIATE_DEGREE \n 2.MASTERS \n 3.PROFESSIONAL_DOCTOR" +
-                    " \n 4.CONTINUOUS_PHD \n 5.UNCONTINUOUS_PHD \n 6.CONTINUES_SENIOR \n 7.UNCONTINUES_SENIOR  ");
+            System.out.println("choose section of study : \n 1.ASSOCIATE_DEGREE \n 2.CONTINUES_SENIOR \n 3.UNCONTINUES_SENIOR" +
+                    " \n 4.PROFESSIONAL_DOCTOR \n 5.CONTINUOUS_PHD \n 6.UNCONTINUOUS_PHD \n 7.CONTINUES_MASTER \n 8.UNCONTINUES_MASTER  ");
             int Study = scanner.nextInt();
             SectionOfStudy sectionOfStudy = null;
             switch (Study) {
                 case 1 -> sectionOfStudy = SectionOfStudy.ASSOCIATE_DEGREE;
-                case 2 -> sectionOfStudy = SectionOfStudy.MASTERS;
-                case 3 -> sectionOfStudy = SectionOfStudy.PROFESSIONAL_DOCTOR;
-                case 4 -> sectionOfStudy = SectionOfStudy.CONTINUOUS_PHD;
-                case 5 -> sectionOfStudy = SectionOfStudy.UNCONTINUOUS_PHD;
-                case 6 -> sectionOfStudy = SectionOfStudy.CONTINUES_SENIOR;
-                case 7 -> sectionOfStudy = SectionOfStudy.UNCONTINUES_SENIOR;
+                case 2 -> sectionOfStudy = SectionOfStudy.CONTINUES_SENIOR;
+                case 3 -> sectionOfStudy = SectionOfStudy.UNCONTINUES_SENIOR;
+                case 4 -> sectionOfStudy = SectionOfStudy.PROFESSIONAL_DOCTOR;
+                case 5 -> sectionOfStudy = SectionOfStudy.CONTINUOUS_PHD;
+                case 6 -> sectionOfStudy = SectionOfStudy.UNCONTINUOUS_PHD;
+                case 7 -> sectionOfStudy = SectionOfStudy.CONTINUES_MASTER;
+                case 8 -> sectionOfStudy = SectionOfStudy.UNCONTINUES_MASTER;
                 default -> System.out.println("Invalid input. Please enter a valid section of study.");
 
             }
@@ -173,7 +190,7 @@ public class SignInMenu {
             System.out.println("Password: " + password);
 
             Student student1 = new Student(firstName, lastName, motherName, shenasname, nationalCode, DOB, nameOfUniversity,
-                    numberOfTerm, enterYear, gettingLoan, havingDorm, lastTimeGetLoan,
+                    numberOfTerm, enterYear, gettingLoan,gettingHoisingLoan, havingDorm, lastTimeGetLoan,
                     universityType, sectionOfStudy, marriedOrSingle, city);
 
             ApplicationContext.getStudentServiceImpl().save(student1);

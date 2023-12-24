@@ -26,10 +26,19 @@ public class Installment extends BaseEntity<Integer> {
     LocalDate timeOfDepositingInstallmentByUser;//لبست پرداخت نشده ها را در به وسیله این می بینیم + مبلغ و تاریخ سر رسید
 
     @ManyToOne
+    @ToString.Exclude
     Loan loan;
 
     @Enumerated(value = EnumType.STRING)
     LoanStatus loanStatus;
 
-
+    @Override
+    public String toString() {
+        return "Installment{" +
+                "payNumber=" + payNumber +
+                ", amountOfEachInstallment=" + amountOfEachInstallment +
+                ", timeOfPayInstallment=" + timeOfPayInstallment +
+                ", loanStatus=" + loanStatus +
+                '}';
+    }
 }

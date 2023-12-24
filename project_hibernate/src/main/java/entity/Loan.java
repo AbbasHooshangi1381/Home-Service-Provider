@@ -29,9 +29,6 @@ public class Loan extends BaseEntity<Integer> {
     @OneToMany(mappedBy = "loan")
     List<Installment>installments;
 
-    @Enumerated(value = EnumType.STRING)
-    HowToPay howToPay;
-
     @OneToOne
     LoanCategory loanCategory;
 

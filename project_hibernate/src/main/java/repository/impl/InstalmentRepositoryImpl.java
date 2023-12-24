@@ -64,7 +64,8 @@ public class InstalmentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
 
     @Override
     public List<Installment> paidInstallments(Integer studentId) {
-        return entityManager.createQuery("  select i.timeOfPayInstallment,i.payNumber from Installment i WHERE" +
+        return entityManager.createQuery("  select i.timeOfDepositingInstallmentByUser" +
+                        ",i.payNumber from Installment i WHERE" +
                         "  i.loanStatus = :loanStatus AND i.loan.student.id=:studentId", Installment.class)
                 .setParameter("loanStatus", LoanStatus.COMPLETE_PAID)
                 .setParameter("studentId", studentId)

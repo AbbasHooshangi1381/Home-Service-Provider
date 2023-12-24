@@ -22,7 +22,6 @@ public class RegisterOrRefundMenu {
         System.out.println("-------------------------------------------");
         System.out.println("1. register for loan :");
         System.out.println("2. refund :");//بازپرداخت
-        System.out.println("3.show user panel : ");
 
         try {
             int select = scanner.nextInt();
@@ -31,8 +30,6 @@ public class RegisterOrRefundMenu {
                 case 1 -> checkAndRegisterTimeOfLoan();
 
                 case 2 -> refund();
-
-                case 3 -> showUserPanel();
 
                 default -> System.out.println("---Eror404---");
             }
@@ -58,60 +55,14 @@ public class RegisterOrRefundMenu {
         LocalDate secondEndDate = secondStartDate.plusWeeks(1);
 
         if (currentTime.isAfter(firstStartDate) && currentTime.isBefore(firstEndDate)) {
-            registerLoan();
+            saveCard();
         } else if (currentTime.isAfter(secondStartDate) && currentTime.isBefore(secondEndDate)) {
-            registerLoan();
+            saveCard();
         } else {
             System.out.println("User is outside the allowed time periods.");
 
         }
         return inputTime;
-    }
-
-
-    public static void registerLoan() throws SQLException {
-        boolean isTrue = true;
-        while (true) {
-
-            if (optionalStudent.isPresent()) {
-                LocalDate localDates = optionalStudent.get().getEnterYear();
-                SectionOfStudy sectionOfStudy = optionalStudent.get().getSectionOfStudy();
-
-                if (sectionOfStudy.equals(SectionOfStudy.ASSOCIATE_DEGREE)) {
-                    LocalDate newDateForAssociateDegree = localDates.plusYears(4);
-                    if (DatesApp.dateOfSystem.isAfter(newDateForAssociateDegree)) {
-                        System.out.println("you are graduated, so you can not get loan");
-                    } else {
-                        saveCard();
-                    }
-                } else if (sectionOfStudy.equals(SectionOfStudy.MASTERS) ||
-                        sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_SENIOR)) {
-                    LocalDate newDateForMaster = localDates.plusYears(2);
-                    if (DatesApp.dateOfSystem.isAfter(newDateForMaster)) {
-                        System.out.println("you are graduated, so you can not get loan");
-                    } else {
-                        saveCard();
-                    }
-                } else if (sectionOfStudy.equals(SectionOfStudy.CONTINUES_SENIOR)) {
-                    LocalDate newDateForContinuesSenior = localDates.plusYears(6);
-                    if (DatesApp.dateOfSystem.isAfter(newDateForContinuesSenior)) {
-                        System.out.println("you are graduated, so you can not get loan");
-                    } else {
-                        saveCard();
-                    }
-                } else if (sectionOfStudy.equals(SectionOfStudy.UNCONTINUOUS_PHD) ||
-                        sectionOfStudy.equals(SectionOfStudy.PROFESSIONAL_DOCTOR)) {
-                    LocalDate newDateForDoctor = localDates.plusYears(5);
-                    if (DatesApp.dateOfSystem.isAfter(newDateForDoctor)) {
-                        System.out.println("you are graduated, so you can not get loan");
-                    } else {
-                        saveCard();
-                    }
-                }
-
-            }
-            break;
-        }
     }
 
     public static void saveCard() throws SQLException {
@@ -158,11 +109,12 @@ public class RegisterOrRefundMenu {
             ApplicationContext.getCardService().save(card);
 
             System.out.println("Card succefully added to data base !!");
-            registerLoanNotGraduated();
+            chooseEducationOrPaymentOrHousingLoanToGetFromUniversity();
+
         }
     }
 
-    public static void registerLoanNotGraduated() {
+    public static void chooseEducationOrPaymentOrHousingLoanToGetFromUniversity() {
         System.out.println("which loan you want ?");
         System.out.println("1.Education Loan");
         System.out.println("2.Housing Loan");
@@ -186,22 +138,30 @@ public class RegisterOrRefundMenu {
                     if (lastLoanDates != null) {
                         if (isLoanDateEligible(lastLoanDates)) {
 
-                            if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE || sectionOfStudy == SectionOfStudy.MASTERS
-                                    || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR || sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
+                            if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE
+                                    || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR ||
+                                    sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
                                 amount = 1900000.00;
-                            } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD) {
-                                amount = 22500000.00;
+                            } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR ||
+                                    sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD ||
+                                    sectionOfStudy == SectionOfStudy.CONTINUES_MASTER
+                                    || sectionOfStudy == SectionOfStudy.UNCONTINUES_MASTER) {
+                                amount = 2250000.00;
                             } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
                                 amount = 2600000.00;
                             }
                         }
                     } else {
 
-                        if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE || sectionOfStudy == SectionOfStudy.MASTERS
-                                || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR || sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
+                        if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE
+                                || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR ||
+                                sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
                             amount = 1900000.00;
-                        } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD) {
-                            amount = 22500000.00;
+                        } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR ||
+                                sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD ||
+                                sectionOfStudy == SectionOfStudy.CONTINUES_MASTER
+                                || sectionOfStudy == SectionOfStudy.UNCONTINUES_MASTER) {
+                            amount = 2250000.00;
                         } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
                             amount = 2600000.00;
                         }
@@ -216,7 +176,6 @@ public class RegisterOrRefundMenu {
                         assert student1 != null;
                         student1.setLastLoanDate(LocalDate.now());
                         installment.setLoanStatus(LoanStatus.INCOMPLETE_PAID);
-
                         installment.setLoan(loan);
 
                         ApplicationContext.getStudentServiceImpl().save(student1);
@@ -224,7 +183,7 @@ public class RegisterOrRefundMenu {
                         ApplicationContext.getCardService().save(card);
                         ApplicationContext.getInstallmentService().save(installment);
                         System.out.println("The amount of loan is added to your card.");
-                        registerOrRefund();
+                        showUserPanel();
                     }
 
 
@@ -245,7 +204,7 @@ public class RegisterOrRefundMenu {
                     Student student1 = ApplicationContext.getStudentServiceImpl().findById(id).orElse(null);
                     City[] cities = City.values();
                     MarriedOrSingle marriedOrSingle = optionalStudent.get().getMarriedOrSingle();
-                    Boolean gettingLoan = optionalStudent.get().getGettingLoan();
+                    Boolean gettingHousingLoan = optionalStudent.get().getGettingHousingLoan();
                     Boolean havingDorm = optionalStudent.get().getHavingDorm();
                     String city = optionalStudent.get().getCity();
 
@@ -253,7 +212,7 @@ public class RegisterOrRefundMenu {
                     for (City enumCity : cities) {
                         if (enumCity.name().equalsIgnoreCase(city)) {
 
-                            if (!gettingLoan && !havingDorm &&
+                            if (!gettingHousingLoan && !havingDorm &&
                                     marriedOrSingle == MarriedOrSingle.MARRIED) {
                                 installment.setLoanStatus(LoanStatus.INCOMPLETE_PAID);
                                 card.setStudent(student1);
@@ -267,7 +226,8 @@ public class RegisterOrRefundMenu {
                             }
 
 
-                        } else if (Objects.equals(city, "TEHRAN")) {
+                        } else if (!gettingHousingLoan && !havingDorm &&
+                                marriedOrSingle == MarriedOrSingle.MARRIED && Objects.equals(city, "TEHRAN")) {
                             card.setStudent(student1);
                             loan.setCountOfLoan(26000000.00);
                             loan.setDateOfStartLoan(LocalDate.now());
@@ -277,7 +237,8 @@ public class RegisterOrRefundMenu {
                             assert student1 != null;
                             student1.setLastLoanDate(LocalDate.now());
 
-                        } else {
+                        } else if (!gettingHousingLoan && !havingDorm &&
+                                marriedOrSingle == MarriedOrSingle.MARRIED) {
                             loan.setCountOfLoan(19500000.00);
                             loan.setDateOfStartLoan(LocalDate.now());
                             loan.setStudent(student1);
@@ -319,23 +280,31 @@ public class RegisterOrRefundMenu {
                         double amount = 0.00;
                         if (lastLoanDate1 != null) {
                             if (isLoanDateEligible(lastLoanDate1)) {
-                                if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE || sectionOfStudy == SectionOfStudy.MASTERS
-                                        || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR || sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
-                                    amount = 1900000.00;
-                                } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD) {
-                                    amount = 2250000.00;
-                                } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
+                                if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE
+                                        || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR ||
+                                        sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
+                                    amount = 1300000.00;
+                                } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR
+                                        || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD ||
+                                        sectionOfStudy == SectionOfStudy.UNCONTINUES_MASTER ||
+                                        sectionOfStudy == SectionOfStudy.CONTINUES_MASTER) {
                                     amount = 2600000.00;
+                                } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
+                                    amount = 6500000.00;
                                 }
                             }
                         } else {
-                            if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE || sectionOfStudy == SectionOfStudy.MASTERS
-                                    || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR || sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
-                                amount = 1900000.00;
-                            } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR || sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD) {
-                                amount = 2250000.00;
-                            } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
+                            if (sectionOfStudy == SectionOfStudy.ASSOCIATE_DEGREE
+                                    || sectionOfStudy == SectionOfStudy.CONTINUES_SENIOR ||
+                                    sectionOfStudy == SectionOfStudy.UNCONTINUES_SENIOR) {
+                                amount = 1300000.00;
+                            } else if (sectionOfStudy == SectionOfStudy.PROFESSIONAL_DOCTOR ||
+                                    sectionOfStudy == SectionOfStudy.CONTINUOUS_PHD ||
+                                    sectionOfStudy == SectionOfStudy.UNCONTINUES_MASTER ||
+                                    sectionOfStudy == SectionOfStudy.CONTINUES_MASTER) {
                                 amount = 2600000.00;
+                            } else if (sectionOfStudy == SectionOfStudy.UNCONTINUOUS_PHD) {
+                                amount = 6500000.00;
                             }
                         }
 
@@ -347,6 +316,7 @@ public class RegisterOrRefundMenu {
                             card.setStudent(student1);
                             assert student1 != null;
                             student1.setLastLoanDate(LocalDate.now());
+
                         }
                     }
 
@@ -354,40 +324,50 @@ public class RegisterOrRefundMenu {
                     ApplicationContext.getStudentServiceImpl().save(student1);
                     ApplicationContext.getCardService().save(card);
                     System.out.println("The amount of the loan is added to your card.");
-                    registerOrRefund();
-                }
+                    showUserPanel();
+                } else
+                    System.out.println("the amount of loan did not add to your card !");
                 registerOrRefund();
             }
 
 
         }
-
     }
 
     public static void addWife() {
-        System.out.println("Enter firstName :  ");
-        String firstName;
-        firstName = validationFirstName();
+        WifeAndHome wifeAndHome = new WifeAndHome();
+        if (optionalStudent.isPresent()) {
+            Integer id = optionalStudent.get().getId();
+            Student student1 = ApplicationContext.getStudentServiceImpl().findById(id).orElse(null);
+
+            System.out.println("Enter firstName :  ");
+            String firstName;
+            firstName = validationFirstName();
 
 
-        System.out.println("Enter lastName : ");
-        String lastName;
-        lastName = validationLastName();
+            System.out.println("Enter lastName : ");
+            String lastName;
+            lastName = validationLastName();
 
-        System.out.println("Enter your location  :  ");
-        String location = scanner.next();
-
-
-        System.out.println("Enter number of renting : ");
-        String numberOfRenting = scanner.next();
-
-        WifeAndHome wifeAndHome = new WifeAndHome(firstName, lastName, location, numberOfRenting);
-        System.out.println("information of wife and house is added to database !");
-        ApplicationContext.getWifeAndHomeService().save(wifeAndHome);
+            System.out.println("Enter your location  :  ");
+            String location = scanner.next();
 
 
+            System.out.println("Enter number of renting : ");
+            String numberOfRenting = scanner.next();
+
+            wifeAndHome.setFirstName(firstName);
+            wifeAndHome.setLastName(lastName);
+            wifeAndHome.setLocationOfHouse(location);
+            wifeAndHome.setNumberOfRentHouse(numberOfRenting);
+            wifeAndHome.setStudent(student1);
+            ApplicationContext.getWifeAndHomeService().save(wifeAndHome);
+            System.out.println("information of wife and house is added to database !");
+            showUserPanel();
+
+
+        }
     }
-
 
     public static boolean isLoanDateEligible(LocalDate lastLoanDate) {
         LocalDate nextEligibleDate = lastLoanDate.plusMonths(6);
@@ -395,7 +375,6 @@ public class RegisterOrRefundMenu {
 
         return currentDate.isAfter(nextEligibleDate);
     }
-
 
 
     public static void showUserPanel() {
@@ -439,101 +418,11 @@ public class RegisterOrRefundMenu {
             ApplicationContext.getInstallmentService().saveAll(installmentList);
             ApplicationContext.getLoanService().save(loan1);
             System.out.println("installments are saved to the database.");
+            registerOrRefund();
         } else
             System.out.println("installments (not) save to dataBase .");
         registerOrRefund();
 
-    }
-
-
-
-    public static void refund() {
-
-        if (optionalStudent.isPresent()) {
-            LocalDate localDate = optionalStudent.get().getEnterYear();
-            SectionOfStudy sectionOfStudy = optionalStudent.get().getSectionOfStudy();
-
-
-            if (sectionOfStudy.equals(SectionOfStudy.ASSOCIATE_DEGREE)) {
-                LocalDate newDateForAssociateDegree = localDate.plusYears(4);
-                if (DatesApp.dateOfSystem.isAfter(newDateForAssociateDegree)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            } else if (sectionOfStudy.equals(SectionOfStudy.MASTERS) ||
-                    sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_SENIOR)) {
-                LocalDate newDateForMaster = localDate.plusYears(2);
-                if (DatesApp.dateOfSystem.isAfter(newDateForMaster)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            } else if (sectionOfStudy.equals(SectionOfStudy.CONTINUES_SENIOR)) {
-                LocalDate newDateForContinuesSenior = localDate.plusYears(6);
-                if (DatesApp.dateOfSystem.isAfter(newDateForContinuesSenior)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            } else if (sectionOfStudy.equals(SectionOfStudy.UNCONTINUOUS_PHD) ||
-                    sectionOfStudy.equals(SectionOfStudy.PROFESSIONAL_DOCTOR)) {
-                LocalDate newDateForDoctor = localDate.plusYears(5);
-                if (DatesApp.dateOfSystem.isAfter(newDateForDoctor)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            }
-
-        }
-        System.out.println("........................");
-     //   signIn();
-    }
-    public static void showRepaymentOptions() {
-        System.out.println("Repayment Options:");
-        System.out.println("1. Installments that paid in past");
-        System.out.println("2. Unpaid Installments");
-        System.out.println("3. Pay Installment");
-        Integer input = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (input) {
-            case 1 -> paidInstallments();
-            case 2 -> unPaidInstallments();
-            case 3 -> payInstallments();
-
-        }
-    }
-
-    public static void payInstallments() {
-
-        System.out.println("please enter the payNumber:");
-        int payNumber = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("please enter your id:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        ApplicationContext.getInstallmentService().payInstallments(payNumber, id);
-    }
-
-    public static void paidInstallments() {
-
-        if (optionalStudent.isPresent()) {
-            Integer id = optionalStudent.get().getId();
-            ApplicationContext.getInstallmentService().paidInstallments(id).forEach(System.out::println);
-        }
-    }
-
-
-    public static void unPaidInstallments() {
-        if (optionalStudent.isPresent()) {
-            Integer id = optionalStudent.get().getId();
-            ApplicationContext.getInstallmentService().unpaidInstallments(id).stream().collect(Collectors.toList());
-
-        }
     }
 
 

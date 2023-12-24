@@ -11,7 +11,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import static menu.Menu.generateRandomPassword;
+import static menu.SignInMenu.generateRandomPassword;
+
 
 @Entity
 @Getter
@@ -33,6 +34,7 @@ public class Student extends BaseEntity<Integer> {
     Integer term;
     LocalDate enterYear;
     Boolean gettingLoan;
+    Boolean gettingHousingLoan;
     Boolean HavingDorm;
     @Column(nullable = true)
     LocalDate lastLoanDate;
@@ -62,7 +64,7 @@ public class Student extends BaseEntity<Integer> {
 
     public Student(String firstName, String lastName, String motherName, Integer birthCertificateNumber,
                    String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, LocalDate enterYear,
-                   Boolean gettingLoan, Boolean havingDorm, LocalDate lastLoanDate,
+                   Boolean gettingLoan,Boolean gettingHousingLoan , Boolean havingDorm, LocalDate lastLoanDate,
                    UniversityType universityType, SectionOfStudy sectionOfStudy,
                    MarriedOrSingle marriedOrSingle, String city) {
         this.firstName = firstName;
@@ -75,6 +77,7 @@ public class Student extends BaseEntity<Integer> {
         this.term = term;
         this.enterYear = enterYear;
         this.gettingLoan = gettingLoan;
+        this.gettingHousingLoan=gettingHousingLoan;
         this.HavingDorm = havingDorm;
         this.lastLoanDate=lastLoanDate;
         this.userName = nationalCode;
