@@ -41,4 +41,6 @@ public class Installment extends BaseEntity<Integer> {
                 ", loanStatus=" + loanStatus +
                 '}';
     }
+
+
 }

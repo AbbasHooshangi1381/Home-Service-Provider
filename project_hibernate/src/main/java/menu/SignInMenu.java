@@ -189,7 +189,7 @@ public class SignInMenu {
             System.out.println("Username: " + nationalCode);
             System.out.println("Password: " + password);
 
-            Student student1 = new Student(firstName, lastName, motherName, shenasname, nationalCode, DOB, nameOfUniversity,
+            Student student1 = new Student(firstName, lastName, motherName, shenasname, nationalCode, password ,DOB, nameOfUniversity,
                     numberOfTerm, enterYear, gettingLoan,gettingHoisingLoan, havingDorm, lastTimeGetLoan,
                     universityType, sectionOfStudy, marriedOrSingle, city);
 
@@ -215,7 +215,7 @@ public class SignInMenu {
         password.append(uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length())));
         password.append(specialCharacters.charAt(random.nextInt(specialCharacters.length())));
 
-        for (int i = 2; i < 8; i++) {
+        for (int i = 1; i < 8; i++) {
             int randomIndex = random.nextInt(lowercaseLettersAndNumbers.length());
             char randomChar = lowercaseLettersAndNumbers.charAt(randomIndex);
             password.append(randomChar);

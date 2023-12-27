@@ -15,5 +15,5 @@ public interface InstallmentRepository extends BaseEntityRepository<Integer, Ins
 
     Boolean payInstallments(Integer payNumber, Integer studentId);
 
-    List<Installment> paidInstallments(Integer studentId);
+    List<Object[]> paidInstallments(Integer id);
 }

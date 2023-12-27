@@ -36,7 +36,7 @@ public class InstallmentsServiceImpl extends BaseEntityServiceImpl<Integer, Inst
     }
 
     @Override
-    public List<Installment> paidInstallments( Integer studentId) {
-        return baseRepository.paidInstallments(studentId);
+    public List<Object[]> paidInstallments( Integer id) {
+        return baseRepository.paidInstallments(id);
     }
 }

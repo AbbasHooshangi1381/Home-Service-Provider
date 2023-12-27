@@ -29,49 +29,50 @@ public class InstalmentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
     }
 
 
-    @Override
-    public List<Installment> unpaidInstallments(Integer id) {
-            return entityManager.createQuery("SELECT i FROM Installment i " +
-                            "WHERE i.loan.student.id = :id " +
-                            "AND i.loanStatus = :loanStatus", Installment.class)
-                    .setParameter("loanStatus",LoanStatus.INCOMPLETE_PAID)
-                    .setParameter("id", id)
-                    .getResultList();
-        }
 
     @Override
     public Boolean payInstallments(Integer payNumber, Integer studentId) {
-        Query query = entityManager.createQuery("  select i from Installment i WHERE i.payNumber = :payNumber" +
-                " and i.loan.student.id= :studentId");
-        query.setParameter("payNumber", payNumber);
-        query.setParameter("studentId", studentId);
-        List resultList = query.getResultList();
 
+        try {
+            beginTransaction();
+            List<Integer> installmentIds = entityManager.createQuery("SELECT i.id FROM Installment i WHERE i.payNumber = :payNumber AND i.loan.student.id = :studentId", Integer.class)
+                    .setParameter("payNumber", payNumber)
+                    .setParameter("studentId", studentId)
+                    .getResultList();
 
-        if (resultList != null) {
-            Query query1 = entityManager.createQuery("update Installment i set i.loanStatus = :COMPLETE_PAID where " +
-                    "i.loan.student.id= :studentId AND i.payNumber= :paynumber");
-            query1.setParameter("COMPLETE_PAID", LoanStatus.COMPLETE_PAID);
-            query1.setParameter("paynumber", payNumber);
-            query1.setParameter("studentId", studentId);
-            query1.executeUpdate();
-            return true;
-        } else {
-            return false;
+            if (installmentIds != null && !installmentIds.isEmpty()) {
+                entityManager.createQuery("UPDATE Installment i SET i.loanStatus = :completePaid WHERE i.id IN :installmentIds")
+                        .setParameter("completePaid", LoanStatus.COMPLETE_PAID)
+                        .setParameter("installmentIds", installmentIds)
+                        .executeUpdate();
+
+                commitTransaction();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
+    }
 
+
+    @Override
+    public List<Installment> unpaidInstallments(Integer id) {
+        return entityManager.createQuery("SELECT i FROM Installment i " +
+                        "WHERE i.loan.student.id = :id " +
+                        "AND i.loanStatus = :loanStatus", Installment.class)
+                .setParameter("loanStatus",LoanStatus.INCOMPLETE_PAID)
+                .setParameter("id", id)
+                .getResultList();
     }
 
     @Override
-    public List<Installment> paidInstallments(Integer studentId) {
-        return entityManager.createQuery("  select i.timeOfDepositingInstallmentByUser" +
-                        ",i.payNumber from Installment i WHERE" +
-                        "  i.loanStatus = :loanStatus AND i.loan.student.id=:studentId", Installment.class)
+    public List<Object[]> paidInstallments(Integer studentId) {
+        return entityManager.createQuery("select i.timeOfDepositingInstallmentByUser, i.payNumber from Installment i " +
+                        "WHERE i.loanStatus = :loanStatus AND i.loan.student.id = :studentId", Object[].class)
                 .setParameter("loanStatus", LoanStatus.COMPLETE_PAID)
                 .setParameter("studentId", studentId)
                 .getResultList();
-
-
     }
 
 }

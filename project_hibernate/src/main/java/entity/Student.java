@@ -63,7 +63,7 @@ public class Student extends BaseEntity<Integer> {
     }
 
     public Student(String firstName, String lastName, String motherName, Integer birthCertificateNumber,
-                   String nationalCode, LocalDate dateOfBirth, String universityName, Integer term, LocalDate enterYear,
+                   String nationalCode,String password, LocalDate dateOfBirth, String universityName, Integer term, LocalDate enterYear,
                    Boolean gettingLoan,Boolean gettingHousingLoan , Boolean havingDorm, LocalDate lastLoanDate,
                    UniversityType universityType, SectionOfStudy sectionOfStudy,
                    MarriedOrSingle marriedOrSingle, String city) {
@@ -81,7 +81,7 @@ public class Student extends BaseEntity<Integer> {
         this.HavingDorm = havingDorm;
         this.lastLoanDate=lastLoanDate;
         this.userName = nationalCode;
-        this.password = generateRandomPassword();
+        this.password = password;
         this.universityType = universityType;
         this.sectionOfStudy = sectionOfStudy;
         this.marriedOrSingle = marriedOrSingle;

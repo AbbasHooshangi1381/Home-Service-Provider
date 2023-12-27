@@ -77,48 +77,6 @@ public class Menu {
     }
 //////////////////////////////////////////////////register is start///////////////////////////////////////////////////////
 
-    public static void refund() {
-
-        if (optionalStudent.isPresent()) {
-            LocalDate localDate = optionalStudent.get().getEnterYear();
-            SectionOfStudy sectionOfStudy = optionalStudent.get().getSectionOfStudy();
-
-
-            if (sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_SENIOR) ||
-                    sectionOfStudy.equals(SectionOfStudy.CONTINUES_SENIOR)) {
-                LocalDate newDateForAssociateDegree = localDate.plusYears(4);
-                if (DatesApp.dateOfSystem.isAfter(newDateForAssociateDegree)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            } else if (sectionOfStudy.equals(SectionOfStudy.ASSOCIATE_DEGREE) ||
-                    sectionOfStudy.equals(SectionOfStudy.UNCONTINUES_MASTER)) {
-                LocalDate newDateForMaster = localDate.plusYears(2);
-                if (DatesApp.dateOfSystem.isAfter(newDateForMaster)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            } else if (sectionOfStudy.equals(SectionOfStudy.CONTINUES_MASTER)) {
-                LocalDate newDateForContinuesSenior = localDate.plusYears(6);
-                if (DatesApp.dateOfSystem.isAfter(newDateForContinuesSenior)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            } else if (sectionOfStudy.equals(SectionOfStudy.UNCONTINUOUS_PHD) ||
-                    sectionOfStudy.equals(SectionOfStudy.PROFESSIONAL_DOCTOR)) {
-                LocalDate newDateForDoctor = localDate.plusYears(5);
-                if (DatesApp.dateOfSystem.isAfter(newDateForDoctor)) {
-                    showRepaymentOptions();
-                } else {
-                    System.out.println("you can not access to repayment menu.");
-                }
-            }
-
-        }
-    }
 
     public static void showRepaymentOptions() {
         System.out.println("Repayment Options:");
@@ -132,6 +90,7 @@ public class Menu {
             case 1 -> paidInstallments();
             case 2 -> unPaidInstallments();
             case 3 -> payInstallments();
+            default -> System.out.println("---Error404---");
 
         }
     }
@@ -142,19 +101,20 @@ public class Menu {
         int payNumber = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.println("please enter your id:");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        if (optionalStudent.isPresent()) {
+            Integer id = optionalStudent.get().getId();
 
-        ApplicationContext.getInstallmentService().payInstallments(payNumber, id);
-        System.out.println("you pay installemnt with the payNumber :"+payNumber);
+            ApplicationContext.getInstallmentService().payInstallments(payNumber, id);
+            System.out.println("you pay installemnt with the payNumber :" + payNumber);
+            registerOrRefund();
+        }
     }
-
     public static void paidInstallments() {
 
         if (optionalStudent.isPresent()) {
             Integer id = optionalStudent.get().getId();
             ApplicationContext.getInstallmentService().paidInstallments(id).forEach(System.out::println);
+            registerOrRefund();
         }
     }
 
@@ -163,12 +123,14 @@ public class Menu {
         if (optionalStudent.isPresent()) {
             Integer id = optionalStudent.get().getId();
             ApplicationContext.getInstallmentService().unpaidInstallments(id).forEach(System.out::println);
+            registerOrRefund();
 
         }
     }
 
     //////////////////////////////////////////////////validation is start/////////////////////////////////////////////////////////
     //////////////////////////////////////////////////validation is start/////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////validation is start/////////////////////////////////////////////////////////
     //////////////////////////////////////////////////validation is start/////////////////////////////////////////////////////////
 
