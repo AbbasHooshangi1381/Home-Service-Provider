@@ -17,5 +17,4 @@ public interface InstallmentService extends BaseEntityService<Integer, Installme
 
     Optional<Installment> findByStudentId(Integer id , Student student);
 
-    Double sumAllLoanAmountPerStudent(Student student);
 }

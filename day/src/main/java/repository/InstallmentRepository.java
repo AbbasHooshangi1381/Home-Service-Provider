@@ -17,7 +17,6 @@ public interface InstallmentRepository extends BaseEntityRepository<Integer , In
 
     Optional<Installment> findByStudentId(Integer id , Student student);
 
-    Double sumAllLoanAmountPerStudent(Student student);
 
 
 }

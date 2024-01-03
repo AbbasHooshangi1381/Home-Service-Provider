@@ -65,10 +65,10 @@ public class InstallmentRepositoryImpl extends BaseEntityRepositoryImpl<Integer,
                         .getSingleResult());
     }
 
-    @Override
+/*    @Override
     public Double sumAllLoanAmountPerStudent(Student student) {
         TypedQuery<Double> typedQuery = entityManager.createQuery("SELECT SUM (l.amount) from Loan l where l.student =: student", Double.class)
                 .setParameter("student", student);
         return typedQuery.getSingleResult();
-    }
+    }*/
 }
