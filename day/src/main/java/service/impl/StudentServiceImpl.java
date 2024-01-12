@@ -26,4 +26,9 @@ public class StudentServiceImpl extends BaseEntityServiceImpl<Integer, Student, 
     public boolean existByNationalCode(String nationalCode) {
         return baseRepository.existByNationalCode(nationalCode);
     }
+
+    @Override
+    public Optional<Student> login(String username, String password) {
+        return baseRepository.login(username, password);
+    }
 }

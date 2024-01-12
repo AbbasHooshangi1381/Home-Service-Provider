@@ -13,4 +13,7 @@ public interface StudentService extends BaseEntityService<Integer , Student> {
 
     boolean existByNationalCode(String nationalCode);
 
+    Optional<Student> login(String username,String password);
+
+
 }

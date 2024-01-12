@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.List;
 
+import static util.PasswordGenerator.generatePassword;
+
 @Entity
 @Setter
 @Getter
@@ -51,6 +53,25 @@ public class Student extends BaseEntity<Integer>{
     University university;
 
 
+
+    public Student(String firstname, String lastname, String fathername, String mothername, String nationalIdNumber,
+                   String nationalCode, LocalDate birthday, String studentNumber, Boolean married, Boolean dormitory,
+                   University university) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.fathername = fathername;
+        this.mothername = mothername;
+        this.nationalIdNumber = nationalIdNumber;
+        this.nationalCode = nationalCode;
+        this.birthday = birthday;
+        this.studentNumber = studentNumber;
+        this.married = married;
+        this.dormitory = dormitory;
+        this.university = university;
+        this.username =nationalCode;
+        this.password =generatePassword();
+    }
+
     public Student(Integer id) {
         super(id);
     }
@@ -62,8 +83,5 @@ public class Student extends BaseEntity<Integer>{
 
     public Student(String firstname) {
         this.firstname = firstname;
-    }
+    }}
 
-
-
-}

@@ -7,8 +7,8 @@ import repository.SemesterRepository;
 
 import java.util.Optional;
 
-public class SemesterService extends BaseEntityServiceImpl<Integer, Semester, SemesterRepository> implements service.SemesterService {
-    public SemesterService(SemesterRepository baseRepository) {
+public class SemesterServiceImpl extends BaseEntityServiceImpl<Integer, Semester, SemesterRepository> implements service.SemesterService {
+    public SemesterServiceImpl(SemesterRepository baseRepository) {
         super(baseRepository);
     }
 

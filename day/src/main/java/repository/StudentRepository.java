@@ -15,4 +15,7 @@ public interface StudentRepository extends BaseEntityRepository<Integer, Student
 
     boolean existByNationalCode(String nationalCode);
 
+    Optional<Student> login(String username,String password);
+
+
 }

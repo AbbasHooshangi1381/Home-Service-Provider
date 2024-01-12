@@ -5,6 +5,7 @@ import entity.Student;
 import repository.StudentRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -47,5 +48,19 @@ public class StudentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Stu
          TypedQuery<Long> typedQuery = entityManager.createQuery("SELECT COUNT (s) FROM Student s WHERE s.nationalCode=:nationalCode", Long.class)
                 .setParameter("nationalCode", nationalCode);
          return typedQuery.getSingleResult()>=0;
+    }
+
+    @Override
+    public Optional<Student> login(String username, String password) {
+        try {
+            return Optional.ofNullable(
+                    entityManager.createQuery("SELECT s FROM Student s"
+                                    + " where s.username =: username AND s.password =: password", Student.class)
+                            .setParameter("username", username)
+                            .setParameter("password", password)
+                            .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
