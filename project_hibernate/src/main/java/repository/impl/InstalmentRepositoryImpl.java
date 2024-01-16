@@ -41,7 +41,8 @@ public class InstalmentRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
                     .getResultList();
 
             if (installmentIds != null && !installmentIds.isEmpty()) {
-                entityManager.createQuery("UPDATE Installment i SET i.loanStatus = :completePaid WHERE i.id IN :installmentIds")
+                entityManager.createQuery("UPDATE Installment i SET " +
+                                "i.loanStatus = :completePaid WHERE i.id IN :installmentIds")
                         .setParameter("completePaid", LoanStatus.COMPLETE_PAID)
                         .setParameter("installmentIds", installmentIds)
                         .executeUpdate();
