@@ -2,6 +2,7 @@ package menu;
 
 import domain.enumurations.ExpertStatus;
 import domain.userEntity.Expert;
+import image.ImageInput;
 import util.ApplicationContext;
 
 import javax.imageio.ImageIO;
@@ -50,8 +51,7 @@ public class ExpertMenu {
 
             String username = "htrhrth23";
 
-
-            String password = "I6qp7zn#";
+            String password = "Fdf@er52";
 
             expertOptional = ApplicationContext.getExpertService().login(username, password);
 
@@ -98,21 +98,9 @@ public class ExpertMenu {
 
         LocalDate timeOfSignIn = LocalDate.now();
 
+        String filePath="D:\\file of intelli j\\dcdsfwef\\src\\main\\java\\image\\CamScanner 02-14-2022 12.36_2.jpg";
 
-        byte[] imageData = new byte[0];
-        try {
-
-            File file = new File("D:\\منابع مکتب شریف\\final-project\\part1\\src\\main\\java\\image\\CE9A9946.JPG");
-
-            BufferedImage image = ImageIO.read(file);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "jpg", baos);
-            imageData = baos.toByteArray();
-
-        } catch (Exception e) {
-            System.out.println(" i cant convert it to byte ! ");
-        }
+        byte[] imageData = ImageInput.uploadProfilePicture(filePath);
 
         ExpertStatus expertStatus = ExpertStatus.NEW;
 
@@ -129,7 +117,7 @@ public class ExpertMenu {
 
     public static void confirmedExpert() {
         System.out.println("1. change password :");
-        // System.out.println("1. change password :");
+        System.out.println("2. save photo to file in system :");
         System.out.println("enter your select:");
 
         try {
@@ -138,8 +126,7 @@ public class ExpertMenu {
             switch (select) {
                 case 1 -> changePasswordOfExpert();
 
-                case 2 -> System.out.println("now i have just changePasswordOfExpert method ");
-
+                case 2 -> savePhotoToSystem();
 
                 default -> System.out.println("---Error404---");
             }
@@ -151,9 +138,20 @@ public class ExpertMenu {
     }
 
     public static void changePasswordOfExpert() throws SQLException {
-        ApplicationContext.getExpertService().changePassword(2, "Fdf@er52");
+        ApplicationContext.getExpertService().changePassword(649, "Fdf@er52");
         System.out.println("password is change !");
 
+        confirmedExpert();
+    }
+
+    public static void savePhotoToSystem() throws SQLException {
+
+        String path="D:\\منابع مکتب شریف\\final-project\\images\\New folder";
+
+        int expertId=649;
+
+        ApplicationContext.getExpertService().savePhotoFromDatabase(path,expertId);
+        System.out.println("photo is save to file");
         firstMenu();
     }
 

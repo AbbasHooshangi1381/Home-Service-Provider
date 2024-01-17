@@ -2,6 +2,7 @@ package repository.impl;
 
 import base.repository.impl.BaseEntityRepositoryImpl;
 import domain.userEntity.Customer;
+import domain.userEntity.Expert;
 import repository.CustomerRepository;
 
 import javax.persistence.EntityManager;
@@ -29,17 +30,11 @@ public class CustomerRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Cu
     public Boolean changePassword(Integer id, String newPassword) {
         try {
             beginTransaction();
-            List<String> idOfCustomer = entityManager.createQuery("SELECT c.password FROM Customer c " +
-                            "WHERE c.id = :id", String.class)
-                    .setParameter("id", id)
-                    .getResultList();
 
-            if (idOfCustomer != null) {
-                entityManager.createQuery("UPDATE Customer c " +
-                                "SET c.password = :password "+
-                                "WHERE c.id =: id")
-                        .setParameter("id", id)
-                        .executeUpdate();
+             Customer customer = entityManager.find(Customer.class, id);
+            if (customer != null) {
+                customer.setPassword(newPassword);
+                entityManager.merge(customer);
 
                 commitTransaction();
                 return true;
@@ -47,5 +42,6 @@ public class CustomerRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Cu
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;    }
+        return false;
+    }
 }

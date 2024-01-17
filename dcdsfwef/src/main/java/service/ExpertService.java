@@ -15,4 +15,7 @@ public interface ExpertService extends BaseEntityService<Integer, Expert> {
 
      Boolean changePassword(Integer id , String newPassword);
 
+     void savePhotoFromDatabase(String destinationPath, int expertId);
+
+
 }

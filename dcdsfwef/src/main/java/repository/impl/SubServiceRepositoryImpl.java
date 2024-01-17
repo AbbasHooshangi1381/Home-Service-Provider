@@ -7,6 +7,7 @@ import repository.CommentsRepository;
 import repository.SubServiceRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class SubServiceRepositoryImpl extends BaseEntityRepositoryImpl<Integer, SubService> implements SubServiceRepository {
@@ -27,63 +28,27 @@ public class SubServiceRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
             beginTransaction();
             SubService subService = entityManager.find(SubService.class, subServiceId);
 
-          /*   if (subService !=null){
-                 subService.setDescription(newDescription);
-                 subService.setPrice(newPrice);
-
-                 commitTransaction();
-             }*/
-
             if (subService != null) {
-                entityManager.createQuery("UPDATE SubService s SET s.description = :newDescription " +
-                                " WHERE s.id =:installmentIds ")
-                        .setParameter("newDescription", newDescription)
-                        .executeUpdate();
-
+                subService.setDescription(newDescription);
+                entityManager.merge(subService);
                 commitTransaction();
                 return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
         return false;
     }
 
     @Override
     public Boolean updatePriceField(Integer subServiceId, Double price) {
-     /*   try {
+        try {
             beginTransaction();
             SubService subService = entityManager.find(SubService.class, subServiceId);
 
             if (subService != null) {
-                entityManager.createQuery("UPDATE SubService s SET s.price = :price " +
-                                " WHERE s.id IN :installmentIds ")
-                        .setParameter("price", price)
-                        .executeUpdate();
-
-                commitTransaction();
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        return false;*/
-
-        try {
-            beginTransaction();
-            List<Integer> subServiceId1 = entityManager.createQuery("SELECT s.id FROM SubService s WHERE s.id = :subServiceId ", Integer.class)
-                    .setParameter("subServiceId", subServiceId)
-                    .getResultList();
-
-            if (subServiceId1 != null && !subServiceId1.isEmpty()) {
-                entityManager.createQuery("UPDATE SubService s SET " +
-                                "s.price = :price WHERE s.id IN :subServiceId1")
-                        .setParameter("price", price)
-                        .setParameter("subServiceId1", subServiceId1)
-                        .executeUpdate();
-
+                subService.setPrice(price);
+                entityManager.merge(subService);
                 commitTransaction();
                 return true;
             }
@@ -112,5 +77,13 @@ public class SubServiceRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
         }
 
         return false;
+    }
+
+    @Override
+    public Double priceOfSubService(Integer subServiceId) {
+         TypedQuery<Double> query = entityManager.createQuery("SELECT s.price FROM SubService s " +
+                 "where s.id=:subServiceId", Double.class)
+                 .setParameter("subServiceId",subServiceId);
+         return query.getSingleResult();
     }
 }

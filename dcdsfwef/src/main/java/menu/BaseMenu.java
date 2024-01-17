@@ -47,6 +47,7 @@ public class BaseMenu {
         } catch (Exception e) {
             //e.printStackTrace();
             System.out.println("!!!WRONG!!!");
+            firstMenu();
         }
 
 

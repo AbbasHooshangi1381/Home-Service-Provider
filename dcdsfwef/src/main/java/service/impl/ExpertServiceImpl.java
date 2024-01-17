@@ -33,4 +33,9 @@ public class ExpertServiceImpl extends BaseEntityServiceImpl<Integer, Expert, Ex
     public Boolean changePassword(Integer id, String newPassword) {
         return baseRepository.changePassword(id, newPassword);
     }
+
+    @Override
+    public void savePhotoFromDatabase(String destinationPath, int expertId) {
+        baseRepository.savePhotoFromDatabase(destinationPath, expertId);
+    }
 }

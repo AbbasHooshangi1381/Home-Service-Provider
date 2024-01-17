@@ -2,6 +2,7 @@ package repository.impl;
 
 import base.repository.impl.BaseEntityRepositoryImpl;
 import domain.userEntity.Admin;
+import domain.userEntity.Expert;
 import repository.AdminRepository;
 
 import javax.persistence.EntityManager;
@@ -27,25 +28,20 @@ public class AdminRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Admin
 
     @Override
     public Boolean changePassword(Integer id, String newPassword) {
-            try {
-                beginTransaction();
-                final List<String> idOfAdmin = entityManager.createQuery("SELECT a.password FROM Admin a " +
-                                "WHERE a.id = :id", String.class)
-                        .setParameter("id", id)
-                        .getResultList();
+        try {
+            beginTransaction();
 
-                if (idOfAdmin != null) {
-                    entityManager.createQuery("UPDATE Admin a " +
-                                    "SET a.password = :password "+
-                                    "WHERE a.id =: id")
-                            .setParameter("id", id)
-                            .executeUpdate();
+            Admin admin = entityManager.find(Admin.class, id);
+            if (admin != null) {
+                admin.setPassword(newPassword);
+                entityManager.merge(admin);
 
-                    commitTransaction();
-                    return true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+                commitTransaction();
+                return true;
             }
-            return false;    }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
+}

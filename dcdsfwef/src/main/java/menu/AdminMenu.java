@@ -48,7 +48,7 @@ public class AdminMenu {
 
         String username = "pojguiu2";
 
-        String password ="t0$5On1r";
+        String password ="1&ddZsef";
 
         adminOptional = ApplicationContext.getAdminService().login(username, password);
 
@@ -180,35 +180,43 @@ public class AdminMenu {
     public static void registerSubService() {
         SubService subService = new SubService();
 
-        System.out.println("i use id number 645 of service to check that is not exist in database:");
-        Integer id = 645;
+        System.out.println("I'm using ID number 650 of service to check if it does not exist in the database:");
+        Integer id = 650;
 
         Service service = ApplicationContext.getServiceService().findById(id).orElse(null);
 
-
         if (service == null) {
-            System.out.println("you dont have this service");
+            System.out.println("You don't have this service.");
         } else {
-
             String subServiceName = "bargh";
-
             List<SubService> subServiceList = (List<SubService>) ApplicationContext.getSubServiceService().findAll();
+            String subServiceValidated = null;
+            boolean subServiceExists = false; // New variable to track existence of sub service
 
             for (SubService subServiceLists : subServiceList) {
                 if (subServiceLists.getSubServiceName().equals(subServiceName)) {
-                    System.out.println("this sub service is already exists !!");
-                    return;
+                    System.out.println("This sub service already exists!");
+                    subServiceExists = true; // Set existence flag to true
+                    break; // No need to continue the loop
                 }
             }
-            subService.setSubServiceName(subServiceName);
+
+            if (subServiceExists) {
+                subServiceValidated = subServiceName;
+            } else {
+                System.out.println("Sub service is validated!");
+            }
+
+            subService.setSubServiceName(subServiceValidated);
             subService.setDescription("frfffffffffffff");
             subService.setPrice(5256.00);
             subService.setService(service);
 
             ApplicationContext.getSubServiceService().save(subService);
-            System.out.println("sub service added to data base ! ");
+            System.out.println("Sub service added to the database!");
 
         }
+
         firstMenuOfAdmin();
     }
 
@@ -223,11 +231,11 @@ public class AdminMenu {
     }
 
     public static void changeDescription() {
-        System.out.println("I USE ID 2 TO CHANGE DESCRIPTION  : ");
-        Integer id = 646;
+        System.out.println("I USE ID 651 TO CHANGE DESCRIPTION  : ");
+        Integer id = 651;
 
         System.out.println("I use new description ");
-        String newDescription = "sadfeffffffffbfgbtfgb653fffff";
+        String newDescription = "sadfeffffffffbfgbtfgb651fffff";
 
         ApplicationContext.getSubServiceService().updateDescriptionField(id, newDescription);
         System.out.println("you change the description successfully !");
@@ -235,8 +243,8 @@ public class AdminMenu {
     }
 
     public static void changePrice() {
-        System.out.println("I use id 2 to change price ");
-        Integer id =646;
+        System.out.println("I use id 651 to change price ");
+        Integer id =651;
 
         System.out.println("I use double 250.00 to change price ");
         Double newPrice = 250.00;
@@ -247,11 +255,11 @@ public class AdminMenu {
     }
 
     public static void registerExpertInOneService() {
-        System.out.println("i use id 2 of expert to add to service : ");
-        Integer idOfExpert = 644;
+        System.out.println("i use id 651 of expert to add to service : ");
+        Integer idOfExpert = 649;
 
-        System.out.println("i use id 2 of subService to add to service : ");
-        Integer idOfSubService = 646;
+        System.out.println("i use id 651 of subService to add to service : ");
+        Integer idOfSubService = 651;
 
         ApplicationContext.getExpertService().updateSubServiceWithExpert(idOfSubService,idOfExpert);
         System.out.println("you added expert to service successfully !");
@@ -260,20 +268,20 @@ public class AdminMenu {
     }
 
     public static void confirmedStatus() {
-        System.out.println("I use id 2 of expert to change the status of it : ");
-        Integer id =644;
+        System.out.println("I use id 649 of expert to change the status of it : ");
+        Integer id =649;
         ApplicationContext.getExpertService().changeStatus(id);
         firstMenuOfAdmin();
 
     }
     public static void changePasswordOfAdmin(){
-        ApplicationContext.getAdminService().changePassword(639,"FSasd85@");
+        ApplicationContext.getAdminService().changePassword(647,"FSasd85@");
         System.out.println("password changed ! ");
         firstMenuOfAdmin();
     }
 
     public static void deleteExpertFromSubService() throws SQLException {
-        Integer id = 2;
+        Integer id = 651;
         ApplicationContext.getSubServiceService().deleteExpertFromSubService(id);
         System.out.println("expert deleted ! ");
         firstMenu();

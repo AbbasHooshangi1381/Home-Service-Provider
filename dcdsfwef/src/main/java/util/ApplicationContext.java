@@ -19,6 +19,14 @@ public class ApplicationContext {
     private static final ServiceService serviceService;
     private static final SubServiceRepository subServiceRepository;
     private static final SubServiceService subServiceService;
+    private static final CustomerOrderRepository customerOrderRepository;
+    private static final CustomerOrderService customerOrderService;
+    private static final CommentsRepository commentRepository;
+    private static final CommentService commentService;
+    private static final SuggestionRepository suggestionRepository;
+    private static final SuggestionService suggestionService;
+    private static final WalletRepository walletRepository;
+    private static final WalletService walletService;
 
 
     static {
@@ -29,10 +37,18 @@ public class ApplicationContext {
         customerService = new CustomerServiceImpl(customerRepository);
         expertRepository = new ExpertRepositoryImpl(entityManager);
         expertService = new ExpertServiceImpl(expertRepository);
-        serviceRepository=new ServiceRepositoryImpl(entityManager);
-        serviceService=new ServiceServiceImpl(serviceRepository);
-        subServiceRepository=new SubServiceRepositoryImpl(entityManager);
-        subServiceService=new SubServiceServiceImpl(subServiceRepository);
+        serviceRepository = new ServiceRepositoryImpl(entityManager);
+        serviceService = new ServiceServiceImpl(serviceRepository);
+        subServiceRepository = new SubServiceRepositoryImpl(entityManager);
+        subServiceService = new SubServiceServiceImpl(subServiceRepository);
+        customerOrderRepository = new CustomerOrderRepositoryImpl(entityManager);
+        customerOrderService = new CustomerOrderServiceImpl(customerOrderRepository);
+        commentRepository = new CommentsRepositoryImpl(entityManager);
+        commentService = new CommentServiceImpl(commentRepository);
+        suggestionRepository = new SuggestionRepositoryImpl(entityManager);
+        suggestionService = new SuggestionServiceImpl(suggestionRepository);
+        walletRepository = new WalletRepositoryImpl(entityManager);
+        walletService = new WalletServiceImpl(walletRepository);
 
 
     }
@@ -55,6 +71,22 @@ public class ApplicationContext {
 
     public static SubServiceService getSubServiceService() {
         return subServiceService;
+    }
+
+    public static CustomerOrderService getCustomerOrderService() {
+        return customerOrderService;
+    }
+
+    public static CommentService getCommentService() {
+        return commentService;
+    }
+
+    public static SuggestionService getSuggestionService() {
+        return suggestionService;
+    }
+
+    public static WalletService getWalletService() {
+        return walletService;
     }
 
 

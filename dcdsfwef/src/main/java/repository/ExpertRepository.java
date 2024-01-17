@@ -13,10 +13,10 @@ public interface ExpertRepository extends BaseEntityRepository<Integer, Expert> 
 
      Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId);
 
-
-
      Boolean changeStatus(Integer id);
 
      Boolean changePassword(Integer id , String newPassword);
+
+     void savePhotoFromDatabase(String destinationPath, int expertId);
 
 }

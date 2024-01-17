@@ -21,11 +21,9 @@ public class CustomerOrder extends BaseEntity<Integer> {
 
     String descriptionOfOrder;
 
-    Double ProposedPrice;
+    Double proposedPrice;
 
-    String descriptionOfWork;
-
-    LocalDate timeOfDoing;
+    String timeOfDoing;
 
     String address;
 
@@ -40,4 +38,15 @@ public class CustomerOrder extends BaseEntity<Integer> {
 
     @Enumerated(value = EnumType.STRING)
     StatusOfOrder statusOfOrder;
+
+    public CustomerOrder( String descriptionOfOrder, Double proposedPrice, String timeOfDoing,
+                         String address, SubService subService, Customer customer, StatusOfOrder statusOfOrder) {
+        this.descriptionOfOrder = descriptionOfOrder;
+        this.proposedPrice = proposedPrice;
+        this.timeOfDoing = timeOfDoing;
+        this.address = address;
+        this.subService = subService;
+        this.customer = customer;
+        this.statusOfOrder = statusOfOrder;
+    }
 }

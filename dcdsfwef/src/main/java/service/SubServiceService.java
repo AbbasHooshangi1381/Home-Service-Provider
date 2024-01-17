@@ -12,4 +12,6 @@ public interface SubServiceService extends BaseEntityService<Integer, SubService
 
     Boolean deleteExpertFromSubService(Integer subServiceId);
 
+    Double priceOfSubService(Integer subServiceId);
+
 }
