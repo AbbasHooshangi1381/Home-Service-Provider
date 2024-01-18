@@ -27,7 +27,7 @@ public class Expert extends BaseEntity<Integer> {
     String userName;
     String password;
     LocalDate dateOfSigningIn;
-
+    @Lob
     byte[] personalPhoto;
     Integer stars;
     @OneToMany(mappedBy = "expert")

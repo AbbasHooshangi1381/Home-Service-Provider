@@ -51,7 +51,7 @@ public class ExpertMenu {
 
             String username = "htrhrth23";
 
-            String password = "Fdf@er52";
+            String password = "t0Jo!h3l";
 
             expertOptional = ApplicationContext.getExpertService().login(username, password);
 
@@ -138,7 +138,7 @@ public class ExpertMenu {
     }
 
     public static void changePasswordOfExpert() throws SQLException {
-        ApplicationContext.getExpertService().changePassword(649, "Fdf@er52");
+        ApplicationContext.getExpertService().changePassword(655, "Fdf@er52");
         System.out.println("password is change !");
 
         confirmedExpert();
@@ -148,7 +148,7 @@ public class ExpertMenu {
 
         String destinationPath = "D:\\منابع مکتب شریف\\final-project\\images\\New folder";
 
-        Integer expertId=649;
+        Integer expertId=655;
 
         ApplicationContext.getExpertService().savePhotoFromDatabase(destinationPath,expertId);
         System.out.println("photo is save to file");

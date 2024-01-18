@@ -146,14 +146,14 @@ public class CustomerMenu {
 
         if (customerOptional.isPresent()) {
             CustomerOrder customerOrder = new CustomerOrder();
-            Customer customer = ApplicationContext.getCustomerService().findById(648).orElse(null);
-            SubService subService = ApplicationContext.getSubServiceService().findById(651).orElse(null);
+            Customer customer = ApplicationContext.getCustomerService().findById(654).orElse(null);
+            SubService subService = ApplicationContext.getSubServiceService().findById(657).orElse(null);
 
             String descriptionOfOrder = "you should it ! ";
 
             Double proposedPrice = 300.00;
 
-            Double fixPrice = ApplicationContext.getSubServiceService().priceOfSubService(651);
+            Double fixPrice = ApplicationContext.getSubServiceService().priceOfSubService(657);
             Double validatedPrice = null;
             if (proposedPrice >= fixPrice) {
                 validatedPrice = proposedPrice;
@@ -186,7 +186,7 @@ public class CustomerMenu {
 
 
     public static void changePassword() throws SQLException {
-        ApplicationContext.getCustomerService().changePassword(648, "Frgw@2fw");
+        ApplicationContext.getCustomerService().changePassword(654, "Frgw@2fw");
         System.out.println("password changed ! ");
         firstMenu();
 
