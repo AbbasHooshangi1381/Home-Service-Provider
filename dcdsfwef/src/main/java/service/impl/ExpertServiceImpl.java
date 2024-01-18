@@ -5,6 +5,8 @@ import domain.userEntity.Expert;
 import repository.ExpertRepository;
 import service.ExpertService;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class ExpertServiceImpl extends BaseEntityServiceImpl<Integer, Expert, ExpertRepository>
@@ -19,10 +21,6 @@ public class ExpertServiceImpl extends BaseEntityServiceImpl<Integer, Expert, Ex
         return baseRepository.showEmail();
     }
 
-/*    @Override
-    public Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId) {
-        return baseRepository.updateSubServiceWithExpert(subServiceId, expertId);
-    }*/
 
     @Override
     public Boolean changeStatus(Integer id) {
@@ -35,7 +33,9 @@ public class ExpertServiceImpl extends BaseEntityServiceImpl<Integer, Expert, Ex
     }
 
     @Override
-    public void savePhotoFromDatabase(String destinationPath, Integer expertId) {
-        baseRepository.savePhotoFromDatabase(destinationPath, expertId);
+    public byte[] saveImageByIdToSystem(Integer id) {
+        return baseRepository.saveImageByIdToSystem(id);
+
     }
+
 }

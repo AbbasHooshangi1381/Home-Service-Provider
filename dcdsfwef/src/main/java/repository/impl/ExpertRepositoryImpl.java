@@ -7,6 +7,7 @@ import domain.userEntity.Expert;
 import repository.ExpertRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,26 +30,6 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
         TypedQuery<String> query = entityManager.createQuery("SELECT e.email FROM Expert e", String.class);
         return query.getResultList();
     }
-
-/*    @Override
-    public Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId) {
-        try {
-            beginTransaction();
-
-            SubService subService = entityManager.find(SubService.class, subServiceId);
-            Expert expert = entityManager.find(Expert.class, expertId);
-
-            if (subService != null && expert != null) {
-                subService.setExpert(expert);
-                entityManager.merge(subService);
-                commitTransaction();
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }*/
 
     @Override
     public Boolean changeStatus(Integer id) {
@@ -89,8 +70,24 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
         return false;
     }
 
-
     @Override
+    public byte[] saveImageByIdToSystem(Integer id) {
+        try {
+            beginTransaction();
+            Query query = entityManager.createQuery("""
+                                  select e.personalPhoto
+                                  from Expert e
+                                  where e.id = :id
+                            """, byte[].class)
+                    .setParameter("id", id);
+            return (byte[]) query.getSingleResult();
+        } finally {
+           commitTransaction();
+        }
+    }
+
+
+/*    @Override
     public void savePhotoFromDatabase(String destinationPath, Integer expertId) {
         try {
             Expert expert = entityManager.find(Expert.class, expertId);
@@ -111,5 +108,5 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
         } catch (Exception e) {
             System.out.println("Failed to save photo: ");
         }
-    }
+    }*/
 }

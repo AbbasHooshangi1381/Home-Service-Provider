@@ -54,7 +54,7 @@ public class CustomerMenu {
             String username = "alfef526";
 
 
-            String password = "Bxfy3s#5";
+            String password = "Hc%h4nok";
 
             customerOptional = ApplicationContext.getCustomerService().login(username, password);
 
@@ -78,7 +78,7 @@ public class CustomerMenu {
         String FirstName = "abbas";
         String validatedFirstName = validationNames(FirstName);
 
-        String LastName = "aaaa";
+        String LastName = "hooshangi";
         String validatedLastName = validationNames(LastName);
 
         String newEmailOFExpert = "";
@@ -124,9 +124,7 @@ public class CustomerMenu {
 
                 default -> System.out.println("---Error404---");
             }
-        } catch (
-                Exception e) {
-            //     e.printStackTrace();
+        } catch (Exception e) {
             System.out.println("!!!WRONG!!!");
 
         }
@@ -136,7 +134,7 @@ public class CustomerMenu {
 
         System.out.println("show service and subService :");
         ApplicationContext.getServiceService().findAll().forEach(System.out::println);
-        System.out.println("---------------------------------------------------");
+        System.out.println("---------------------subService----------------------");
         ApplicationContext.getSubServiceService().findAll().forEach(System.out::println);
         registerCustomerOrderLevel2();
 
@@ -145,15 +143,16 @@ public class CustomerMenu {
     public static void registerCustomerOrderLevel2() throws SQLException {
 
         if (customerOptional.isPresent()) {
+             Integer id = customerOptional.get().getId();
             CustomerOrder customerOrder = new CustomerOrder();
-            Customer customer = ApplicationContext.getCustomerService().findById(654).orElse(null);
-            SubService subService = ApplicationContext.getSubServiceService().findById(657).orElse(null);
+            Customer customer = ApplicationContext.getCustomerService().findById(id).orElse(null);
+            SubService subService = ApplicationContext.getSubServiceService().findById(675).orElse(null);
 
             String descriptionOfOrder = "you should it ! ";
 
-            Double proposedPrice = 300.00;
+            Double proposedPrice = 8000.00;
 
-            Double fixPrice = ApplicationContext.getSubServiceService().priceOfSubService(657);
+            Double fixPrice = ApplicationContext.getSubServiceService().priceOfSubService(675);
             Double validatedPrice = null;
             if (proposedPrice >= fixPrice) {
                 validatedPrice = proposedPrice;
@@ -162,8 +161,7 @@ public class CustomerMenu {
             }
 
             String timeOfWork;
-            timeOfWork = checkAndRegisterTimeOfLoan("1402/10/30");
-
+            timeOfWork = checkAndRegisterTimeOfLoan("1402/11/30");
             String address = "mashhad";
 
             StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SUGGEST_EXPERT;
@@ -186,23 +184,44 @@ public class CustomerMenu {
 
 
     public static void changePassword() throws SQLException {
-        ApplicationContext.getCustomerService().changePassword(654, "Frgw@2fw");
+        ApplicationContext.getCustomerService().changePassword(672, "Frgw@2fw");
         System.out.println("password changed ! ");
         firstMenu();
 
     }
 
+
+
+
+
+
     public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {
-        LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ISO_DATE);
+        LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         LocalDate firstStartDate = LocalDate.parse("1402-10-27", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         if (currentTime.isAfter(firstStartDate)) {
-            inputTime = inputTime;
+            return inputTime;
         } else {
-            System.out.println("You should choose a date after 1402-10-27");
+            throw new IllegalArgumentException("You should choose a date after 1402-10-27");
         }
-        return inputTime;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /////////////////////////////////////////////////////////validations////////////////////////////////////////////

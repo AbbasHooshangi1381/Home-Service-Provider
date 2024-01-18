@@ -15,7 +15,7 @@ import java.util.Scanner;
 import static menu.AdminMenu.firstMenuOfAdmin;
 import static menu.AdminMenu.signInOrSignUpAdmin;
 import static menu.CustomerMenu.*;
-import static menu.ExpertMenu.signInOrSignUpExpert;
+import static menu.ExpertsMenu.signInOrSignUpExpert;
 import static validation.Validation.generateRandomPassword;
 
 public class BaseMenu {
