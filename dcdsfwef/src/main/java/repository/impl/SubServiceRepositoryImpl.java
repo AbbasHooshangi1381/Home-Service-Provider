@@ -58,7 +58,7 @@ public class SubServiceRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
         return false;
     }
 
-    @Override
+ /*   @Override
     public Boolean deleteExpertFromSubService(Integer subServiceId) {
         try {
             beginTransaction();
@@ -77,7 +77,7 @@ public class SubServiceRepositoryImpl extends BaseEntityRepositoryImpl<Integer, 
         }
 
         return false;
-    }
+    }*/
 
     @Override
     public Double priceOfSubService(Integer subServiceId) {

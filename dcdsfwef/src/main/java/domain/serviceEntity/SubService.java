@@ -2,6 +2,7 @@ package domain.serviceEntity;
 
 import base.domin.BaseEntity;
 import domain.other.CustomerOrder;
+import domain.other.ExpertSubService;
 import domain.userEntity.Expert;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -28,8 +29,8 @@ public class SubService extends BaseEntity<Integer> {
     @ToString.Exclude
     Service service;
 
-    @ManyToOne
-    Expert expert;
+    @OneToMany(mappedBy = "subService")
+    List<ExpertSubService>expertSubServices;
 
     @OneToMany(mappedBy = "subService")
     List<CustomerOrder> customerOrderList;

@@ -1,6 +1,5 @@
-package service;
+package all.service;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Repository

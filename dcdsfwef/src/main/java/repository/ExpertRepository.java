@@ -11,12 +11,12 @@ public interface ExpertRepository extends BaseEntityRepository<Integer, Expert> 
 
      List<String> showEmail();
 
-     Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId);
+   //  Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId);
 
      Boolean changeStatus(Integer id);
 
      Boolean changePassword(Integer id , String newPassword);
 
-     void savePhotoFromDatabase(String destinationPath, int expertId);
+     void savePhotoFromDatabase(String destinationPath, Integer expertId);
 
 }

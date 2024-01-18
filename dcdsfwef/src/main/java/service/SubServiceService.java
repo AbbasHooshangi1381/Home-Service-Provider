@@ -10,7 +10,7 @@ public interface SubServiceService extends BaseEntityService<Integer, SubService
 
     Boolean updatePriceField(Integer subServiceId, Double price);
 
-    Boolean deleteExpertFromSubService(Integer subServiceId);
+  //  Boolean deleteExpertFromSubService(Integer subServiceId);
 
     Double priceOfSubService(Integer subServiceId);
 

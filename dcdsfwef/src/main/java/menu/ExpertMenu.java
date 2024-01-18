@@ -98,7 +98,7 @@ public class ExpertMenu {
 
         LocalDate timeOfSignIn = LocalDate.now();
 
-        String filePath="D:\\file of intelli j\\dcdsfwef\\src\\main\\java\\image\\CamScanner 02-14-2022 12.36_2.jpg";
+        String filePath = "D:\\file of intelli j\\dcdsfwef\\src\\main\\java\\image\\CamScanner 02-14-2022 12.36_2.jpg";
 
         byte[] imageData = ImageInput.uploadProfilePicture(filePath);
 
@@ -146,12 +146,24 @@ public class ExpertMenu {
 
     public static void savePhotoToSystem() throws SQLException {
 
-        String path="D:\\منابع مکتب شریف\\final-project\\images\\New folder";
+        String destinationPath = "D:\\منابع مکتب شریف\\final-project\\images\\New folder";
 
-        int expertId=649;
+        Integer expertId=649;
 
-        ApplicationContext.getExpertService().savePhotoFromDatabase(path,expertId);
+        ApplicationContext.getExpertService().savePhotoFromDatabase(destinationPath,expertId);
         System.out.println("photo is save to file");
+
+/*        String destinationPath = "D:\\منابع مکتب شریف\\final-project\\images\\New folder";
+
+        File destinationDir = new File(destinationPath);
+
+        if (destinationDir.canWrite()) {
+            System.out.println("شما دسترسی لازم برای نوشتن در مسیر مقصد را دارید.");
+        } else {
+            System.out.println("شما دسترسی لازم برای نوشتن در مسیر مقصد را ندارید.");
+        }*/
+
+
         firstMenu();
     }
 

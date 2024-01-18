@@ -10,7 +10,5 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         // EntityManagerFactoryProvider.getEntityManagerFactory().createEntityManager();
           BaseMenu.firstMenu();
-
-
 }
 }

@@ -1,8 +1,10 @@
 package menu;
 
+import domain.other.ExpertSubService;
 import domain.serviceEntity.Service;
 import domain.serviceEntity.SubService;
 import domain.userEntity.Admin;
+import domain.userEntity.Expert;
 import util.ApplicationContext;
 
 import java.sql.SQLException;
@@ -48,7 +50,7 @@ public class AdminMenu {
 
         String username = "pojguiu2";
 
-        String password ="1&ddZsef";
+        String password = "1&ddZsef";
 
         adminOptional = ApplicationContext.getAdminService().login(username, password);
 
@@ -110,9 +112,6 @@ public class AdminMenu {
         System.out.println("8. delete expert from subService :");
 
 
-        //اضافه و حذف متخصصان از زیر خدمت های موجود در سیستم )مدیر(
-
-
         try {
             int select = scanner.nextInt();
             scanner.nextLine();
@@ -129,9 +128,9 @@ public class AdminMenu {
 
                 case 6 -> confirmedStatus();
 
-                case 7 ->changePasswordOfAdmin();
+                case 7 -> changePasswordOfAdmin();
 
-                case 8->deleteExpertFromSubService();
+                case 8 -> deleteExpertFromSubService();
 
                 default -> System.out.println("---Error404---");
             }
@@ -191,13 +190,13 @@ public class AdminMenu {
             String subServiceName = "bargh";
             List<SubService> subServiceList = (List<SubService>) ApplicationContext.getSubServiceService().findAll();
             String subServiceValidated = null;
-            boolean subServiceExists = false; // New variable to track existence of sub service
+            boolean subServiceExists = false;
 
             for (SubService subServiceLists : subServiceList) {
                 if (subServiceLists.getSubServiceName().equals(subServiceName)) {
                     System.out.println("This sub service already exists!");
-                    subServiceExists = true; // Set existence flag to true
-                    break; // No need to continue the loop
+                    subServiceExists = true;
+                    break;
                 }
             }
 
@@ -244,7 +243,7 @@ public class AdminMenu {
 
     public static void changePrice() {
         System.out.println("I use id 651 to change price ");
-        Integer id =651;
+        Integer id = 651;
 
         System.out.println("I use double 250.00 to change price ");
         Double newPrice = 250.00;
@@ -255,34 +254,35 @@ public class AdminMenu {
     }
 
     public static void registerExpertInOneService() {
-        System.out.println("i use id 651 of expert to add to service : ");
         Integer idOfExpert = 649;
-
-        System.out.println("i use id 651 of subService to add to service : ");
         Integer idOfSubService = 651;
 
-        ApplicationContext.getExpertService().updateSubServiceWithExpert(idOfSubService,idOfExpert);
-        System.out.println("you added expert to service successfully !");
+        SubService subService = ApplicationContext.getSubServiceService().findById(idOfSubService).orElse(null);
+        Expert expert = ApplicationContext.getExpertService().findById(idOfExpert).orElse(null);
+        ExpertSubService expertSubService=new ExpertSubService(expert,subService);
+
+        ApplicationContext.getExpertSubServiceService().save(expertSubService);
         firstMenuOfAdmin();
 
     }
 
     public static void confirmedStatus() {
         System.out.println("I use id 649 of expert to change the status of it : ");
-        Integer id =649;
+        Integer id = 649;
         ApplicationContext.getExpertService().changeStatus(id);
         firstMenuOfAdmin();
 
     }
-    public static void changePasswordOfAdmin(){
-        ApplicationContext.getAdminService().changePassword(647,"FSasd85@");
+
+    public static void changePasswordOfAdmin() {
+        ApplicationContext.getAdminService().changePassword(647, "FSasd85@");
         System.out.println("password changed ! ");
         firstMenuOfAdmin();
     }
 
     public static void deleteExpertFromSubService() throws SQLException {
-        Integer id = 651;
-        ApplicationContext.getSubServiceService().deleteExpertFromSubService(id);
+        Integer idOfExpertSubServiceId = 651;
+        ApplicationContext.getExpertSubServiceService().deleteById(idOfExpertSubServiceId);
         System.out.println("expert deleted ! ");
         firstMenu();
     }

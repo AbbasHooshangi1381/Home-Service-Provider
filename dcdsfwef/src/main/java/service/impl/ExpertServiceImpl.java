@@ -19,10 +19,10 @@ public class ExpertServiceImpl extends BaseEntityServiceImpl<Integer, Expert, Ex
         return baseRepository.showEmail();
     }
 
-    @Override
+/*    @Override
     public Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId) {
         return baseRepository.updateSubServiceWithExpert(subServiceId, expertId);
-    }
+    }*/
 
     @Override
     public Boolean changeStatus(Integer id) {
@@ -35,7 +35,7 @@ public class ExpertServiceImpl extends BaseEntityServiceImpl<Integer, Expert, Ex
     }
 
     @Override
-    public void savePhotoFromDatabase(String destinationPath, int expertId) {
+    public void savePhotoFromDatabase(String destinationPath, Integer expertId) {
         baseRepository.savePhotoFromDatabase(destinationPath, expertId);
     }
 }

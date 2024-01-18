@@ -8,13 +8,10 @@ public class ImageInput {
     public static byte[] uploadProfilePicture(String filePath) throws IOException {
         File file = new File(filePath);
 
-        // check size of image
         long fileSize = file.length();
         if (fileSize > 300 * 1024) {
-            throw new IllegalArgumentException("The size of the photo is more than 300 KB.");
+            throw new IllegalArgumentException("The size of the your photo is more than 300 KB.");
         }
-
-        // saving image to database
 
         return Files.readAllBytes(file.toPath());
     }

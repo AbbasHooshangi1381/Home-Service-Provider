@@ -21,10 +21,10 @@ public class SubServiceServiceImpl extends BaseEntityServiceImpl<Integer, SubSer
         return baseRepository.updatePriceField(subServiceId, price);
     }
 
-    @Override
+   /* @Override
     public Boolean deleteExpertFromSubService(Integer subServiceId) {
         return baseRepository.deleteExpertFromSubService(subServiceId);
-    }
+    }*/
 
     @Override
     public Double priceOfSubService(Integer subServiceId) {

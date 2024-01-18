@@ -27,6 +27,8 @@ public class ApplicationContext {
     private static final SuggestionService suggestionService;
     private static final WalletRepository walletRepository;
     private static final WalletService walletService;
+    private static final ExpertSubServiceRepository expertSubServiceRepository;
+    private static final ExpertSubServiceService expertSubServiceService;
 
 
     static {
@@ -49,6 +51,8 @@ public class ApplicationContext {
         suggestionService = new SuggestionServiceImpl(suggestionRepository);
         walletRepository = new WalletRepositoryImpl(entityManager);
         walletService = new WalletServiceImpl(walletRepository);
+        expertSubServiceRepository = new ExpertSubServiceRepositoryImpl(entityManager);
+        expertSubServiceService = new ExpertSubServiceServiceImpl(expertSubServiceRepository);
 
 
     }
@@ -87,6 +91,10 @@ public class ApplicationContext {
 
     public static WalletService getWalletService() {
         return walletService;
+    }
+
+    public static ExpertSubServiceService getExpertSubServiceService() {
+        return expertSubServiceService;
     }
 
 

@@ -3,6 +3,7 @@ package domain.userEntity;
 import base.domin.BaseEntity;
 import domain.enumurations.ExpertStatus;
 import domain.other.Comments;
+import domain.other.ExpertSubService;
 import domain.other.Wallet;
 import domain.serviceEntity.Service;
 import domain.serviceEntity.SubService;
@@ -30,7 +31,7 @@ public class Expert extends BaseEntity<Integer> {
     byte[] personalPhoto;
     Integer stars;
     @OneToMany(mappedBy = "expert")
-    List<SubService> subServiceList;
+    List<ExpertSubService> expertSubServices;
 
     @Enumerated(value = EnumType.STRING)
     ExpertStatus expertStatus;

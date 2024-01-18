@@ -30,7 +30,7 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
         return query.getResultList();
     }
 
-    @Override
+/*    @Override
     public Boolean updateSubServiceWithExpert(Integer subServiceId, Integer expertId) {
         try {
             beginTransaction();
@@ -48,7 +48,7 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
             e.printStackTrace();
         }
         return false;
-    }
+    }*/
 
     @Override
     public Boolean changeStatus(Integer id) {
@@ -91,13 +91,13 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
 
 
     @Override
-    public void savePhotoFromDatabase(String destinationPath, int expertId) {
+    public void savePhotoFromDatabase(String destinationPath, Integer expertId) {
         try {
             Expert expert = entityManager.find(Expert.class, expertId);
             byte[] photoData = expert.getPersonalPhoto();
 
             if (photoData != null) {
-                String fileName = "personalPhoto :" + expertId + ".jpg";
+                String fileName = "personalPhoto2 :" + expertId + ".jpg";
                 String fullPath = destinationPath + File.separator + fileName;
 
                 FileOutputStream fos = new FileOutputStream(fullPath);
@@ -109,7 +109,7 @@ public class ExpertRepositoryImpl extends BaseEntityRepositoryImpl<Integer, Expe
                 System.out.println("No photo found for expert with ID: " + expertId);
             }
         } catch (Exception e) {
-            System.out.println("Failed to save photo: " + e.getMessage());
+            System.out.println("Failed to save photo: ");
         }
     }
 }
