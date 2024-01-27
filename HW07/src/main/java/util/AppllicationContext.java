@@ -45,7 +45,7 @@ import java.sql.SQLException;
         return userService;
     }
 
-    public static ShareHolderRepository getShareHolderRepository() {
+    public static ShareHolderRepository getShareHolderRepository() throws SQLException {
         if (shareHolderRepository==null){
             shareHolderRepository=new ShareHolderRepository();
         }
@@ -60,7 +60,7 @@ import java.sql.SQLException;
         return shareHolderService;
     }
 
-    public static ProductRepository getProductRepository() {
+    public static ProductRepository getProductRepository() throws SQLException {
         if (productRepository==null){
             productRepository=new ProductRepository();
         }
@@ -74,7 +74,7 @@ import java.sql.SQLException;
         return productService;
     }
 
-    public static CategoryRepository getCategoryRepository() {
+    public static CategoryRepository getCategoryRepository() throws SQLException {
         if (categoryRepository==null){
             categoryRepository=new CategoryRepository();
         }
@@ -88,7 +88,7 @@ import java.sql.SQLException;
         return categoryService;
     }
 
-    public static BrandRepository getBrandRepository() {
+    public static BrandRepository getBrandRepository() throws SQLException {
         if (brandRepository==null){
             brandRepository=new BrandRepository();
         }
