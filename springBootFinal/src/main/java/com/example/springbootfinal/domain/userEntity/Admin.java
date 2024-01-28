@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Admin extends BaseUser {
 
@@ -25,9 +24,13 @@ public class Admin extends BaseUser {
     @OneToMany(mappedBy = "admin")
     List<Expert> expertList;
 
+
+
     public Admin(String firstName, String lastName, String email, String userName,
                  String password, LocalDate dateOfSigningIn) {
         super(firstName, lastName, email, userName, password, dateOfSigningIn);
 
     }
+
+
 }

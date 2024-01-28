@@ -6,15 +6,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerOrderService {
-    void saveCustomerOrder(Integer customerId, Integer subServiceId) throws SQLException;
 
-     List<CustomerOrder> findByCustomerIdOrderByProposedPriceDesc(int customerId);
+    void saveOrder(CustomerOrder customerOrder,Integer customerId,Integer subDutyId)  throws SQLException;
 
-     List<CustomerOrder> findByCustomerIdOrderByExpertStarsDesc(int customerId);
+    List<CustomerOrder> findByCustomerIdOrderByProposedPriceDesc(int customerId);
 
-     void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId);
+    List<CustomerOrder> findByCustomerIdOrderByExpertStarsDesc(int customerId);
+
+    void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId);
 
     void changeStatusOfOrderByCustomerStarted(Integer orderId);
 
-     void changeStatusOfOrderByCustomerToFinish(Integer orderId);
+    void changeStatusOfOrderByCustomerToFinish(Integer orderId);
 }

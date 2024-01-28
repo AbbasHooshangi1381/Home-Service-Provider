@@ -6,6 +6,7 @@ import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.ExpertService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +28,9 @@ class ExpertServiceImplTest {
     ExpertRepository expertRepository;
     ExpertService expertService;
 
-    @Test
+    Expert expert;
+
+    @BeforeEach
     void saveExpert() throws IOException {
         String firstName = "ali";
         String lastName = "ahmadi";

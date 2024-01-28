@@ -1,12 +1,12 @@
 package com.example.springbootfinal.service;
 
+import com.example.springbootfinal.domain.serviceEntity.SubDuty;
+
 import java.sql.SQLException;
 
 public interface SubDutyService {
 
-    void saveOrder(Integer customerId, Integer subServiceId) throws SQLException;
-
-    void saveSubDutyByAdmin(Integer dutyId, String subServiceName);
+    void saveSubDutyByAdmin(Integer dutyId, SubDuty subDuty);
 
     void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription);
 

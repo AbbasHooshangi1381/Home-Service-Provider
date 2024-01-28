@@ -4,6 +4,7 @@ import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
+import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
@@ -36,42 +37,9 @@ public class SubDutyServiceImpl implements SubDutyService {
     }
 
     @Override
-    public void saveOrder(Integer customerId, Integer subServiceId) throws SQLException {
-        dutyRepository.findAll().forEach(System.out::println);
-        subDutyRepository.findAll().forEach(System.out::println);
-        CustomerOrder customerOrder = new CustomerOrder();
-
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        SubDuty subDuty = subDutyRepository.findById(subServiceId).orElse(null);
-        String descriptionOfOrder = "you should it ! ";
-        double proposedPrice = 8000.00;
-        assert subDuty != null;
-        Double fixPrice = subDuty.getPrice();
-        Double validatedPrice = null;
-        if (proposedPrice >= fixPrice) {
-            validatedPrice = proposedPrice;
-        } else {
-            System.out.println("your price is under the lowest price");
-        }
-        String timeOfWork;
-        timeOfWork = checkAndRegisterTimeOfLoan("1402/11/30");
-        String address = "mashhad";
-        StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
-        customerOrder.setCustomer(customer);
-        customerOrder.setDescriptionOfOrder(descriptionOfOrder);
-        customerOrder.setAddress(address);
-        customerOrder.setStatusOfOrder(waitingForSuggestExpert);
-        customerOrder.setProposedPrice(validatedPrice);
-        customerOrder.setSubService(subDuty);
-        customerOrder.setTimeOfDoing(timeOfWork);
-
-        customerOrderRepository.save(customerOrder);
-
-    }
-
-    @Override
-    public void saveSubDutyByAdmin(Integer dutyId, String subServiceName) {
+    public void saveSubDutyByAdmin(Integer dutyId, SubDuty subDuty) {
         Duty duty = dutyRepository.findById(dutyId).orElse(null);
+        String subServiceName = subDuty.getSubServiceName();
 
         if (duty == null) {
             System.out.println("i dint have this duty ! ");
@@ -81,12 +49,6 @@ public class SubDutyServiceImpl implements SubDutyService {
             if (bySubServiceName.isPresent()) {
                 System.out.println(" i have this subDuty");
             } else {
-                SubDuty subDuty = new SubDuty();
-                subDuty.setSubServiceName("homeElectronic");
-                subDuty.setDescription("ddddddddddddd");
-                subDuty.setPrice(250.00);
-                subDuty.setService(duty);
-
                 subDutyRepository.save(subDuty);
                 System.out.println("subDuty added to data base ! ");
 
@@ -94,16 +56,16 @@ public class SubDutyServiceImpl implements SubDutyService {
         }
     }
 
-    @Transactional
     @Override
     public void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription) {
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
+        Optional<SubDuty> optionalSubDuty = subDutyRepository.findById(subDutyId);
 
-        if (subDuty != null) {
+        if (optionalSubDuty.isPresent()) {
+            SubDuty subDuty = optionalSubDuty.get();
             subDuty.setDescription(newDescription);
             subDutyRepository.save(subDuty);
         } else {
-            System.out.println(" i do not have this id in subDuty !");
+            System.out.println("You cannot change the password. admin with ID " + subDutyId + " does not exist.");
         }
     }
 

@@ -2,15 +2,20 @@ package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
+import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.SubDutyService;
-import org.junit.jupiter.api.Test;
+import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
@@ -18,92 +23,93 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SubDutyServiceImplTest {
-    @Mock
+    @Autowired
     private DutyRepository dutyRepository;
 
-    @Mock
+    @Autowired
     private SubDutyRepository subDutyRepository;
 
-    @InjectMocks
+    @Autowired
     private SubDutyService subDutyService;
 
+    Duty dutys;
+    SubDuty subDutys;
+
+    @BeforeEach
+    void setUpDuty() {
+        Duty duty = new Duty(
+                "electronic");
+        dutys = dutyRepository.save(duty);
+    }
+
+    @BeforeEach
+    void setUpSubDuty() {
+
+        SubDuty subDuty = new SubDuty(
+                "gaz",
+                500.00,
+                "dafergergergrgrver",
+                dutys);
+
+        subDutys=subDutyRepository.save(subDuty);
+
+
+    }
+
     @Test
+    @Order(1)
     void saveSubDutyByAdminWhenDutyExistsAndSubDutyDoesNotExist() {
-        Integer dutyId = 123;
-        String subServiceName = "homeElectronic";
+        Integer dutyId = dutys.getId();
+        Duty duty = dutyRepository.findById(dutyId).orElse(null);
+        assertNotNull(duty);
+        SubDuty subDuty1 = subDutyRepository.findBySubServiceName("bargh").orElse(null);
+        assertNull(subDuty1);
 
-        Duty duty = new Duty();
-        when(dutyRepository.findById(eq(dutyId))).thenReturn(Optional.of(duty));
-
-        when(subDutyRepository.findBySubServiceName(eq(subServiceName))).thenReturn(Optional.empty());
-
-        subDutyService.saveSubDutyByAdmin(dutyId, subServiceName);
-
-        verify(dutyRepository, times(1)).findById(eq(dutyId));
-        verify(subDutyRepository, times(1)).findBySubServiceName(eq(subServiceName));
-
-    }
-
-    @Test
-    void saveSubDutyByAdminWhenDutyDoesNotExist() {
-        Integer dutyId = 123;
-        String subServiceName = "homeElectronic";
-        when(dutyRepository.findById(eq(dutyId))).thenReturn(Optional.empty());
-        subDutyService.saveSubDutyByAdmin(dutyId, subServiceName);
-        verify(dutyRepository, times(1)).findById(eq(dutyId));
-        verify(subDutyRepository, never()).findBySubServiceName(any());
-
-
-    }
-
-    @Test
-    void saveSubDutyByAdminWhenSubDutyExists() {
-        Integer dutyId = 123;
-        String subServiceName = "homeElectronic";
-
-        Duty duty = new Duty();
-        when(dutyRepository.findById(eq(dutyId))).thenReturn(Optional.of(duty));
+        String subServiceName = "gaz";
+        Double price = 500.00;
+        String description = "dafergergergrgrver";
 
         SubDuty subDuty = new SubDuty();
-        when(subDutyRepository.findBySubServiceName(eq(subServiceName))).thenReturn(Optional.of(subDuty));
+        subDuty.setService(duty);
+        subDuty.setPrice(price);
+        subDuty.setDescription(description);
+        subDuty.setSubServiceName(subServiceName);
+        assertNotNull(subDuty);
+        subDutyService.saveSubDutyByAdmin(dutyId, subDuty);
 
-        subDutyService.saveSubDutyByAdmin(dutyId, subServiceName);
+
     }
 
     @Test
     void changeDescriptionOfSubDuty() {
-        Integer subDutyId = 1;
-        String newDescription = "mamad";
+        Optional<SubDuty> subDuty = subDutyRepository.findBySubServiceName("gaz");
+        assertNotNull(subDuty);
+        Integer id = subDuty.get().getId();
 
-        SubDuty subDuty = new SubDuty();
-        subDuty.setId(subDutyId);
-        subDuty.setDescription(newDescription);
+        String newPassword = "newDescription123";
+        assertNotNull(newPassword);
+        subDutyService.changeDescriptionOfSubDuty(id, newPassword);
 
-        when(subDutyRepository.findById(subDutyId)).thenReturn(Optional.of(subDuty));
-
-        subDutyService.changeDescriptionOfSubDuty(subDutyId, newDescription);
-
-        assertEquals(newDescription, subDuty.getDescription());
-        verify(subDutyRepository, times(1)).findById(subDutyId);
-        verify(subDutyRepository, times(1)).save(subDuty);
+        String changedDescription= subDuty.get().getDescription();
+        assertNotNull(changedDescription);
+        assertEquals(newPassword, changedDescription);
     }
 
     @Test
     void changePriceOfSubDutyByAdmin() {
-        Integer subDutyId = 1;
+        Integer subDutyId = subDutys.getId();
         Double newPrice = 10.99;
 
         SubDuty subDuty = new SubDuty();
         subDuty.setPrice(newPrice);
-        Mockito.when(subDutyRepository.findById(subDutyId)).thenReturn(Optional.of(subDuty));
 
-        subDutyService.changePriceOfSubDutyByAdmin(subDutyId,newPrice);
+        subDutyService.changePriceOfSubDutyByAdmin(subDutyId, newPrice);
 
-        assertEquals(newPrice,subDuty.getPrice());
-        verify(subDutyRepository, times(1)).findById(subDutyId);
-        verify(subDutyRepository, times(1)).save(subDuty);
+        assertEquals(newPrice, subDuty.getPrice());
 
     }
 

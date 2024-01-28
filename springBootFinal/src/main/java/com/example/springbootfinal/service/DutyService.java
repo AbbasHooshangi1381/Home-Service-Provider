@@ -1,5 +1,7 @@
 package com.example.springbootfinal.service;
 
+import com.example.springbootfinal.domain.serviceEntity.Duty;
+
 public interface DutyService {
-    void saveServiceByAdmin(String dutyName);
+    Duty saveServiceByAdmin(String dutyName);
 }

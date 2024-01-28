@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 
 public interface DutyRepository extends JpaRepository<Duty,Integer> {
-    boolean existsByName(String name);
+    Optional<Duty> findByName(String name);
 
 }

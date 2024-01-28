@@ -85,25 +85,15 @@ public class AdminServiceImpl implements AdminService {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static String validationNames(String firstName) {
-        boolean isTrue = true;
-        while (isTrue) {
-            if (validationName(firstName)) {
-                isTrue = false;
-            } else {
-                System.out.println("Please enter a valid name!");
-            }
+        if (!validationName(firstName)) {
+            throw new RuntimeException("Please enter a valid name!");
         }
         return firstName;
     }
 
     public static String validationEmails(String email) {
-        boolean isTrue = true;
-        while (isTrue) {
-            if (validateEmail(email)) {
-                isTrue = false;
-            } else {
-                System.out.println("Please enter a valid email address!");
-            }
+        if (!validateEmail(email)) {
+            throw new RuntimeException("Please enter a valid email address!");
         }
         return email;
     }

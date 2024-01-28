@@ -48,4 +48,13 @@ public class CustomerOrder extends BaseEntity<Integer> {
         this.customer = customer;
         this.statusOfOrder = statusOfOrder;
     }
+
+    public CustomerOrder( String descriptionOfOrder, Double proposedPrice, String timeOfDoing,
+                         String address, StatusOfOrder statusOfOrder) {
+        this.descriptionOfOrder = descriptionOfOrder;
+        this.proposedPrice = proposedPrice;
+        this.timeOfDoing = timeOfDoing;
+        this.address = address;
+        this.statusOfOrder = statusOfOrder;
+    }
 }

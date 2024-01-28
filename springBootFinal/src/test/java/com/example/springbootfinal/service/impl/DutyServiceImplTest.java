@@ -1,31 +1,40 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.DutyRepository;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DutyServiceImplTest {
 
-    private AdminRepository adminRepository;
+    @Autowired
     private DutyRepository dutyRepository;
-
-    private AdminServiceImpl adminService;
+    @Autowired
     private DutyServiceImpl dutyService;
 
     @Test
+    @Order(1)
     void saveServiceByAdminTest() {
         String dutyName = "electronic";
-        boolean isExceptionThrown = false;
+        Optional<Duty> byName = dutyRepository.findByName(dutyName);
 
-        try {
-            dutyRepository.existsByName(dutyName);
-            dutyService.saveServiceByAdmin(dutyName);
-        } catch (RuntimeException e) {
-            isExceptionThrown = true;
-            assertEquals("خدمت تکراری است.", e.getMessage());
-        }
+        dutyService.saveServiceByAdmin(dutyName);
 
-        assertTrue(isExceptionThrown);
+        assertNotNull(dutyName,"it should not be null");
+        assertFalse(byName.isPresent());
     }
 }

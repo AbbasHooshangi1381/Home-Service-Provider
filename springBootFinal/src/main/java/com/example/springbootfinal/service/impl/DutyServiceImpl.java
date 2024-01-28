@@ -5,6 +5,8 @@ import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.service.DutyService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class DutyServiceImpl implements DutyService {
 
@@ -15,16 +17,15 @@ public class DutyServiceImpl implements DutyService {
     }
 
     @Override
-    public void saveServiceByAdmin(String dutyName) {
-        boolean byName = dutyRepository.existsByName(dutyName);
-
-        if (byName == true) {
+    public Duty saveServiceByAdmin(String dutyName) {
+        Optional<Duty> duty1 = dutyRepository.findByName(dutyName);
+        if (duty1.isPresent()) {
             System.out.println("i have this service");
-        } else {
+        }
             Duty duty = new Duty(dutyName);
             dutyRepository.save(duty);
             System.out.println("service added to data base ! ");
-        }
+            return duty;
     }
 
 

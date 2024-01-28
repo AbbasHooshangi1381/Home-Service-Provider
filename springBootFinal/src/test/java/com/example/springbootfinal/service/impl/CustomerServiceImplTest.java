@@ -1,8 +1,9 @@
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.userEntity.Admin;
-import com.example.springbootfinal.repository.AdminRepository;
-import com.example.springbootfinal.repository.DutyRepository;
+import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.repository.CustomerRepository;
+import com.example.springbootfinal.service.CustomerService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +14,19 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class AdminServiceImplTest {
+class CustomerServiceImplTest {
 
     @Autowired
-    private AdminRepository adminRepository;
-    @Autowired
-    private AdminServiceImpl adminService;
+    CustomerRepository customerRepository;
 
-    Admin admins;
+    @Autowired
+    CustomerService customerService;
+
+    Customer customer;
 
     @BeforeEach
     void setUp() {
@@ -34,42 +35,28 @@ class AdminServiceImplTest {
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
-        admins = adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
     }
 
     @Test
     @Order(1)
-    void saveAdmin_allValidationsAndDatabaseBehavior() {
-        assertNotNull(admins);
-
+    void saveCustomer() {
+        assertNotNull(customer);
     }
 
     @Test
-    @Order(2)
-    void findByUserNameAndPassword() {
-        String email = admins.getEmail();
-        Optional<Admin> byEmail = adminRepository.findByEmail(email);
-        String password = byEmail.get().getPassword();
-        String userName = byEmail.get().getUserName();
-        Optional<Admin> byUserNameAndPassword = adminRepository.findByUserNameAndPassword(userName, password);
-        assertTrue(byUserNameAndPassword.isPresent());
-        System.out.println("you are in system ");
-    }
-
-    @Test
-    @Order(3)
-    void changePasswordWithAdmin() {
-        Optional<Admin> byEmail = adminRepository.findByEmail("abbas.ali@example.com");
+    @Order(1)
+    void changePassword() {
+         String email = customer.getEmail();
+        Optional<Customer> byEmail = customerRepository.findByEmail(email);
         Integer id = byEmail.get().getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
 
-        adminService.changePassword(id, newPassword);
+        customerService.changePassword(id, newPassword);
 
         String changedPassword = byEmail.get().getPassword();
         assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
     }
-
-
 }
