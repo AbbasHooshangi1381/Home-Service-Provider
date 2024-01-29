@@ -1,11 +1,14 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
+import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.service.CustomerService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,14 +21,12 @@ import static com.example.springbootfinal.validation.Validation.generateRandomPa
 @Transactional
 @Service
 public class CustomerServiceImpl implements CustomerService {
-
+    @Autowired
     CustomerRepository customerRepository;
+    @Autowired
     CustomerOrderRepository customerOrderRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerOrderRepository customerOrderRepository) {
-        this.customerRepository = customerRepository;
-        this.customerOrderRepository = customerOrderRepository;
-    }
+
 
 
     @Override
@@ -61,6 +62,24 @@ public class CustomerServiceImpl implements CustomerService {
             System.out.println("You cannot change the password. admin with ID " + id + " does not exist.");
             return false;
         }
+    }
+
+    @Override
+    public void changeStatusOfOrderByCustomerStarted(Integer orderId) {
+        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
+        byId.ifPresent(customerOrder -> {
+            customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
+            customerOrderRepository.save(customerOrder);
+        });
+    }
+
+    @Override
+    public void changeStatusOfOrderByCustomerToFinish(Integer orderId) {
+        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
+        byId.ifPresent(customerOrder -> {
+            customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
+            customerOrderRepository.save(customerOrder);
+        });
     }
 
 

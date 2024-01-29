@@ -16,19 +16,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class AdminServiceImplTest {
 
     @Autowired
-    private AdminRepository adminRepository;
+    private  AdminRepository adminRepository;
     @Autowired
-    private AdminServiceImpl adminService;
+    private  AdminServiceImpl adminService;
 
-    Admin admins;
+     Admin admins;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    public void setupClass() {
         String validFirstName = "John";
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
@@ -59,7 +60,8 @@ class AdminServiceImplTest {
     @Test
     @Order(3)
     void changePasswordWithAdmin() {
-        Optional<Admin> byEmail = adminRepository.findByEmail("abbas.ali@example.com");
+        String email = admins.getEmail();
+        Optional<Admin> byEmail = adminRepository.findByEmail(email);
         Integer id = byEmail.get().getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
@@ -67,7 +69,6 @@ class AdminServiceImplTest {
         adminService.changePassword(id, newPassword);
 
         String changedPassword = byEmail.get().getPassword();
-        assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
     }
 

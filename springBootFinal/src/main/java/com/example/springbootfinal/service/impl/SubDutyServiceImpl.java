@@ -1,46 +1,38 @@
 package com.example.springbootfinal.service.impl;
 
-import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
-import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
-import com.example.springbootfinal.domain.userEntity.Admin;
-import com.example.springbootfinal.domain.userEntity.Customer;
-import com.example.springbootfinal.repository.CustomerOrderRepository;
-import com.example.springbootfinal.repository.CustomerRepository;
-import com.example.springbootfinal.repository.DutyRepository;
-import com.example.springbootfinal.repository.SubDutyRepository;
+import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.SubDutyService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class SubDutyServiceImpl implements SubDutyService {
-
+    @Autowired
     DutyRepository dutyRepository;
+    @Autowired
     SubDutyRepository subDutyRepository;
+    @Autowired
     CustomerRepository customerRepository;
+    @Autowired
     CustomerOrderRepository customerOrderRepository;
-
-    public SubDutyServiceImpl(SubDutyRepository subDutyRepository, DutyRepository dutyRepository
-            , CustomerRepository customerRepository, CustomerOrderRepository customerOrderRepository) {
-        this.subDutyRepository = subDutyRepository;
-        this.dutyRepository = dutyRepository;
-        this.customerRepository = customerRepository;
-        this.customerOrderRepository = customerOrderRepository;
-    }
+    @Autowired
+    ExpertRepository expertRepository;
 
     @Override
-    public void saveSubDutyByAdmin(Integer dutyId, SubDuty subDuty) {
-        Duty duty = dutyRepository.findById(dutyId).orElse(null);
-        String subServiceName = subDuty.getSubServiceName();
+    public void saveSubDutyByAdmin(Integer dutyId,String subServiceName,Double priceOfSubDuty,String description ) {
 
+        Duty duty = dutyRepository.findById(dutyId).orElse(null);
         if (duty == null) {
             System.out.println("i dint have this duty ! ");
 
@@ -49,6 +41,11 @@ public class SubDutyServiceImpl implements SubDutyService {
             if (bySubServiceName.isPresent()) {
                 System.out.println(" i have this subDuty");
             } else {
+                SubDuty subDuty=new SubDuty();
+                subDuty.setSubServiceName(subServiceName);
+                subDuty.setPrice(priceOfSubDuty);
+                subDuty.setService(duty);
+                subDuty.setDescription(description);
                 subDutyRepository.save(subDuty);
                 System.out.println("subDuty added to data base ! ");
 
@@ -82,9 +79,28 @@ public class SubDutyServiceImpl implements SubDutyService {
     }
 
     @Override
-    public void showSubDuty() {
-        subDutyRepository.findAll().forEach(System.out::println);
+    public List<SubDuty> showSubDuty() {
+        List<SubDuty> all = subDutyRepository.findAll();
+        return all;
+    }
 
+    @Override
+    public void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId) {
+         SubDuty subDuty =subDutyRepository.findById(subServiceId).orElse(null);
+         List<Expert> all =expertRepository.findAll();
+        if (subDuty!=null){
+             subDuty.setExperts(all);
+             subDutyRepository.save(subDuty);
+         }
+    }
+
+    @Override
+    public void deleteExpertInSubDutyField(Integer subDutyId) {
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
+        if (subDuty != null) {
+            subDuty.setExperts(null);
+            subDutyRepository.save(subDuty);
+        }
     }
 
 

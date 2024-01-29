@@ -1,11 +1,16 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
+import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.DutyRepository;
+import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.SubDutyService;
+import jakarta.transaction.Transactional;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +20,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,9 +34,10 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SubDutyServiceImplTest {
+
     @Autowired
     private DutyRepository dutyRepository;
 
@@ -36,18 +47,19 @@ class SubDutyServiceImplTest {
     @Autowired
     private SubDutyService subDutyService;
 
+    @Autowired
+    ExpertRepository expertRepository;
+
     Duty dutys;
     SubDuty subDutys;
+    SubDuty subDutyss;
+    Expert save;
 
-    @BeforeEach
-    void setUpDuty() {
+    @BeforeAll
+    void setUpDuty() throws IOException {
         Duty duty = new Duty(
                 "electronic");
         dutys = dutyRepository.save(duty);
-    }
-
-    @BeforeEach
-    void setUpSubDuty() {
 
         SubDuty subDuty = new SubDuty(
                 "gaz",
@@ -55,9 +67,21 @@ class SubDutyServiceImplTest {
                 "dafergergergrgrver",
                 dutys);
 
-        subDutys=subDutyRepository.save(subDuty);
+        subDutys = subDutyRepository.save(subDuty);
 
 
+        Expert expert = new Expert(
+                "ali",
+                "ahmadi",
+                "okjggk@gmail.com",
+                "pojguiu2",
+                "aA53@dfr",
+                LocalDate.now(),
+                ExpertStatus.NEW, ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
+                "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg"));
+
+        save = expertRepository.save(expert);
+        assertNotNull(save);
     }
 
     @Test
@@ -73,33 +97,34 @@ class SubDutyServiceImplTest {
         Double price = 500.00;
         String description = "dafergergergrgrver";
 
-        SubDuty subDuty = new SubDuty();
-        subDuty.setService(duty);
-        subDuty.setPrice(price);
-        subDuty.setDescription(description);
-        subDuty.setSubServiceName(subServiceName);
-        assertNotNull(subDuty);
-        subDutyService.saveSubDutyByAdmin(dutyId, subDuty);
+        subDutyService.saveSubDutyByAdmin(dutyId, subServiceName, price, description);
 
 
     }
 
     @Test
+    @Transactional
+    @Order(2)
     void changeDescriptionOfSubDuty() {
-        Optional<SubDuty> subDuty = subDutyRepository.findBySubServiceName("gaz");
-        assertNotNull(subDuty);
-        Integer id = subDuty.get().getId();
+        String subServiceName = subDutys.getSubServiceName();
+        Optional<SubDuty> subDuty = subDutyRepository.findBySubServiceName(subServiceName);
+        if (subDuty.isPresent()) {
+            assertNotNull(subDuty);
+            Integer id = subDuty.get().getId();
 
-        String newPassword = "newDescription123";
-        assertNotNull(newPassword);
-        subDutyService.changeDescriptionOfSubDuty(id, newPassword);
+            String newPassword = "newDescription123";
+            assertNotNull(newPassword);
+            subDutyService.changeDescriptionOfSubDuty(id, newPassword);
 
-        String changedDescription= subDuty.get().getDescription();
-        assertNotNull(changedDescription);
-        assertEquals(newPassword, changedDescription);
+            String changedDescription = subDuty.get().getDescription();
+            assertNotNull(changedDescription);
+            assertEquals(newPassword, changedDescription);
+        }
     }
 
     @Test
+    @Transactional
+    @Order(3)
     void changePriceOfSubDutyByAdmin() {
         Integer subDutyId = subDutys.getId();
         Double newPrice = 10.99;
@@ -113,5 +138,32 @@ class SubDutyServiceImplTest {
 
     }
 
+    @Test
+    @Order(4)
+    void showSubDuty() {
+        List<SubDuty> subDuties = subDutyService.showSubDuty();
+        assertNotNull(subDuties);
+    }
+
+    @Test
+    @Order(5)
+    void deleteExpertInSubDutyField() {
+        Integer id = subDutys.getId();
+        assertNotNull(id);
+        subDutyService.deleteExpertInSubDutyField(id);
+    }
+
+    @Test
+    @Transactional
+    @Order(6)
+    void registerExpertInOneSubDuty() {
+        Integer id = subDutys.getId();
+        assertNotNull(id);
+        Integer id1 = save.getId();
+        Page<Expert> all = expertRepository.findAll(Pageable.ofSize(id1));
+        assertNotNull(all);
+        subDutyService.registerExpertInOneSubDuty(id1, id);
+
+    }
 }
 

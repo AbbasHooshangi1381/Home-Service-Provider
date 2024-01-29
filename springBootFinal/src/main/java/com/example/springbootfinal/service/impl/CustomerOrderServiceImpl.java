@@ -25,22 +25,23 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
     SubDutyRepository subDutyRepository;
+    @Autowired
     CustomerOrderRepository customerOrderRepository;
+    @Autowired
     DutyRepository dutyRepository;
 
 
     @Override
-    public void saveOrder(CustomerOrder customerOrder,Integer customerId,Integer subDutyId) throws SQLException {
+    public CustomerOrder saveOrder(String descriptionOfOrder, double proposedPrice, String timeOfWork, String address,
+                                   StatusOfOrder waitingForSuggestExpert   , Integer customerId, Integer subDutyId) throws SQLException {
         dutyRepository.findAll().forEach(System.out::println);
         subDutyRepository.findAll().forEach(System.out::println);
 
-        CustomerOrder customerOrder1 = new CustomerOrder();
         Customer customer = customerRepository.findById(customerId).orElse(null);
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
-        String descriptionOfOrder = "you should it ! ";
-        double proposedPrice = 8000.00;
-        Optional<SubDuty> bargh = subDutyRepository.findBySubServiceName("bargh");
+        Optional<SubDuty> bargh = subDutyRepository.findBySubServiceName("gaz");
         Double fixPrice = bargh.get().getPrice();
         Double validatedPrice = null;
         if (proposedPrice >= fixPrice) {
@@ -48,10 +49,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         } else {
             System.out.println("your price is under the lowest price");
         }
-        String timeOfWork;
-        timeOfWork = checkAndRegisterTimeOfLoan("1402/11/30");
-        String address = "mashhad";
-        StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
+
+         checkAndRegisterTimeOfLoan(timeOfWork);
+        CustomerOrder customerOrder=new CustomerOrder();
         customerOrder.setCustomer(customer);
         customerOrder.setDescriptionOfOrder(descriptionOfOrder);
         customerOrder.setAddress(address);
@@ -61,6 +61,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         customerOrder.setTimeOfDoing(timeOfWork);
 
         customerOrderRepository.save(customerOrder);
+        return customerOrder;
     }
 
     @Override
@@ -90,22 +91,5 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         });
     }
 
-    @Override
-    public void changeStatusOfOrderByCustomerStarted(Integer orderId) {
-        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
-        byId.ifPresent(customerOrder -> {
-            customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
-            customerOrderRepository.save(customerOrder);
-        });
-    }
-
-    @Override
-    public void changeStatusOfOrderByCustomerToFinish(Integer orderId) {
-        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
-        byId.ifPresent(customerOrder -> {
-            customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
-            customerOrderRepository.save(customerOrder);
-        });
-    }
 
 }

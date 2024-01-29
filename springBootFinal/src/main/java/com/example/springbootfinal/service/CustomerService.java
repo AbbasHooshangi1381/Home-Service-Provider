@@ -9,4 +9,8 @@ public interface CustomerService {
 
     Boolean changePassword(Integer id , String newPassword);
 
+    void changeStatusOfOrderByCustomerStarted(Integer orderId);
+
+    void changeStatusOfOrderByCustomerToFinish(Integer orderId);
+
 }

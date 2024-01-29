@@ -1,27 +1,30 @@
 package com.example.springbootfinal.service;
 
 import com.example.springbootfinal.domain.other.CustomerOrder;
+import com.example.springbootfinal.domain.userEntity.Expert;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ExpertService {
 
      void changeStatusOfExpertByAdmin(Integer expertId);
 
-     void saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn,String filePath) throws IOException ;
+     Expert saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn, String filePath) throws IOException ;
+
+     Optional<Expert> findByUserNameAndPassword(String username, String password);
 
      Boolean changePassword(Integer id , String newPassword);
 
      byte[] saveImageByIdToSystem(Integer id);
 
-     void registerExpertInOneService(Integer expertId , Integer subServiceId);
-
-     void sendOfferForSubDuty(Integer expertId , Integer customerOrderId) throws SQLException;
+     void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,double suggestionPrice,String timeOfWork) throws SQLException;
 
      List<CustomerOrder> customerOrderList();
+
 
 
 

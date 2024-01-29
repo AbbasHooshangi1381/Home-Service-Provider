@@ -1,5 +1,4 @@
 package com.example.springbootfinal.image;
-
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -20,6 +19,11 @@ public class ImageInput {
         }
 
         return Files.readAllBytes(file.toPath());
+    }
+
+    public static boolean isImageExists(String filePath) {
+        File file = new File(filePath);
+        return file.exists() && file.isFile();
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.ExpertStatus;
-import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.userEntity.Expert;
@@ -11,8 +10,8 @@ import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.repository.SuggestionRepository;
 import com.example.springbootfinal.service.ExpertService;
-import com.example.springbootfinal.validation.Validation;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -33,22 +32,18 @@ import static com.example.springbootfinal.validation.Validation.generateRandomPa
 @Service
 @Transactional
 public class ExpertServiceImpl implements ExpertService {
-
+    @Autowired
     ExpertRepository expertRepository;
+    @Autowired
     CustomerOrderRepository customerOrderRepository;
+    @Autowired
     SubDutyRepository subDutyRepository;
+    @Autowired
     SuggestionRepository suggestionRepository;
 
-    public ExpertServiceImpl(ExpertRepository expertRepository, CustomerOrderRepository customerOrderRepository,
-                             SubDutyRepository subDutyRepository, SuggestionRepository suggestionRepository) {
-        this.expertRepository = expertRepository;
-        this.customerOrderRepository = customerOrderRepository;
-        this.subDutyRepository = subDutyRepository;
-        this.suggestionRepository = suggestionRepository;
-    }
 
     @Override
-    public void saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn, String filePath) throws IOException {
+    public Expert saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn, String filePath) throws IOException {
 
         String validatedFirstName = validationNames(firstName);
         String validatedLastName = validationNames(lastName);
@@ -66,11 +61,23 @@ public class ExpertServiceImpl implements ExpertService {
 
         expertRepository.save(expert);
 
+        return expert;
+    }
+
+    @Override
+    public Optional<Expert> findByUserNameAndPassword(String username, String password) {
+        Optional<Expert> byUserNameAndPassword = expertRepository.findByUserNameAndPassword(username, password);
+        if (byUserNameAndPassword.isPresent()){
+            System.out.println("you are in system ");
+        }else {
+            System.out.println("you are not in system ");
+        }
+        return byUserNameAndPassword;
     }
 
 
     @Override
-    public void changeStatusOfExpertByAdmin(Integer id) {
+    public void changeStatusOfExpertByAdmin( Integer id) {
         Optional<Expert> optionalExpert = expertRepository.findById(id);
         if (optionalExpert.isPresent()) {
             Expert expert = optionalExpert.get();
@@ -100,6 +107,7 @@ public class ExpertServiceImpl implements ExpertService {
     @Override
     public byte[] saveImageByIdToSystem(Integer id) {
         Expert expert = expertRepository.findById(id).orElse(null);
+
         assert expert != null;
         byte[] personalPhoto = expert.getPersonalPhoto();
 
@@ -115,18 +123,11 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
-    public void registerExpertInOneService(Integer expertId, Integer subServiceId) {
-
-    }
-
-    @Override
-    public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId) throws SQLException {
+    public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,double suggestionPrice,String timeOfWork) throws SQLException {
         Optional<Expert> byId = expertRepository.findById(expertId);
         CustomerOrder customerOrder = customerOrderRepository.findById(expertId).orElse(null);
         Suggestion suggestion = new Suggestion();
-        double suggestionPrice = 500.00;
-        String timeOfWork;
-        timeOfWork = checkAndRegisterTimeOfLoan("1402/11/30");
+         String time = checkAndRegisterTimeOfLoan(timeOfWork);
         if (customerOrder != null) {
             Double proposedPrice = customerOrder.getProposedPrice();
             Double validatedPrice = null;
@@ -138,12 +139,11 @@ public class ExpertServiceImpl implements ExpertService {
             }
 
             suggestion.setSuggestionPrice(validatedPrice);
-            suggestion.setTimeOfSendSuggestion(LocalDate.parse(timeOfWork));
+            suggestion.setTimeOfSendSuggestion(LocalDate.parse(time));
             suggestion.setDurationTimeOfWork("2hours");
             suggestionRepository.save(suggestion);
             customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
             customerOrderRepository.save(customerOrder);
-
 
         }
     }

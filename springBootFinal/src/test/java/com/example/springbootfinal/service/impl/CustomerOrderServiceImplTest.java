@@ -21,12 +21,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.example.springbootfinal.service.impl.SubDutyServiceImpl.checkAndRegisterTimeOfLoan;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CustomerOrderServiceImplTest {
 
@@ -45,53 +46,73 @@ class CustomerOrderServiceImplTest {
 
     private Customer customer;
     private Duty dutys;
-    private SubDuty subDuty;
+    private SubDuty subDutys;
+    private CustomerOrder customerOrders;
 
-    @BeforeEach
-    void setUpCustomer() {
+    @BeforeAll
+    void setUpCustomer() throws SQLException {
 
         String validFirstName = "John";
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
-        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
-    }
-    @BeforeEach
-    void setUpDuty() {
+
+        customer=customerService.saveCustomer(validFirstName,validLastName,validEmail,validUserName,validTimeOfSignIn);
+
         Duty duty = new Duty(
                 "electronic");
         dutys = dutyRepository.save(duty);
-    }
-    @BeforeEach
-    void setUpSubDuty() {
 
         SubDuty subDuty = new SubDuty(
                 "gaz",
                 500.00,
                 "dafergergergrgrver",
                 dutys);
+        subDutys = subDutyRepository.save(subDuty);
 
+        Integer id = customer.getId();
+        assertNotNull(id);
+        Integer id1 = subDutys.getId();
+        assertNotNull(id1);
+        String descriptionOfOrder = "you should it ! ";
+        double proposedPrice = 8000.00;
+        String timeOfWork = "1402/11/30";
+        String address = "mashhad";
+        StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
 
+       customerOrders= customerOrderService.saveOrder(descriptionOfOrder,
+                proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
+
 
     @Test
     @Order(1)
-    public void saveOrder() throws SQLException {
-        dutyRepository.findAll().forEach(System.out::println);
-        subDutyRepository.findAll().forEach(System.out::println);
-
+    void findByCustomerIdOrderByProposedPriceDesc() {
         Integer id = customer.getId();
-        Integer id1 = subDuty.getId();
-        String descriptionOfOrder = "you should it ! ";
-        double proposedPrice = 8000.00;
-        String timeOfWork="1402/11/30";
-        String address = "mashhad";
-        StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
-        CustomerOrder customerOrder1=new CustomerOrder(descriptionOfOrder,proposedPrice,timeOfWork,address,waitingForSuggestExpert);
-        assertNotNull(customerOrder1);
-        customerOrderService.saveOrder(customerOrder1,id,id1);
+        assertNotNull(id);
+        List<CustomerOrder> byCustomerIdOrderByProposedPriceDesc =
+                customerOrderService.findByCustomerIdOrderByProposedPriceDesc(id);
+        assertNotNull(byCustomerIdOrderByProposedPriceDesc);
+    }
 
+    @Test
+    @Order(2)
+    void findByCustomerIdOrderByExpertStarsDesc() {
+        Integer id = customer.getId();
+        assertNotNull(id);
+
+        final List<CustomerOrder> byCustomerIdOrderByExpertStarsDesc =
+                customerOrderService.findByCustomerIdOrderByExpertStarsDesc(id);
+        assertNotNull(byCustomerIdOrderByExpertStarsDesc);
+    }
+
+    @Test
+    @Order(3)
+    void changeStatusOfOrderByCustomerToWaitingToCome() {
+         Integer id = customerOrders.getId();
+         assertNotNull(id);
+         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(id);
     }
 
 }
