@@ -89,8 +89,9 @@ class ExpertServiceImplTest {
                 "pojguiu2",
                 "aA53@dfr",
                 LocalDate.now(),
-                ExpertStatus.NEW, ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
-                "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg"));
+                ExpertStatus.NEW,
+                ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
+                        "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg"));
         save = expertRepository.save(expert);
         assertNotNull(save);
 
@@ -106,6 +107,23 @@ class ExpertServiceImplTest {
         customerOrder = customerOrderService.saveOrder(descriptionOfOrder,
                 proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
+
+    @Test
+    @Order(1)
+    void saveExperts() throws IOException {
+        String name = "aldi";
+        String lastname = "ahmfrfadi";
+        String emails = "okdfejggk@gmail.com";
+        String username = "pojgdduiu2";
+        LocalDate localDates = LocalDate.now();
+       String location="D:\\file of intelli j\\springBootFinal\\" +
+                        "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg";
+
+         Expert expertss = expertService.saveExpert(name, lastname, emails, username, localDates, location);
+         assertNotNull(expertss);
+    }
+
+
     @Test
     @Transactional
     @Order(2)
@@ -120,6 +138,7 @@ class ExpertServiceImplTest {
         assert updatedExpert != null;
         Assertions.assertEquals(ExpertStatus.CONFIRMED, updatedExpert.getExpertStatus());
     }
+
     @Test
     @Transactional
     @Order(3)
@@ -128,9 +147,11 @@ class ExpertServiceImplTest {
         Optional<Expert> byEmail = expertRepository.findByEmail(email);
         String password = byEmail.get().getPassword();
         String userName = byEmail.get().getUserName();
-        Optional<Expert> byUserNameAndPassword = expertRepository.findByUserNameAndPassword(userName, password);
+        Optional<Expert> byUserNameAndPassword = expertService.findByUserNameAndPassword(userName, password);
         assertTrue(byUserNameAndPassword.isPresent());
-        System.out.println("you are in system ");
+        Optional<Expert> byUserNameAndPassword1 = expertService.findByUserNameAndPassword("aaaaaa", "bbbbbbb");
+        assertFalse(byUserNameAndPassword1.isPresent());
+
     }
 
     @Test
@@ -141,11 +162,15 @@ class ExpertServiceImplTest {
         Integer id = experts.getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
-        expertService.changePassword(id, newPassword);
+        Boolean aBoolean = expertService.changePassword(id, newPassword);
+        assertTrue(aBoolean);
         String changedPassword = experts.getPassword();
         assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
+         Boolean aBoolean1 = expertService.changePassword(2, newPassword);
+         assertFalse(aBoolean1);
     }
+
     @Test
     @Order(5)
     void saveImageByIdToSystem() {
@@ -156,6 +181,7 @@ class ExpertServiceImplTest {
                 + 22 + ".jpg");
         assertTrue(imageExists);
     }
+
     @Test
     @Order(6)
     void sendOfferForSubDuty() throws SQLException {
@@ -165,6 +191,7 @@ class ExpertServiceImplTest {
         assertNotNull(id1);
         expertService.sendOfferForSubDuty(id, id1, 5000.00, "1402/11/19");
     }
+
     @Test
     @Order(7)
     void customerOrderList() {

@@ -1,6 +1,8 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
@@ -9,6 +11,8 @@ import com.example.springbootfinal.service.AdminService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import static com.example.springbootfinal.validation.RegexValidation.validateEmail;
 import static com.example.springbootfinal.validation.RegexValidation.validationName;
@@ -64,7 +68,35 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public void addingSubDutyToExpert(Expert expert, SubDuty subDuty) {
+        if (expert==null||subDuty==null){
+            System.out.println("the expert or subDuty is null !");
+        }
+        if (subDuty.getExperts()==null){
+            List<Expert> expertList=new ArrayList<>();
+            expertList.add(expert);
+            subDuty.setExperts(expertList);
+        }else {
+            List<Expert>expertLists=subDuty.getExperts();
+            expertLists.add(expert);
+        }
+        subDutyRepository.save(subDuty);
+    }
 
+    @Override
+    public void deletingSubDutyToExpert(Expert expert, SubDuty subDuty) {
+        if (expert==null||subDuty==null){
+            System.out.println("the expert or subDuty is null !");
+        }
+        assert subDuty != null;
+        if (subDuty.getExperts()!=null){
+             List<Expert> experts = subDuty.getExperts();
+             subDuty.setExperts(null);
+            System.out.println("deleted");
+        }
+        subDutyRepository.save(subDuty);
+    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////

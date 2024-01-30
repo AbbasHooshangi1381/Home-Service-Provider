@@ -1,8 +1,16 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.enumurations.ExpertStatus;
+import com.example.springbootfinal.domain.serviceEntity.Duty;
+import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
+import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.DutyRepository;
+import com.example.springbootfinal.repository.ExpertRepository;
+import com.example.springbootfinal.repository.SubDutyRepository;
+import com.example.springbootfinal.service.SubDutyService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,32 +18,72 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AdminServiceImplTest {
     @Autowired
-    private  AdminRepository adminRepository;
+    private AdminRepository adminRepository;
     @Autowired
-    private  AdminServiceImpl adminService;
-     Admin admins;
+    private AdminServiceImpl adminService;
+    @Autowired
+    DutyRepository dutyRepository;
+    @Autowired
+    SubDutyRepository subDutyRepository;
+    @Autowired
+    ExpertRepository expertRepository;
+
+
+    Admin admins;
+    Expert save;
+    Duty dutys;
+    SubDuty subDutys;
+
     @BeforeAll
-    public void setupClass() {
+    public void setupClass() throws IOException {
         String validFirstName = "John";
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
         admins = adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+
+        Duty duty = new Duty(
+                "electronic");
+        dutys = dutyRepository.save(duty);
+
+        SubDuty subDuty = new SubDuty(
+                "gaz",
+                500.00,
+                "dafergergergrgrver",
+                dutys);
+        subDutys = subDutyRepository.save(subDuty);
+
+        Expert expert = new Expert(
+                "ali",
+                "ahmadi",
+                "okjggk@gmail.com",
+                "pojguiu2",
+                "aA53@dfr",
+                LocalDate.now(),
+                ExpertStatus.NEW, ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
+                "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg"));
+        save = expertRepository.save(expert);
+        assertNotNull(save);
     }
+
     @Test
     @Order(1)
     void saveAdmin_allValidationsAndDatabaseBehavior() {
         assertNotNull(admins);
     }
+
     @Test
     @Order(2)
     void saveAdmin_withEmailRepeat() {
@@ -51,18 +99,19 @@ class AdminServiceImplTest {
             assertEquals("ایمیل تکراری است.", e.getMessage());
         }
     }
+
     @Test
     @Order(3)
     void findByUserNameAndPassword() {
         String email = admins.getEmail();
-         Admin admin = adminRepository.findByEmail(email).get();
+        Admin admin = adminRepository.findByEmail(email).get();
         String password = admin.getPassword();
         assertNotNull(password);
         String userName = admin.getUserName();
         assertNotNull(userName);
-        Optional<Admin> byUserNameAndPassword = adminRepository.findByUserNameAndPassword(userName, password);
+        Optional<Admin> byUserNameAndPassword = adminService.findByUserNameAndPassword(userName, password);
         assertTrue(byUserNameAndPassword.isPresent());
-        Optional<Admin> byUserNameAndPassword1 = adminRepository.findByUserNameAndPassword("aaaa", "bbbb");
+        Optional<Admin> byUserNameAndPassword1 = adminService.findByUserNameAndPassword("aaaa", "bbbb");
         assertFalse(byUserNameAndPassword1.isPresent());
     }
 
@@ -79,5 +128,25 @@ class AdminServiceImplTest {
         assertTrue(aBoolean);
         String changedPassword = byEmail.get().getPassword();
         assertEquals(newPassword, changedPassword);
+    }
+
+    @Test
+    @Order(5)
+    void addingSubDutyToExpert() {
+        Expert expert = save;
+        assertNotNull(expert);
+        SubDuty subDuty = subDutys;
+        assertNotNull(subDuty);
+        adminService.addingSubDutyToExpert(expert, subDuty);
+    }
+
+    @Test
+    @Order(6)
+    void deletingSubDutyToExpert() {
+        Expert expert = save;
+        assertNotNull(expert);
+        SubDuty subDuty = subDutys;
+        assertNotNull(subDuty);
+        adminService.deletingSubDutyToExpert(expert, subDuty);
     }
 }

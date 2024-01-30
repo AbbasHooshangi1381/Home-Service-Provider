@@ -131,15 +131,17 @@ class SubDutyServiceImplTest {
         subDutyService.deleteExpertInSubDutyField(id);
     }
     @Test
-    @Transactional
     @Order(6)
     void registerExpertInOneSubDuty() {
         Integer id = subDutys.getId();
         assertNotNull(id);
         Integer id1 = save.getId();
-        Page<Expert> all = expertRepository.findAll(Pageable.ofSize(id1));
+        assertNotNull(id1);
+        List<Expert> all = expertRepository.findAll();
         assertNotNull(all);
         subDutyService.registerExpertInOneSubDuty(id1, id);
     }
+
+
 }
 

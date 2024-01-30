@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,6 +93,7 @@ public class SubDutyServiceImpl implements SubDutyService {
             subDutyRepository.save(subDuty);
         }
     }
+
     public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {
         LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         LocalDate firstStartDate = LocalDate.parse("1402-10-27", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
