@@ -161,15 +161,6 @@ class ExpertServiceImplTest {
     @Test
     @Order(5)
     void saveImageByIdToSystem() {
-  /*      Integer id = save.getId();
-        byte[] expectedPhoto = save.getPersonalPhoto();
-        byte[] bytes = expertService.saveImageByIdToSystem(id);
-        assertNotNull(bytes);
-        assertArrayEquals(expectedPhoto, bytes);
-
-        int nonExistingId = 99;
-        byte[] nonExistingPhoto = expertService.saveImageByIdToSystem(nonExistingId);
-        assertNull(nonExistingPhoto);*/
         Integer id = save.getId();
         byte[] bytes = expertService.saveImageByIdToSystem(id);
         assertNotNull(bytes);
@@ -187,6 +178,7 @@ class ExpertServiceImplTest {
         Integer id1 = customerOrder.getId();
         assertNotNull(id1);
         expertService.sendOfferForSubDuty(id, id1, 5000.00, "1402/11/19");
+
 
     }
 

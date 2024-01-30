@@ -27,11 +27,14 @@ class DutyServiceImplTest {
     @Order(1)
     void saveServiceByAdminTest() {
         String dutyName = "electronic";
-        Optional<Duty> byName = dutyRepository.findByName(dutyName);
+        Optional<Duty> byNameBefore = dutyRepository.findByName(dutyName);
+        assertTrue(byNameBefore.isEmpty());
+        Duty savedDuty = dutyService.saveServiceByAdmin(dutyName);
 
-        dutyService.saveServiceByAdmin(dutyName);
+        assertNotNull(savedDuty);
 
-        assertNotNull(dutyName,"it should not be null");
-        assertFalse(byName.isPresent());
+        Optional<Duty> byNameAfter = dutyRepository.findByName(dutyName);
+        assertTrue(byNameAfter.isPresent());
+      //  assertEquals(savedDuty, byNameAfter.get());
     }
 }

@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,9 +68,9 @@ public class ExpertServiceImpl implements ExpertService {
     @Override
     public Optional<Expert> findByUserNameAndPassword(String username, String password) {
         Optional<Expert> byUserNameAndPassword = expertRepository.findByUserNameAndPassword(username, password);
-        if (byUserNameAndPassword.isPresent()){
+        if (byUserNameAndPassword.isPresent()) {
             System.out.println("you are in system ");
-        }else {
+        } else {
             System.out.println("you are not in system ");
         }
         return byUserNameAndPassword;
@@ -77,7 +78,7 @@ public class ExpertServiceImpl implements ExpertService {
 
 
     @Override
-    public void changeStatusOfExpertByAdmin( Integer id) {
+    public void changeStatusOfExpertByAdmin(Integer id) {
         Optional<Expert> optionalExpert = expertRepository.findById(id);
         if (optionalExpert.isPresent()) {
             Expert expert = optionalExpert.get();
@@ -123,28 +124,30 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
-    public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,double suggestionPrice,String timeOfWork) throws SQLException {
+    public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, double suggestionPrice, String timeOfWork) throws SQLException {
         Optional<Expert> byId = expertRepository.findById(expertId);
-        CustomerOrder customerOrder = customerOrderRepository.findById(expertId).orElse(null);
+        Optional<CustomerOrder> customerOrderOpt = customerOrderRepository.findById(customerOrderId);
+        if (customerOrderOpt.isEmpty()) {
+            throw new IllegalArgumentException("Invalid customerOrderId");
+        }
+
+        CustomerOrder customerOrder = customerOrderOpt.get();
         Suggestion suggestion = new Suggestion();
-         String time = checkAndRegisterTimeOfLoan(timeOfWork);
-        if (customerOrder != null) {
-            Double proposedPrice = customerOrder.getProposedPrice();
-            Double validatedPrice = null;
-            if (byId.isPresent()) {
-                if (suggestionPrice >= proposedPrice) {
-                    validatedPrice = proposedPrice;
-                }
+        Double proposedPrice = customerOrder.getProposedPrice();
+        //   Double validatedPrice ;
+        if (byId.isPresent()) {
+            if (suggestionPrice >= proposedPrice) {
+                Double validatedPrice = proposedPrice;
 
+
+                suggestion.setSuggestionPrice(validatedPrice);
+                String time = checkAndRegisterTimeOfLoan(timeOfWork);
+                suggestion.setTimeOfSendSuggestion(LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+                suggestion.setDurationTimeOfWork("2hours");
+                suggestionRepository.save(suggestion);
+                customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
+                customerOrderRepository.save(customerOrder);
             }
-
-            suggestion.setSuggestionPrice(validatedPrice);
-            suggestion.setTimeOfSendSuggestion(LocalDate.parse(time));
-            suggestion.setDurationTimeOfWork("2hours");
-            suggestionRepository.save(suggestion);
-            customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
-            customerOrderRepository.save(customerOrder);
-
         }
     }
 

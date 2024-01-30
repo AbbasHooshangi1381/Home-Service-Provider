@@ -80,8 +80,8 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public List<SubDuty> showSubDuty() {
-        List<SubDuty> all = subDutyRepository.findAll();
-        return all;
+        Optional<Duty> electronic = dutyRepository.findByName("electronic");
+        return electronic.get().getSubServiceList();
     }
 
     @Override

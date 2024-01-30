@@ -52,10 +52,10 @@ class CustomerServiceImplTest {
 
     @BeforeAll
     void setUp() throws SQLException {
-        String validFirstName = "John";
-        String validLastName = "Smith";
-        String validEmail = "abbas.ali@example.com";
-        String validUserName = "johnsmith";
+        String validFirstName = "Jddddohn";
+        String validLastName = "Smddddith";
+        String validEmail = "abbadddds.ali@example.com";
+        String validUserName = "johndddddsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
         customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
 
@@ -75,36 +75,47 @@ class CustomerServiceImplTest {
         String address = "mashhad";
         StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
 
-        customerOrder= customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
+        customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
 
     @Test
     @Order(1)
     void saveCustomer() {
-        assertNotNull(customer);
+        String validFirstName = "John";
+        String validLastName = "Smith";
+        String validEmail = "abbas.ali@example.com";
+        String validUserName = "johnsmith";
+        LocalDate validTimeOfSignIn = LocalDate.now();
+        Customer customer3 = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+        assertNotNull(customer3);
     }
 
     @Test
     @Transactional
     @Order(2)
     void changePassword() {
-         String email = customer.getEmail();
+        String email = customer.getEmail();
         Optional<Customer> byEmail = customerRepository.findByEmail(email);
         Integer id = byEmail.get().getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
 
-        customerService.changePassword(id, newPassword);
+         Boolean aBoolean = customerService.changePassword(id, newPassword);
+         assertTrue(aBoolean);
 
         String changedPassword = byEmail.get().getPassword();
         assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
+
+         Boolean bBoolean = customerService.changePassword(2, "aff52");
+         assertFalse(bBoolean);
     }
+
     @Test
     @Transactional
     @Order(3)
     void changeStatusOfOrderByCustomerStarted() {
-        Integer id = customer.getId();
+        Integer id = customerOrder.getId();
         assertNotNull(id);
         customerService.changeStatusOfOrderByCustomerStarted(id);
     }
@@ -113,7 +124,7 @@ class CustomerServiceImplTest {
     @Transactional
     @Order(4)
     void changeStatusOfOrderByCustomerToFinish() {
-        Integer id = customer.getId();
+        Integer id = customerOrder.getId();
         assertNotNull(id);
         customerService.changeStatusOfOrderByCustomerToFinish(id);
     }

@@ -1,6 +1,8 @@
 package com.example.springbootfinal.image;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +17,14 @@ public class ImageInput {
 
         String extension = FilenameUtils.getExtension(filePath);
         if (!extension.equalsIgnoreCase("jpg")) {
-            System.out.println("Please upload a photo with JPG extension.");
+
+            throw new IllegalArgumentException("Please upload a photo with JPG extension.");
+
+        }
+
+        Image image = ImageIO.read(file);
+        if (image == null) {
+            throw new IllegalArgumentException("The provided file is not a valid image.");
         }
 
         return Files.readAllBytes(file.toPath());
