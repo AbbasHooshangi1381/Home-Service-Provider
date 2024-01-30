@@ -1,10 +1,7 @@
 package com.example.springbootfinal.domain.userEntity;
 
 import com.example.springbootfinal.baseDomain.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,6 +16,7 @@ import java.time.LocalDate;
 public class BaseUser extends BaseEntity<Integer> {
     String firstName;
     String lastName;
+    @Column(unique = true)
     String email;
     String userName;
     String password;

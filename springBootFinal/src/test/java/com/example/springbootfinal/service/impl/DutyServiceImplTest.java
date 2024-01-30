@@ -12,17 +12,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DutyServiceImplTest {
-
     @Autowired
     private DutyRepository dutyRepository;
     @Autowired
     private DutyServiceImpl dutyService;
-
     @Test
     @Order(1)
     void saveServiceByAdminTest() {
@@ -30,11 +27,8 @@ class DutyServiceImplTest {
         Optional<Duty> byNameBefore = dutyRepository.findByName(dutyName);
         assertTrue(byNameBefore.isEmpty());
         Duty savedDuty = dutyService.saveServiceByAdmin(dutyName);
-
         assertNotNull(savedDuty);
-
         Optional<Duty> byNameAfter = dutyRepository.findByName(dutyName);
         assertTrue(byNameAfter.isPresent());
-      //  assertEquals(savedDuty, byNameAfter.get());
     }
 }

@@ -12,7 +12,4 @@ import java.util.Optional;
 
 public interface DutyRepository extends JpaRepository<Duty,Integer> {
     Optional<Duty> findByName(String name);
-
-
-
 }

@@ -9,9 +9,7 @@ import java.util.Optional;
 
 @Service
 public class DutyServiceImpl implements DutyService {
-
     DutyRepository dutyRepository;
-
     public DutyServiceImpl(DutyRepository dutyRepository) {
         this.dutyRepository = dutyRepository;
     }
@@ -27,6 +25,4 @@ public class DutyServiceImpl implements DutyService {
             System.out.println("service added to data base ! ");
             return duty;
     }
-
-
 }

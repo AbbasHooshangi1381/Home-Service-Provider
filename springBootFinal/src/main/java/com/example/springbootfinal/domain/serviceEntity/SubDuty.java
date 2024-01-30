@@ -3,10 +3,7 @@ package com.example.springbootfinal.domain.serviceEntity;
 import com.example.springbootfinal.baseDomain.BaseEntity;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.userEntity.Expert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,7 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class SubDuty extends BaseEntity<Integer> {
-
+    @Column(unique = true)
     String subServiceName;
     Double price;
     String description;

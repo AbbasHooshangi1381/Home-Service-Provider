@@ -10,22 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExpertService {
-
      void changeStatusOfExpertByAdmin(Integer expertId);
-
      Expert saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn, String filePath) throws IOException ;
-
      Optional<Expert> findByUserNameAndPassword(String username, String password);
-
      Boolean changePassword(Integer id , String newPassword);
-
      byte[] saveImageByIdToSystem(Integer id);
-
      void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,double suggestionPrice,String timeOfWork) throws SQLException;
-
      List<CustomerOrder> customerOrderList();
-
-
-
-
 }

@@ -45,12 +45,10 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public Expert saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn, String filePath) throws IOException {
-
         String validatedFirstName = validationNames(firstName);
         String validatedLastName = validationNames(lastName);
         String validatedEmail = validationEmails(email);
         String password = generateRandomPassword();
-
         if (expertRepository.existsByEmail(validatedEmail)) {
             throw new RuntimeException("ایمیل تکراری است.");
         }
@@ -59,12 +57,9 @@ public class ExpertServiceImpl implements ExpertService {
         Integer star = 0;
         Expert expert = new Expert(validatedFirstName, validatedLastName, validatedEmail,
                 userName, password, timeOfSignIn, imageData, star, expertStatus);
-
         expertRepository.save(expert);
-
         return expert;
     }
-
     @Override
     public Optional<Expert> findByUserNameAndPassword(String username, String password) {
         Optional<Expert> byUserNameAndPassword = expertRepository.findByUserNameAndPassword(username, password);
@@ -75,8 +70,6 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return byUserNameAndPassword;
     }
-
-
     @Override
     public void changeStatusOfExpertByAdmin(Integer id) {
         Optional<Expert> optionalExpert = expertRepository.findById(id);
@@ -88,8 +81,6 @@ public class ExpertServiceImpl implements ExpertService {
             System.out.println("You cannot change the ExpertStatus.");
         }
     }
-
-
     @Override
     public Boolean changePassword(Integer id, String newPassword) {
         Optional<Expert> optionalExpert = expertRepository.findById(id);
@@ -104,14 +95,11 @@ public class ExpertServiceImpl implements ExpertService {
             return false;
         }
     }
-
     @Override
     public byte[] saveImageByIdToSystem(Integer id) {
         Expert expert = expertRepository.findById(id).orElse(null);
-
         assert expert != null;
         byte[] personalPhoto = expert.getPersonalPhoto();
-
         try (FileOutputStream fos = new FileOutputStream("D:\\منابع مکتب شریف\\final-project\\images\\New folder\\New folder"
                 + 22 + ".jpg")) {
             fos.write(personalPhoto);
@@ -122,7 +110,6 @@ public class ExpertServiceImpl implements ExpertService {
 
         return personalPhoto;
     }
-
     @Override
     public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, double suggestionPrice, String timeOfWork) throws SQLException {
         Optional<Expert> byId = expertRepository.findById(expertId);
@@ -130,16 +117,12 @@ public class ExpertServiceImpl implements ExpertService {
         if (customerOrderOpt.isEmpty()) {
             throw new IllegalArgumentException("Invalid customerOrderId");
         }
-
         CustomerOrder customerOrder = customerOrderOpt.get();
         Suggestion suggestion = new Suggestion();
         Double proposedPrice = customerOrder.getProposedPrice();
-        //   Double validatedPrice ;
         if (byId.isPresent()) {
             if (suggestionPrice >= proposedPrice) {
                 Double validatedPrice = proposedPrice;
-
-
                 suggestion.setSuggestionPrice(validatedPrice);
                 String time = checkAndRegisterTimeOfLoan(timeOfWork);
                 suggestion.setTimeOfSendSuggestion(LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -150,23 +133,18 @@ public class ExpertServiceImpl implements ExpertService {
             }
         }
     }
-
     @Override
     public List<CustomerOrder> customerOrderList() {
         List<CustomerOrder> all = customerOrderRepository.findAll();
-
         List<CustomerOrder> filteredOrders = all.stream()
                 .filter(order ->
                         order.getStatusOfOrder().equals(WAITING_FOR_EXPERT_SUGGESTIONS) ||
                                 order.getStatusOfOrder().equals(WAITING_FOR_SELECT_EXPERT)
                 )
                 .collect(Collectors.toList());
-
         for (CustomerOrder order : filteredOrders) {
             System.out.println(order);
         }
-
         return filteredOrders;
     }
-
 }

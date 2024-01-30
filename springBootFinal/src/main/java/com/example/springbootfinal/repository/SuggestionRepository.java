@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 
 public interface SuggestionRepository  extends JpaRepository< Suggestion, Integer> {
-
 }

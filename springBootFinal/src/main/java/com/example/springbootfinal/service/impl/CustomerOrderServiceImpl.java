@@ -12,17 +12,13 @@ import com.example.springbootfinal.service.CustomerOrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
 import static com.example.springbootfinal.service.impl.SubDutyServiceImpl.checkAndRegisterTimeOfLoan;
-
 @Service
 @Transactional
 public class CustomerOrderServiceImpl implements CustomerOrderService {
-
     @Autowired
     CustomerRepository customerRepository;
     @Autowired
@@ -31,14 +27,11 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     CustomerOrderRepository customerOrderRepository;
     @Autowired
     DutyRepository dutyRepository;
-
-
     @Override
     public CustomerOrder saveOrder(String descriptionOfOrder, double proposedPrice, String timeOfWork, String address,
                                    StatusOfOrder waitingForSuggestExpert   , Integer customerId, Integer subDutyId) throws SQLException {
         dutyRepository.findAll().forEach(System.out::println);
         subDutyRepository.findAll().forEach(System.out::println);
-
         Customer customer = customerRepository.findById(customerId).orElse(null);
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
         Optional<SubDuty> bargh = subDutyRepository.findBySubServiceName("gaz");
@@ -49,7 +42,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         } else {
             System.out.println("your price is under the lowest price");
         }
-
          checkAndRegisterTimeOfLoan(timeOfWork);
         CustomerOrder customerOrder=new CustomerOrder();
         customerOrder.setCustomer(customer);
@@ -59,7 +51,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         customerOrder.setProposedPrice(validatedPrice);
         customerOrder.setSubService(subDuty);
         customerOrder.setTimeOfDoing(timeOfWork);
-
         customerOrderRepository.save(customerOrder);
         return customerOrder;
     }
@@ -72,7 +63,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         }
         return customerOrders;
     }
-
     @Override
     public List<CustomerOrder> findByCustomerIdOrderByExpertStarsDesc(int customerId) {
         List<CustomerOrder> customerOrders = customerOrderRepository.findByCustomerIdOrderByExpertStarsDesc(customerId);
@@ -81,7 +71,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         }
         return customerOrders;
     }
-
     @Override
     public void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId) {
         Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
@@ -90,6 +79,4 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             customerOrderRepository.save(customerOrder);
         });
     }
-
-
 }

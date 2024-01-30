@@ -9,9 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface SubDutyRepository extends JpaRepository<SubDuty, Integer> {
-
-    // boolean existsBySubServiceName(String name);
     Optional<SubDuty> findBySubServiceName(String subServiceName);
-
-
 }

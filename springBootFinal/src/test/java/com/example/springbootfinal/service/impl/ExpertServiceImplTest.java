@@ -68,8 +68,6 @@ class ExpertServiceImplTest {
         Duty duty = new Duty(
                 "electronic");
         dutys = dutyRepository.save(duty);
-
-
         String validFirstName = "John";
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
@@ -84,7 +82,6 @@ class ExpertServiceImplTest {
                 dutys);
         subDutys = subDutyRepository.save(subDuty);
 
-
         Expert expert = new Expert(
                 "ali",
                 "ahmadi",
@@ -94,10 +91,8 @@ class ExpertServiceImplTest {
                 LocalDate.now(),
                 ExpertStatus.NEW, ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
                 "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg"));
-
         save = expertRepository.save(expert);
         assertNotNull(save);
-
 
         Integer id = customer.getId();
         assertNotNull(id);
@@ -108,12 +103,9 @@ class ExpertServiceImplTest {
         String timeOfWork = "1402/11/30";
         String address = "mashhad";
         StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
-
         customerOrder = customerOrderService.saveOrder(descriptionOfOrder,
                 proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
-
-
     @Test
     @Transactional
     @Order(2)
@@ -128,7 +120,6 @@ class ExpertServiceImplTest {
         assert updatedExpert != null;
         Assertions.assertEquals(ExpertStatus.CONFIRMED, updatedExpert.getExpertStatus());
     }
-
     @Test
     @Transactional
     @Order(3)
@@ -150,26 +141,21 @@ class ExpertServiceImplTest {
         Integer id = experts.getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
-
         expertService.changePassword(id, newPassword);
-
         String changedPassword = experts.getPassword();
         assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
     }
-
     @Test
     @Order(5)
     void saveImageByIdToSystem() {
         Integer id = save.getId();
         byte[] bytes = expertService.saveImageByIdToSystem(id);
         assertNotNull(bytes);
-
         boolean imageExists = ImageInput.isImageExists("D:\\منابع مکتب شریف\\final-project\\images\\New folder\\New folder"
                 + 22 + ".jpg");
         assertTrue(imageExists);
     }
-
     @Test
     @Order(6)
     void sendOfferForSubDuty() throws SQLException {
@@ -178,11 +164,7 @@ class ExpertServiceImplTest {
         Integer id1 = customerOrder.getId();
         assertNotNull(id1);
         expertService.sendOfferForSubDuty(id, id1, 5000.00, "1402/11/19");
-
-
     }
-
-
     @Test
     @Order(7)
     void customerOrderList() {

@@ -8,7 +8,6 @@ import com.example.springbootfinal.service.SubDutyService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,11 +30,9 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void saveSubDutyByAdmin(Integer dutyId,String subServiceName,Double priceOfSubDuty,String description ) {
-
         Duty duty = dutyRepository.findById(dutyId).orElse(null);
         if (duty == null) {
             System.out.println("i dint have this duty ! ");
-
         } else {
             Optional<SubDuty> bySubServiceName = subDutyRepository.findBySubServiceName(subServiceName);
             if (bySubServiceName.isPresent()) {
@@ -48,7 +45,6 @@ public class SubDutyServiceImpl implements SubDutyService {
                 subDuty.setDescription(description);
                 subDutyRepository.save(subDuty);
                 System.out.println("subDuty added to data base ! ");
-
             }
         }
     }
@@ -56,7 +52,6 @@ public class SubDutyServiceImpl implements SubDutyService {
     @Override
     public void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription) {
         Optional<SubDuty> optionalSubDuty = subDutyRepository.findById(subDutyId);
-
         if (optionalSubDuty.isPresent()) {
             SubDuty subDuty = optionalSubDuty.get();
             subDuty.setDescription(newDescription);
@@ -65,11 +60,9 @@ public class SubDutyServiceImpl implements SubDutyService {
             System.out.println("You cannot change the password. admin with ID " + subDutyId + " does not exist.");
         }
     }
-
     @Override
     public void changePriceOfSubDutyByAdmin(Integer subDutyId, Double newPrice) {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
-
         if (subDuty != null) {
             subDuty.setPrice(newPrice);
             subDutyRepository.save(subDuty);
@@ -77,13 +70,11 @@ public class SubDutyServiceImpl implements SubDutyService {
             System.out.println(" i do not have this id in subDuty !");
         }
     }
-
     @Override
     public List<SubDuty> showSubDuty() {
         Optional<Duty> electronic = dutyRepository.findByName("electronic");
         return electronic.get().getSubServiceList();
     }
-
     @Override
     public void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId) {
          SubDuty subDuty =subDutyRepository.findById(subServiceId).orElse(null);
@@ -93,7 +84,6 @@ public class SubDutyServiceImpl implements SubDutyService {
              subDutyRepository.save(subDuty);
          }
     }
-
     @Override
     public void deleteExpertInSubDutyField(Integer subDutyId) {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
@@ -102,8 +92,6 @@ public class SubDutyServiceImpl implements SubDutyService {
             subDutyRepository.save(subDuty);
         }
     }
-
-
     public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {
         LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         LocalDate firstStartDate = LocalDate.parse("1402-10-27", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -113,6 +101,4 @@ public class SubDutyServiceImpl implements SubDutyService {
             throw new IllegalArgumentException("You should choose a date after 1402-10-27");
         }
     }
-
-
 }

@@ -12,23 +12,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class AdminServiceImplTest {
-
     @Autowired
     private  AdminRepository adminRepository;
     @Autowired
     private  AdminServiceImpl adminService;
-
      Admin admins;
-
     @BeforeAll
     public void setupClass() {
         String validFirstName = "John";
@@ -38,12 +31,10 @@ class AdminServiceImplTest {
         LocalDate validTimeOfSignIn = LocalDate.now();
         admins = adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
     }
-
     @Test
     @Order(1)
     void saveAdmin_allValidationsAndDatabaseBehavior() {
         assertNotNull(admins);
-
     }
     @Test
     @Order(2)
@@ -53,16 +44,13 @@ class AdminServiceImplTest {
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
-
         try {
             adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
             fail("متد قرار نبود عملیات سیو با ایمیل تکراری را انجام دهد.");
         } catch (RuntimeException e) {
             assertEquals("ایمیل تکراری است.", e.getMessage());
         }
-
     }
-
     @Test
     @Order(3)
     void findByUserNameAndPassword() {
@@ -76,7 +64,6 @@ class AdminServiceImplTest {
         assertTrue(byUserNameAndPassword.isPresent());
         Optional<Admin> byUserNameAndPassword1 = adminRepository.findByUserNameAndPassword("aaaa", "bbbb");
         assertFalse(byUserNameAndPassword1.isPresent());
-
     }
 
     @Test
@@ -88,14 +75,9 @@ class AdminServiceImplTest {
         Integer id = byEmail.get().getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
-
         Boolean aBoolean = adminService.changePassword(id, newPassword);
         assertTrue(aBoolean);
-
         String changedPassword = byEmail.get().getPassword();
         assertEquals(newPassword, changedPassword);
-
     }
-
-
 }

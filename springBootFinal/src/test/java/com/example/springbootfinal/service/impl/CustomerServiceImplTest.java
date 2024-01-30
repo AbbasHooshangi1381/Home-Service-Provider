@@ -29,19 +29,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CustomerServiceImplTest {
-
     @Autowired
     CustomerRepository customerRepository;
-
     @Autowired
     CustomerService customerService;
-
     @Autowired
     CustomerOrderService customerOrderService;
-
     @Autowired
     DutyRepository dutyRepository;
-
     @Autowired
     SubDutyRepository subDutyRepository;
 

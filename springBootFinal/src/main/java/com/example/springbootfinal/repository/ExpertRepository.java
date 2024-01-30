@@ -10,13 +10,7 @@ import java.util.Optional;
 @Repository
 
 public interface ExpertRepository extends JpaRepository<Expert,Integer> {
-
      boolean existsByEmail(String email);
-
      Optional<Expert> findByEmail(String email);
-
      Optional<Expert> findByUserNameAndPassword(String username, String password);
-
-
-
 }

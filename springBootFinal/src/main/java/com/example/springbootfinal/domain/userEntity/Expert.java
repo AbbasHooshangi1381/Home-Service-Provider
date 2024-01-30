@@ -39,9 +39,7 @@ public class Expert extends BaseUser {
         this.personalPhoto = personalPhoto;
         this.stars = stars;
         this.expertStatus = expertStatus;
-
     }
-
     public Expert(String firstName, String lastName, String email, String userName, String password,
                   LocalDate dateOfSigningIn,ExpertStatus expertStatus, byte[] personalPhoto) {
         super(firstName, lastName, email, userName, password, dateOfSigningIn);

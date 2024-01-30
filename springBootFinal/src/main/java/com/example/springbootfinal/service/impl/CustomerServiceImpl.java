@@ -10,14 +10,11 @@ import com.example.springbootfinal.service.CustomerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.Optional;
-
 import static com.example.springbootfinal.service.impl.AdminServiceImpl.validationEmails;
 import static com.example.springbootfinal.service.impl.AdminServiceImpl.validationNames;
 import static com.example.springbootfinal.validation.Validation.generateRandomPassword;
-
 @Transactional
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -26,33 +23,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     CustomerOrderRepository customerOrderRepository;
 
-
-
-
     @Override
     public Customer saveCustomer(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn) {
-
         String validatedFirstName = validationNames(firstName);
         String validatedLastName = validationNames(lastName);
         String validatedEmail = validationEmails(email);
         String password = generateRandomPassword();
-
         Optional<Customer> byEmail = customerRepository.findByEmail(email);
-
         if (byEmail.isPresent()) {
             throw new RuntimeException("ایمیل تکراری است.");
         }
-
         Customer customer = new Customer(validatedFirstName, validatedLastName, validatedEmail, userName, password, timeOfSignIn);
         customerRepository.save(customer);
         return customer;
     }
-
-
     @Override
     public Boolean changePassword(Integer id, String newPassword) {
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
-
         if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
             customer.setPassword(newPassword);
@@ -63,7 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
             return false;
         }
     }
-
     @Override
     public void changeStatusOfOrderByCustomerStarted(Integer orderId) {
         Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
@@ -72,7 +58,6 @@ public class CustomerServiceImpl implements CustomerService {
             customerOrderRepository.save(customerOrder);
         });
     }
-
     @Override
     public void changeStatusOfOrderByCustomerToFinish(Integer orderId) {
         Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
@@ -81,7 +66,5 @@ public class CustomerServiceImpl implements CustomerService {
             customerOrderRepository.save(customerOrder);
         });
     }
-
-
 }
 
