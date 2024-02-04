@@ -4,6 +4,8 @@ import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.exception.DuplicateException;
+import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
@@ -14,6 +16,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,43 +47,46 @@ public class ExpertServiceImpl implements ExpertService {
 
 
     @Override
-    public Expert saveExpert(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn, String filePath) throws IOException {
+    public Expert saveExpert(String firstName, String lastName, String email, String userName,
+                             String filePath) throws IOException {
         String validatedFirstName = validationNames(firstName);
         String validatedLastName = validationNames(lastName);
         String validatedEmail = validationEmails(email);
         String password = generateRandomPassword();
         if (expertRepository.existsByEmail(validatedEmail)) {
-            throw new RuntimeException("ایمیل تکراری است.");
+            throw new DuplicateException("ایمیل تکراری است.");
         }
         byte[] imageData = ImageInput.uploadProfilePicture(filePath);
         ExpertStatus expertStatus = ExpertStatus.NEW;
         Integer star = 0;
+        LocalDate timeOfSignIn = LocalDate.now();
         Expert expert = new Expert(validatedFirstName, validatedLastName, validatedEmail,
                 userName, password, timeOfSignIn, imageData, star, expertStatus);
-        expertRepository.save(expert);
-        return expert;
+        Expert save = expertRepository.save(expert);
+        return save;
     }
+
     @Override
     public Optional<Expert> findByUserNameAndPassword(String username, String password) {
         Optional<Expert> byUserNameAndPassword = expertRepository.findByUserNameAndPassword(username, password);
         if (byUserNameAndPassword.isPresent()) {
             System.out.println("you are in system ");
         } else {
-            System.out.println("you are not in system ");
+            throw new NotFoundException("i do not have this expert");
         }
         return byUserNameAndPassword;
     }
+
     @Override
     public void changeStatusOfExpertByAdmin(Integer id) {
-        Optional<Expert> optionalExpert = expertRepository.findById(id);
-        if (optionalExpert.isPresent()) {
-            Expert expert = optionalExpert.get();
-            expert.setExpertStatus(ExpertStatus.CONFIRMED);
-            expertRepository.save(expert);
-        } else {
-            System.out.println("You cannot change the ExpertStatus.");
-        }
+        Expert expert1 = expertRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Expert not found"));
+
+            expert1.setExpertStatus(ExpertStatus.CONFIRMED);
+            expertRepository.save(expert1);
+
     }
+
     @Override
     public Boolean changePassword(Integer id, String newPassword) {
         Optional<Expert> optionalExpert = expertRepository.findById(id);
@@ -91,25 +97,22 @@ public class ExpertServiceImpl implements ExpertService {
             expertRepository.save(expert);
             return true;
         } else {
-            System.out.println("You cannot change the password. Expert with ID " + id + " does not exist.");
-            return false;
+            throw new NotFoundException("Expert with ID " + id + " not found");
         }
     }
+
     @Override
-    public byte[] saveImageByIdToSystem(Integer id) {
-        Expert expert = expertRepository.findById(id).orElse(null);
-        assert expert != null;
+    public byte[] saveImageByIdToSystem(Integer id) throws IOException {
+        Expert expert = expertRepository.findById(id).orElseThrow(FileNotFoundException::new);
+
         byte[] personalPhoto = expert.getPersonalPhoto();
-        try (FileOutputStream fos = new FileOutputStream("D:\\منابع مکتب شریف\\final-project\\images\\New folder\\New folder"
-                + 22 + ".jpg")) {
-            fos.write(personalPhoto);
-        } catch (IOException e) {
-            System.err.println(" i can not create image !");
-            e.printStackTrace();
-        }
+        FileOutputStream fos = new FileOutputStream("D:\\منابع مکتب شریف\\final-project\\images\\New folder\\New folder" + 22 + ".jpg");
+        fos.write(personalPhoto);
+        fos.close();
 
         return personalPhoto;
     }
+
     @Override
     public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, double suggestionPrice, String timeOfWork) throws SQLException {
         Optional<Expert> byId = expertRepository.findById(expertId);
@@ -133,6 +136,7 @@ public class ExpertServiceImpl implements ExpertService {
             }
         }
     }
+
     @Override
     public List<CustomerOrder> customerOrderList() {
         List<CustomerOrder> all = customerOrderRepository.findAll();

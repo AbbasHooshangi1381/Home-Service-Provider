@@ -1,3 +1,4 @@
+
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.ExpertStatus;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
@@ -51,8 +53,7 @@ class AdminServiceImplTest {
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
-        LocalDate validTimeOfSignIn = LocalDate.now();
-        admins = adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+        admins = adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName);
 
         Duty duty = new Duty(
                 "electronic");
@@ -80,7 +81,7 @@ class AdminServiceImplTest {
 
     @Test
     @Order(1)
-    void saveAdmin_allValidationsAndDatabaseBehavior() {
+    void saveAdmin_allValidations() {
         assertNotNull(admins);
     }
 
@@ -93,7 +94,7 @@ class AdminServiceImplTest {
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
         try {
-            adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+            adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName);
             fail("متد قرار نبود عملیات سیو با ایمیل تکراری را انجام دهد.");
         } catch (RuntimeException e) {
             assertEquals("ایمیل تکراری است.", e.getMessage());
@@ -124,8 +125,8 @@ class AdminServiceImplTest {
         Integer id = byEmail.get().getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
-        Boolean aBoolean = adminService.changePassword(id, newPassword);
-        assertTrue(aBoolean);
+        String password = adminService.changePassword(id, newPassword);
+        assertNotNull(password);
         String changedPassword = byEmail.get().getPassword();
         assertEquals(newPassword, changedPassword);
     }
@@ -133,20 +134,21 @@ class AdminServiceImplTest {
     @Test
     @Order(5)
     void addingSubDutyToExpert() {
-        Expert expert = save;
-        assertNotNull(expert);
-        SubDuty subDuty = subDutys;
-        assertNotNull(subDuty);
-        adminService.addingSubDutyToExpert(expert, subDuty);
+        Integer id = save.getId();
+        assertNotNull(id);
+        Integer id1 = subDutys.getId();
+        assertNotNull(id1);
+        adminService.addingSubDutyToExpert(id, id1);
     }
 
     @Test
     @Order(6)
     void deletingSubDutyToExpert() {
-        Expert expert = save;
-        assertNotNull(expert);
-        SubDuty subDuty = subDutys;
-        assertNotNull(subDuty);
-        adminService.deletingSubDutyToExpert(expert, subDuty);
+        Integer id = save.getId();
+        assertNotNull(id);
+        Integer id1 = subDutys.getId();
+        assertNotNull(id1);
+        adminService.deletingSubDutyToExpert(id, id1);
     }
 }
+

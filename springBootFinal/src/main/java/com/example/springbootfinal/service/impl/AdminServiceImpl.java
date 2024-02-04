@@ -3,6 +3,9 @@ package com.example.springbootfinal.service.impl;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.exception.DuplicateException;
+import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
@@ -32,13 +35,14 @@ public class AdminServiceImpl implements AdminService {
         this.expertRepository = expertRepository;
     }
     @Override
-    public Admin saveAdmin(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn) {
+    public Admin saveAdmin(String firstName, String lastName, String email, String userName) {
         String validatedFirstName = validationNames(firstName);
         String validatedLastName = validationNames(lastName);
         String validatedEmail = validationEmails(email);
         String password=generateRandomPassword();
+        LocalDate timeOfSignIn=LocalDate.now();
         if (adminRepository.existsByEmail(email)) {
-            throw new RuntimeException("ایمیل تکراری است.");
+            throw new DuplicateException("ایمیل تکراری است.");
         }
         Admin admin = new Admin(validatedFirstName, validatedLastName, validatedEmail, userName,password, timeOfSignIn);
         adminRepository.save(admin);
@@ -55,21 +59,22 @@ public class AdminServiceImpl implements AdminService {
         return byUserNameAndPassword;
     }
     @Override
-    public Boolean changePassword(Integer id, String newPassword) {
+    public String changePassword(Integer id, String newPassword) {
         Optional<Admin> optionalAdmin = adminRepository.findById(id);
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
             admin.setPassword(newPassword);
             adminRepository.save(admin);
-            return true;
+            return "Password changed successfully for admin with ID " + id;
         } else {
-            System.out.println("You cannot change the password. admin with ID " + id + " does not exist.");
-            return false;
+            return "Failed to change password. Admin with ID " + id + " does not exist.";
         }
     }
 
     @Override
-    public void addingSubDutyToExpert(Expert expert, SubDuty subDuty) {
+    public void addingSubDutyToExpert(Integer expertId, Integer subDutyId) {
+        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("Expert not found with id: " + expertId));
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with id: " + subDutyId));
         if (expert==null||subDuty==null){
             System.out.println("the expert or subDuty is null !");
         }
@@ -85,7 +90,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deletingSubDutyToExpert(Expert expert, SubDuty subDuty) {
+    public void deletingSubDutyToExpert(Integer expertId, Integer subDutyId)  {
+        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("Expert not found with id: " + expertId));
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with id: " + subDutyId));
         if (expert==null||subDuty==null){
             System.out.println("the expert or subDuty is null !");
         }
@@ -103,14 +110,14 @@ public class AdminServiceImpl implements AdminService {
 
     public static String validationNames(String firstName) {
         if (!validationName(firstName)) {
-            throw new RuntimeException("Please enter a valid name!");
+            throw new NotValidException("name not valid ! ");
         }
         return firstName;
     }
 
     public static String validationEmails(String email) {
         if (!validateEmail(email)) {
-            throw new RuntimeException("Please enter a valid email address!");
+            throw new NotValidException("Please enter a valid email address!");
         }
         return email;
     }

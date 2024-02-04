@@ -15,4 +15,8 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, In
 
     @Query("SELECT o FROM CustomerOrder o JOIN o.subService.experts e WHERE o.customer.id = :customerId ORDER BY e.stars DESC")
     List<CustomerOrder> findByCustomerIdOrderByExpertStarsDesc(@Param("customerId") int customerId);
+
+    @Query("SELECT co FROM CustomerOrder co WHERE co.subService.subServiceName = :subServiceName")
+    List<CustomerOrder> findBySubServiceName(@Param("subServiceName") String subServiceName);
+
 }

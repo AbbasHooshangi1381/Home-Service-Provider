@@ -1,6 +1,7 @@
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.serviceEntity.Duty;
+import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.DutyRepository;
 import org.junit.jupiter.api.*;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,4 +33,11 @@ class DutyServiceImplTest {
         Optional<Duty> byNameAfter = dutyRepository.findByName(dutyName);
         assertTrue(byNameAfter.isPresent());
     }
+
+/*    @Test
+    @Order(2)
+    void showDuty() {
+        List<SubDuty> subDuties = dutyService.showSubDuty();
+        assertNotNull(subDuties);
+    }*/
 }

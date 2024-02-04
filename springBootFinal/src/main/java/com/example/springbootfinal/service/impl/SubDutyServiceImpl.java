@@ -30,22 +30,25 @@ public class SubDutyServiceImpl implements SubDutyService {
     ExpertRepository expertRepository;
 
     @Override
-    public void saveSubDutyByAdmin(Integer dutyId,String subServiceName,Double priceOfSubDuty,String description ) {
+    public SubDuty saveSubDutyByAdmin(Integer dutyId, String subServiceName, Double priceOfSubDuty, String description) {
         Duty duty = dutyRepository.findById(dutyId).orElse(null);
         if (duty == null) {
-            System.out.println("i dint have this duty ! ");
+            System.out.println("i dint have this duty !");
+            return null;
         } else {
             Optional<SubDuty> bySubServiceName = subDutyRepository.findBySubServiceName(subServiceName);
             if (bySubServiceName.isPresent()) {
-                System.out.println(" i have this subDuty");
+                System.out.println("i have this subDuty");
+                return bySubServiceName.get();
             } else {
-                SubDuty subDuty=new SubDuty();
+                SubDuty subDuty = new SubDuty();
                 subDuty.setSubServiceName(subServiceName);
                 subDuty.setPrice(priceOfSubDuty);
                 subDuty.setService(duty);
                 subDuty.setDescription(description);
                 subDutyRepository.save(subDuty);
-                System.out.println("subDuty added to data base ! ");
+                System.out.println("subDuty added to database !");
+                return subDuty;
             }
         }
     }
@@ -71,11 +74,7 @@ public class SubDutyServiceImpl implements SubDutyService {
             System.out.println(" i do not have this id in subDuty !");
         }
     }
-    @Override
-    public List<SubDuty> showSubDuty() {
-        Optional<Duty> electronic = dutyRepository.findByName("electronic");
-        return electronic.get().getSubServiceList();
-    }
+
     @Override
     public void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId) {
          SubDuty subDuty =subDutyRepository.findById(subServiceId).orElse(null);

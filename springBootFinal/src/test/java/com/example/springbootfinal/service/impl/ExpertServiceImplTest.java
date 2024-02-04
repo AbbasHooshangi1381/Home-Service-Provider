@@ -72,8 +72,8 @@ class ExpertServiceImplTest {
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
-        LocalDate validTimeOfSignIn = LocalDate.now();
-        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+
+        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
 
         SubDuty subDuty = new SubDuty(
                 "gaz",
@@ -115,11 +115,10 @@ class ExpertServiceImplTest {
         String lastname = "ahmfrfadi";
         String emails = "okdfejggk@gmail.com";
         String username = "pojgdduiu2";
-        LocalDate localDates = LocalDate.now();
        String location="D:\\file of intelli j\\springBootFinal\\" +
                         "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg";
 
-         Expert expertss = expertService.saveExpert(name, lastname, emails, username, localDates, location);
+         Expert expertss = expertService.saveExpert(name, lastname, emails, username, location);
          assertNotNull(expertss);
     }
 
@@ -173,7 +172,7 @@ class ExpertServiceImplTest {
 
     @Test
     @Order(5)
-    void saveImageByIdToSystem() {
+    void saveImageByIdToSystem() throws IOException {
         Integer id = save.getId();
         byte[] bytes = expertService.saveImageByIdToSystem(id);
         assertNotNull(bytes);

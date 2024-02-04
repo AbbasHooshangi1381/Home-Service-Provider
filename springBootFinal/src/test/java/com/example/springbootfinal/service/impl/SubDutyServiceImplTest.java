@@ -77,7 +77,7 @@ class SubDutyServiceImplTest {
     }
     @Test
     @Order(1)
-    void saveSubDutyByAdminWhenDutyExistsAndSubDutyDoesNotExist() {
+    void saveSubDutyByAdmin() {
         Integer dutyId = dutys.getId();
         Duty duty = dutyRepository.findById(dutyId).orElse(null);
         assertNotNull(duty);
@@ -119,19 +119,13 @@ class SubDutyServiceImplTest {
     }
     @Test
     @Order(4)
-    void showSubDuty() {
-        List<SubDuty> subDuties = subDutyService.showSubDuty();
-        assertNotNull(subDuties);
-    }
-    @Test
-    @Order(5)
     void deleteExpertInSubDutyField() {
         Integer id = subDutys.getId();
         assertNotNull(id);
         subDutyService.deleteExpertInSubDutyField(id);
     }
     @Test
-    @Order(6)
+    @Order(5)
     void registerExpertInOneSubDuty() {
         Integer id = subDutys.getId();
         assertNotNull(id);

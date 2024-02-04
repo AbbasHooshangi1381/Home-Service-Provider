@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.example.springbootfinal.service.impl.SubDutyServiceImpl.checkAndRegisterTimeOfLoan;
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -54,7 +55,7 @@ class CustomerOrderServiceImplTest {
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
-        customer=customerService.saveCustomer(validFirstName,validLastName,validEmail,validUserName,validTimeOfSignIn);
+        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
 
         Duty duty = new Duty(
                 "electronic");
@@ -76,9 +77,10 @@ class CustomerOrderServiceImplTest {
         String timeOfWork = "1402/11/30";
         String address = "mashhad";
         StatusOfOrder waitingForSuggestExpert = StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
-       customerOrders= customerOrderService.saveOrder(descriptionOfOrder,
+        customerOrders = customerOrderService.saveOrder(descriptionOfOrder,
                 proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
+
     @Test
     @Order(1)
     void findByCustomerIdOrderByProposedPriceDesc() {
@@ -88,6 +90,7 @@ class CustomerOrderServiceImplTest {
                 customerOrderService.findByCustomerIdOrderByProposedPriceDesc(id);
         assertNotNull(byCustomerIdOrderByProposedPriceDesc);
     }
+
     @Test
     @Order(2)
     void findByCustomerIdOrderByExpertStarsDesc() {
@@ -97,11 +100,22 @@ class CustomerOrderServiceImplTest {
                 customerOrderService.findByCustomerIdOrderByExpertStarsDesc(id);
         assertNotNull(byCustomerIdOrderByExpertStarsDesc);
     }
+
     @Test
     @Order(3)
     void changeStatusOfOrderByCustomerToWaitingToCome() {
-         Integer id = customerOrders.getId();
-         assertNotNull(id);
-         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(id);
+        Integer id = customerOrders.getId();
+        assertNotNull(id);
+        customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(id);
+    }
+
+    @Test
+    @Order(4)
+    void showAllOrderBySubDutyName() {
+        String subServiceName = subDutys.getSubServiceName();
+        assertNotNull(subServiceName);
+        List<CustomerOrder> customerOrderOfOneSubDuty = customerOrderService.findCustomerOrderOfOneSubDuty(subServiceName);
+        assertNotNull(customerOrderOfOneSubDuty);
+
     }
 }

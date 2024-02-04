@@ -8,9 +8,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface AdminService {
-    Boolean changePassword(Integer id, String newPassword);
-    Admin saveAdmin(String firstName, String lastName, String email, String userName, LocalDate timeOfSignIn);
+    String changePassword(Integer id, String newPassword);
+    Admin saveAdmin(String firstName, String lastName, String email, String userName);
     Optional<Admin> findByUserNameAndPassword(String username, String password);
-    void addingSubDutyToExpert(Expert expert, SubDuty subDuty);
-    void deletingSubDutyToExpert(Expert expert, SubDuty subDuty);
+    void addingSubDutyToExpert(Integer expertId, Integer subDutyId) ;
+    void deletingSubDutyToExpert(Integer expertId, Integer subDutyId) ;
 }

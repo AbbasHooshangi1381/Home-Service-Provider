@@ -51,8 +51,7 @@ class CustomerServiceImplTest {
         String validLastName = "Smddddith";
         String validEmail = "abbadddds.ali@example.com";
         String validUserName = "johndddddsmith";
-        LocalDate validTimeOfSignIn = LocalDate.now();
-        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
 
         Duty duty = new Duty("electronic");
         dutys = dutyRepository.save(duty);
@@ -80,8 +79,7 @@ class CustomerServiceImplTest {
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
-        LocalDate validTimeOfSignIn = LocalDate.now();
-        Customer customer3 = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName, validTimeOfSignIn);
+        Customer customer3 = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
         assertNotNull(customer3);
     }
 
@@ -95,15 +93,15 @@ class CustomerServiceImplTest {
         assertNotNull(id);
         String newPassword = "newPassword123";
 
-         Boolean aBoolean = customerService.changePassword(id, newPassword);
-         assertTrue(aBoolean);
+         String password = customerService.changePassword(id, newPassword);
+        assertNotNull(password);
 
         String changedPassword = byEmail.get().getPassword();
         assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
 
-         Boolean bBoolean = customerService.changePassword(2, "aff52");
-         assertFalse(bBoolean);
+         String password1 = customerService.changePassword(2, "aff52");
+        assertNotNull(password1);
     }
 
     @Test

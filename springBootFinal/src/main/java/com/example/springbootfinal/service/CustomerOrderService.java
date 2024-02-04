@@ -8,8 +8,13 @@ import java.util.List;
 
 public interface CustomerOrderService {
     CustomerOrder saveOrder(String descriptionOfOrder, double proposedPrice, String timeOfWork, String address,
-                            StatusOfOrder waitingForSuggestExpert   , Integer customerId, Integer subDutyId)  throws SQLException;
+                            StatusOfOrder waitingForSuggestExpert, Integer customerId, Integer subDutyId) throws SQLException;
+
     List<CustomerOrder> findByCustomerIdOrderByProposedPriceDesc(int customerId);
+
     List<CustomerOrder> findByCustomerIdOrderByExpertStarsDesc(int customerId);
+
+    List<CustomerOrder> findCustomerOrderOfOneSubDuty(String subDuty);
+
     void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId);
 }
