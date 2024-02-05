@@ -7,6 +7,8 @@ import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.dto.Admin.BaseChangePasswordDto;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Admin.BaseSaveDto;
+import com.example.springbootfinal.dto.customer.UserPassDto;
+import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
@@ -28,7 +30,7 @@ public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private  ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
 
     @PostMapping("/register-user")
@@ -41,29 +43,26 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
 
-    @GetMapping("/{userName}/{password}")
-    public ResponseEntity<BaseSaveDto> checkAdmin(@PathVariable String userName, @PathVariable String password) {
-        Customer customer = customerService.findByFirstNameAndPassword(userName, password).orElse(null);
+    @GetMapping("/login/{username}/{password}")
+    public ResponseEntity<BaseResponseDto> checkCustomer(@PathVariable String username, @PathVariable String password) {
+        Customer customer = customerService.findByUserNameAndPassword(username, password).orElseThrow();
         if (customer != null) {
-            BaseSaveDto adminSaveDto = modelMapper.map(customer, BaseSaveDto.class);
-            return new ResponseEntity<>(adminSaveDto, HttpStatus.OK);
+            BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
+            return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/admin/{id}/{Password}")
-    public ResponseEntity<BaseResponseDto> changePassword(@PathVariable Integer id, @PathVariable String Password) {
+    @PutMapping("/{id}/{password}")
+    public ResponseEntity<String> changePassword(@PathVariable Integer id, @PathVariable String password) {
 
-        String password = customerService.changePassword(id, Password);
+         customerService.changePassword(id, password);
 
-        final BaseResponseDto map = modelMapper.map(password, BaseResponseDto.class);
-
-        return new ResponseEntity<>(map, HttpStatus.OK);
-
+        return ResponseEntity.ok("pasword changed !");
     }
 
-    @PutMapping("/start/{orderId}")
+    @PutMapping("/startOrder/{orderId}")
     public ResponseEntity<String> startOrder(@PathVariable Integer orderId) {
         customerService.changeStatusOfOrderByCustomerStarted(orderId);
         return ResponseEntity.ok("Order " + orderId + " has been started.");

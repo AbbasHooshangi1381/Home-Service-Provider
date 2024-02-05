@@ -125,13 +125,13 @@ class AdminServiceImplTest {
         Integer id = byEmail.get().getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
-        String password = adminService.changePassword(id, newPassword);
-        assertNotNull(password);
+         Admin admin = adminService.changePassword(id, newPassword);
+        assertNotNull(admin);
         String changedPassword = byEmail.get().getPassword();
         assertEquals(newPassword, changedPassword);
     }
 
-    @Test
+/*    @Test
     @Order(5)
     void addingSubDutyToExpert() {
         Integer id = save.getId();
@@ -149,6 +149,6 @@ class AdminServiceImplTest {
         Integer id1 = subDutys.getId();
         assertNotNull(id1);
         adminService.deletingSubDutyToExpert(id, id1);
-    }
+    }*/
 }
 

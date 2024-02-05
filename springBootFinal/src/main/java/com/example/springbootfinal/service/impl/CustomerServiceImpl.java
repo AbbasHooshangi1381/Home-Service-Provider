@@ -46,26 +46,22 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String changePassword(Integer id, String password) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(id);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
+        final Customer customer = customerRepository.findById(id).orElseThrow(() -> new NotFoundException(" i can not found this customer"));
             customer.setPassword(password);
             customerRepository.save(customer);
             return "Password changed successfully for customer with ID " + id;
-        } else {
-            return "Failed to change password. customer with ID " + id + " does not exist.";
-        }
+
     }
 
     @Override
-    public Optional<Customer> findByFirstNameAndPassword(String userName, String password) {
-        Optional<Customer> byCustomerNameAndPassword = customerRepository.findByFirstNameAndPassword(userName, password);
-        if (byCustomerNameAndPassword.isPresent()) {
+    public Optional<Customer> findByUserNameAndPassword(String username, String password) {
+         Optional<Customer> byUserNameAndPassword = customerRepository.findByUserNameAndPassword(username, password);
+        if (byUserNameAndPassword.isPresent()) {
             System.out.println("you are in system ");
         } else {
             System.out.println("you are not in system ");
         }
-        return byCustomerNameAndPassword;
+        return byUserNameAndPassword;
     }
 
     @Override

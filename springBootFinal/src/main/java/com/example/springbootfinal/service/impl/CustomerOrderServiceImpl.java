@@ -33,16 +33,17 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     DutyRepository dutyRepository;
 
     @Override
-    public CustomerOrder saveOrder(String descriptionOfOrder, double proposedPrice, String timeOfWork, String address,
+    public CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
                                    StatusOfOrder waitingForSuggestExpert, Integer customerId, Integer subDutyId) throws SQLException {
+
         dutyRepository.findAll().forEach(System.out::println);
         subDutyRepository.findAll().forEach(System.out::println);
+
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found with ID: " + customerId));
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with ID: " + subDutyId));
 
-        Optional<SubDuty> bargh = subDutyRepository.findBySubServiceName("gaz");
-        Double fixPrice = bargh.get().getPrice();
+        Double fixPrice = subDuty.getPrice();
 
         Double validatedPrice = validatePrice(proposedPrice, fixPrice);
 
@@ -60,54 +61,26 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         return customerOrderRepository.save(customerOrder);
     }
 
-    @Override
-    public List<CustomerOrder> findByCustomerIdOrderByProposedPriceDesc(int customerId) {
-        List<CustomerOrder> customerOrders = customerOrderRepository.findByCustomerIdOrderByProposedPriceDesc(customerId);
-        if (customerOrders.isEmpty()) {
-            throw new NotFoundException("i can not find this customer order");
-        } else {
-            for (CustomerOrder customerOrder : customerOrders) {
-                System.out.println(customerOrder);
-            }
-        }
-        return customerOrders;
-    }
-
-    @Override
-    public List<CustomerOrder> findByCustomerIdOrderByExpertStarsDesc(int customerId) {
-        List<CustomerOrder> customerOrders = customerOrderRepository.findByCustomerIdOrderByExpertStarsDesc(customerId);
-        if (customerOrders.isEmpty()) {
-            throw new NotFoundException("i can not find this customer order");
-        } else {
-            for (CustomerOrder customerOrder : customerOrders) {
-                System.out.println(customerOrder);
-            }
-        }
-        return customerOrders;
-
-    }
 
     @Override
     public List<CustomerOrder> findCustomerOrderOfOneSubDuty(String subDuty) {
          List<CustomerOrder> bySubServiceName = customerOrderRepository.findBySubServiceName(subDuty);
          if (bySubServiceName.isEmpty()){
-             System.out.println(" i dint have order for this subDuty");
+             throw new NotFoundException("i do not have this subService");
          }
         return bySubServiceName;
     }
 
     @Override
     public void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId) {
-        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
-        if (byId.isEmpty()) {
-            throw new NotFoundException("i can not find this order ");
-        } else {
-            byId.ifPresent(customerOrder -> {
+        final CustomerOrder customerOrder = customerOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(" i can not find customerOrder"));
                 customerOrder.setStatusOfOrder(StatusOfOrder.WAITING_FOR_COMING_EXPERT);
                 customerOrderRepository.save(customerOrder);
-            });
-        }
     }
+
+
+
+
 
     public Double validatePrice(double proposedPrice, double fixPrice) {
         Double validatedPrice = null;

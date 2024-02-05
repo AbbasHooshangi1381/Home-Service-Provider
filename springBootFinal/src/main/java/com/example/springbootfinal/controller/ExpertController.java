@@ -40,37 +40,30 @@ public class ExpertController {
     }
 
     @GetMapping("/{username}/{password}")
-    public ResponseEntity<ExpertSaveDto> checkExpert(@PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkExpert(@PathVariable String username, @PathVariable String password) {
         Expert expert = expertService.findByUserNameAndPassword(username, password).orElse(null);
         if (expert != null) {
-            ExpertSaveDto map = modelMapper.map(expert, ExpertSaveDto.class);
+            BaseResponseDto map = modelMapper.map(expert, BaseResponseDto.class);
             return new ResponseEntity<>(map, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/{id}")
-        public ResponseEntity<BaseResponseDto> changePassword(@PathVariable Integer id,
-                                                            @RequestBody BaseChangePasswordDto expertChangePasswordDto) {
-        Expert expert = expertRepository.findById(id).get();
+    @PutMapping("/{id}/{newPassword}")
+    public ResponseEntity<String> changePassword(@PathVariable Integer id,
+                                                 @PathVariable String newPassword) {
+        expertService.changePassword(id, newPassword);
 
-        expert.setPassword(expertChangePasswordDto.getNewPassword());
-        expertRepository.save(expert);
+        return ResponseEntity.ok("password changed ! ");
 
-        BaseResponseDto map = modelMapper.map(expert, BaseResponseDto.class);
-
-        return ResponseEntity.ok(map);
     }
+    @PutMapping("/confirmExpertStatusByAdmin/{id}")
+    public ResponseEntity<BaseResponseDto> confirmExpertStatusByAdmin(@PathVariable Integer id) {
+         Expert expert = expertService.changeStatusOfExpertByAdmin(id);
+         BaseResponseDto map = modelMapper.map(expert, BaseResponseDto.class);
+        return ResponseEntity.ok(map);
 
-    @PostMapping("/{id}")
-    public ResponseEntity<String> confirmExpertStatusByAdmin(@PathVariable Integer id) {
-        try {
-            expertService.changeStatusOfExpertByAdmin(id);
-            return ResponseEntity.ok("Expert status confirmed successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to confirm expert status.");
-        }
     }
 
     @PostMapping("/{expertId}")

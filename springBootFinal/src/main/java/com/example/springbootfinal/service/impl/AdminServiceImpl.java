@@ -59,51 +59,48 @@ public class AdminServiceImpl implements AdminService {
         return byUserNameAndPassword;
     }
     @Override
-    public String changePassword(Integer id, String newPassword) {
+    public Admin changePassword(Integer id, String newPassword) {
         Optional<Admin> optionalAdmin = adminRepository.findById(id);
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
             admin.setPassword(newPassword);
             adminRepository.save(admin);
-            return "Password changed successfully for admin with ID " + id;
+            return admin;
         } else {
-            return "Failed to change password. Admin with ID " + id + " does not exist.";
+            throw new NotFoundException("i dont have this admin");
         }
     }
 
-    @Override
-    public void addingSubDutyToExpert(Integer expertId, Integer subDutyId) {
-        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("Expert not found with id: " + expertId));
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with id: " + subDutyId));
-        if (expert==null||subDuty==null){
-            System.out.println("the expert or subDuty is null !");
-        }
-        if (subDuty.getExperts()==null){
-            List<Expert> expertList=new ArrayList<>();
-            expertList.add(expert);
-            subDuty.setExperts(expertList);
-        }else {
-            List<Expert>expertLists=subDuty.getExperts();
-            expertLists.add(expert);
-        }
-        subDutyRepository.save(subDuty);
-    }
-
-    @Override
-    public void deletingSubDutyToExpert(Integer expertId, Integer subDutyId)  {
-        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("Expert not found with id: " + expertId));
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with id: " + subDutyId));
-        if (expert==null||subDuty==null){
-            System.out.println("the expert or subDuty is null !");
-        }
-        assert subDuty != null;
-        if (subDuty.getExperts()!=null){
-             List<Expert> experts = subDuty.getExperts();
-             subDuty.setExperts(null);
-            System.out.println("deleted");
-        }
-        subDutyRepository.save(subDuty);
-    }
+//    @Override
+//    public void addingSubDutyToExpert(Integer expertId, Integer subDutyId) {
+//        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("Expert not found with id: " + expertId));
+//        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with id: " + subDutyId));
+//        if (subDuty.getExperts()==null){
+//            List<Expert> expertList=new ArrayList<>();
+//            expertList.add(expert);
+//            subDuty.setExperts(expertList);
+//        }else {
+//            List<Expert>expertLists=subDuty.getExperts();
+//            expertLists.add(expert);
+//        }
+//        subDutyRepository.save(subDuty);
+//    }
+//
+//    @Override
+//    public void deletingSubDutyToExpert(Integer expertId, Integer subDutyId)  {
+//        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("Expert not found with id: " + expertId));
+//        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with id: " + subDutyId));
+//        if (expert==null||subDuty==null){
+//            System.out.println("the expert or subDuty is null !");
+//        }
+//        assert subDuty != null;
+//        if (subDuty.getExperts()!=null){
+//             List<Expert> experts = subDuty.getExperts();
+//             subDuty.setExperts(null);
+//            System.out.println("deleted");
+//        }
+//        subDutyRepository.save(subDuty);
+//    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////

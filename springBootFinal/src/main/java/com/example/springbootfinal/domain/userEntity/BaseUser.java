@@ -2,10 +2,13 @@ package com.example.springbootfinal.domain.userEntity;
 
 import com.example.springbootfinal.baseDomain.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+
 @MappedSuperclass
 @Getter
 @Setter
@@ -14,15 +17,18 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseUser extends BaseEntity<Integer> {
+    @NotNull(message = " firstName should not be null ")
     String firstName;
+    @NotNull(message = " lastName should not be null ")
     String lastName;
     @Column(unique = true)
+    @Email
     String email;
     String userName;
     String password;
     LocalDate dateOfSigningIn;
 
-    public BaseUser( String firstName,
+    public BaseUser(String firstName,
                     String lastName, String email, String userName, String password, LocalDate dateOfSigningIn) {
         this.firstName = firstName;
         this.lastName = lastName;

@@ -3,7 +3,9 @@ package com.example.springbootfinal.domain.serviceEntity;
 import com.example.springbootfinal.baseDomain.BaseEntity;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,10 +17,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class SubDuty extends BaseEntity<Integer> {
-    @Column(unique = true)
+    @NotNull(message = " subDutyName should not be null ")
     String subServiceName;
+    @NotNull(message = " price should not be null ")
     Double price;
     String description;
 

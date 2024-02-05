@@ -11,4 +11,5 @@ public interface SubDutyService {
     void changePriceOfSubDutyByAdmin(Integer subDutyId, Double newPrice);
     void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId);
     void deleteExpertInSubDutyField(Integer subDutyId);
+    List<SubDuty> showSubDutyOfOneDuty(String dutyName);
 }

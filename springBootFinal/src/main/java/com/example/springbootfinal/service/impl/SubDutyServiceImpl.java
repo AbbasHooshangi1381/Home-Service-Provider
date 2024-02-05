@@ -1,17 +1,23 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.SubDutyService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,18 +61,18 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription) {
-        Optional<SubDuty> optionalSubDuty = subDutyRepository.findById(subDutyId);
-        if (optionalSubDuty.isPresent()) {
-            SubDuty subDuty = optionalSubDuty.get();
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
+        if (subDuty != null) {
             subDuty.setDescription(newDescription);
             subDutyRepository.save(subDuty);
         } else {
             System.out.println("You cannot change the password. admin with ID " + subDutyId + " does not exist.");
         }
     }
+
     @Override
     public void changePriceOfSubDutyByAdmin(Integer subDutyId, Double newPrice) {
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
         if (subDuty != null) {
             subDuty.setPrice(newPrice);
             subDutyRepository.save(subDuty);
@@ -77,20 +83,37 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId) {
-         SubDuty subDuty =subDutyRepository.findById(subServiceId).orElse(null);
-         List<Expert> all =expertRepository.findAll();
-        if (subDuty!=null){
-             subDuty.setExperts(all);
-             subDutyRepository.save(subDuty);
-         }
+        SubDuty subDuty = subDutyRepository.findById(subServiceId)
+                .orElseThrow(() -> new NotFoundException("SubDuty with ID " + subServiceId + " not found"));
+
+        if (subDuty != null) {
+            List<Expert> allById = expertRepository.findAllById(Collections.singleton(expertId));
+            if (allById.isEmpty()) {
+                throw new NotFoundException("Expert with ID " + expertId + " not found");
+            }
+            subDuty.setExperts(allById);
+            subDutyRepository.save(subDuty);
+        }
     }
+
     @Override
     public void deleteExpertInSubDutyField(Integer subDutyId) {
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElse(null);
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID not found"));
         if (subDuty != null) {
             subDuty.setExperts(null);
             subDutyRepository.save(subDuty);
         }
+    }
+
+    @Override
+    public List<SubDuty> showSubDutyOfOneDuty(String dutyName) {
+        List<SubDuty> subDuties = subDutyRepository.findSubDutyByServiceName(dutyName);
+        if (subDuties.isEmpty()) {
+            throw new NotFoundException("I cannot find this subDuty and duty");
+        }
+
+        return subDuties;
+
     }
 
     public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {

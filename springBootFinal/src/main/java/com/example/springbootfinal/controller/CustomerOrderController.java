@@ -6,6 +6,7 @@ import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderDTO;
+import com.example.springbootfinal.dto.customerOrder.CustomerOrderResponseDto;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.DutyRepository;
@@ -34,9 +35,9 @@ public class CustomerOrderController {
     }
 
     @PostMapping("/saveOrder")
-    public ResponseEntity<CustomerOrder> saveOrder(@RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
+    public ResponseEntity<CustomerOrderResponseDto> saveOrder(@RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
         String descriptionOfOrder = customerOrderDto.getDescriptionOfOrder();
-        double proposedPrice = customerOrderDto.getProposedPrice();
+        Double proposedPrice = customerOrderDto.getProposedPrice();
         String timeOfWork = customerOrderDto.getTimeOfWork();
         String address = customerOrderDto.getAddress();
         StatusOfOrder statusOfOrder = customerOrderDto.getStatusOfOrder();
@@ -45,19 +46,15 @@ public class CustomerOrderController {
 
         CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, statusOfOrder, customerId, subDutyId);
 
-        return new ResponseEntity<>(customerOrder, HttpStatus.CREATED);
-    }
+        CustomerOrderResponseDto responseDto = new CustomerOrderResponseDto();
+        responseDto.setId(customerOrder.getId());
+        responseDto.setDescriptionOfOrder(customerOrder.getDescriptionOfOrder());
+        responseDto.setProposedPrice(customerOrder.getProposedPrice());
+        responseDto.setTimeOfWork(customerOrder.getTimeOfDoing());
+        responseDto.setAddress(customerOrder.getAddress());
+        responseDto.setStatusOfOrder(customerOrder.getStatusOfOrder());
 
-    @GetMapping("/findByCustomerIdOrderByProposedPriceDesc/{customerId}")
-    public ResponseEntity<List<CustomerOrder>> findByCustomerIdOrderByProposedPriceDesc(@PathVariable int customerId) {
-        List<CustomerOrder> customerOrders = customerOrderService.findByCustomerIdOrderByProposedPriceDesc(customerId);
-        return ResponseEntity.ok(customerOrders);
-    }
-
-    @GetMapping("/findByCustomerIdOrderByExpertStarsDesc/{customerId}")
-    public ResponseEntity<List<CustomerOrder>> findByCustomerIdOrderByExpertStarsDesc(@PathVariable int customerId) {
-        List<CustomerOrder> customerOrders = customerOrderService.findByCustomerIdOrderByExpertStarsDesc(customerId);
-        return ResponseEntity.ok(customerOrders);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}/change-status")

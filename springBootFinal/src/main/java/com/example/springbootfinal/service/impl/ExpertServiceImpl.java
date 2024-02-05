@@ -78,24 +78,24 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
-    public void changeStatusOfExpertByAdmin(Integer id) {
+    public Expert changeStatusOfExpertByAdmin(Integer id) {
         Expert expert1 = expertRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Expert not found"));
 
             expert1.setExpertStatus(ExpertStatus.CONFIRMED);
             expertRepository.save(expert1);
-
+            return expert1;
     }
 
     @Override
-    public Boolean changePassword(Integer id, String newPassword) {
+    public Expert changePassword(Integer id, String newPassword) {
         Optional<Expert> optionalExpert = expertRepository.findById(id);
 
         if (optionalExpert.isPresent()) {
             Expert expert = optionalExpert.get();
             expert.setPassword(newPassword);
-            expertRepository.save(expert);
-            return true;
+
+            return expertRepository.save(expert);
         } else {
             throw new NotFoundException("Expert with ID " + id + " not found");
         }

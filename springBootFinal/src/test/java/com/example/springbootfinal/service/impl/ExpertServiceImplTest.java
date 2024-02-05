@@ -127,13 +127,11 @@ class ExpertServiceImplTest {
     @Transactional
     @Order(2)
     void changeStatusOfExpertByAdmin() {
-        final Optional<Expert> byEmail = expertRepository.findByEmail("okjggk@gmail.com");
-        assertNotNull(byEmail);
-        Integer id = byEmail.get().getId();
+         Integer id = save.getId();
         assertNotNull(id);
         expertService.changeStatusOfExpertByAdmin(id);
 
-        Expert updatedExpert = expertRepository.findByEmail("okjggk@gmail.com").orElse(null);
+        Expert updatedExpert = expertRepository.findById(id).orElse(null);
         assert updatedExpert != null;
         Assertions.assertEquals(ExpertStatus.CONFIRMED, updatedExpert.getExpertStatus());
     }
@@ -161,13 +159,13 @@ class ExpertServiceImplTest {
         Integer id = experts.getId();
         assertNotNull(id);
         String newPassword = "newPassword123";
-        Boolean aBoolean = expertService.changePassword(id, newPassword);
-        assertTrue(aBoolean);
+         Expert expert = expertService.changePassword(id, newPassword);
+        assertNotNull(expert);
         String changedPassword = experts.getPassword();
         assertNotNull(changedPassword);
         assertEquals(newPassword, changedPassword);
-         Boolean aBoolean1 = expertService.changePassword(2, newPassword);
-         assertFalse(aBoolean1);
+         Expert expert1 = expertService.changePassword(2, newPassword);
+        assertNotNull(expert1);
     }
 
     @Test

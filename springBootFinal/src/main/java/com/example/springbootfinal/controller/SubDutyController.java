@@ -4,12 +4,14 @@ import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutyResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutySaveDto;
+import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.SubDutyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -52,16 +54,17 @@ public class SubDutyController {
     }
 
     @PutMapping("/registerExpertInOneSubDuty/{expertId}/{subServiceId}")
-    public ResponseEntity<String>registerExpertInOneSubDuty(@PathVariable Integer expertId,@PathVariable Integer subServiceId){
+    public ResponseEntity<String> registerExpertInOneSubDuty(@PathVariable Integer expertId, @PathVariable Integer subServiceId) {
         subDutyService.registerExpertInOneSubDuty(expertId, subServiceId);
-        return ResponseEntity.ok(" subDuty with ID"+expertId+"has added to subService with Id "+ subServiceId);
-
+        return ResponseEntity.ok("Expert with ID " + expertId + " added to SubService with ID " + subServiceId);
     }
 
+
     @PutMapping("/deleteExpertInSubDutyField/{subServiceId}")
-    public ResponseEntity<String>deleteExpertInSubDutyField(@PathVariable Integer subServiceId){
+    public ResponseEntity<String> deleteExpertInSubDutyField(@PathVariable Integer subServiceId){
         subDutyService.deleteExpertInSubDutyField(subServiceId);
         return ResponseEntity.ok(" subDuty with ID"+subServiceId+"has deleted ");
+
     }
 
 }

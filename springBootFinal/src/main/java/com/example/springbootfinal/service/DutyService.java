@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DutyService {
     Duty saveServiceByAdmin(String dutyName);
-    List<SubDuty> showSubDuty(String dutyName);
+  //  List<SubDuty> showSubDuty(String dutyName);
 
 }

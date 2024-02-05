@@ -48,27 +48,24 @@ public class AdminController {
     }
 
     @GetMapping("/{username}/{password}")
-    public ResponseEntity<BaseSaveDto> checkAdmin(@PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkAdmin(@PathVariable String username, @PathVariable String password) {
         Admin admin = adminService.findByUserNameAndPassword(username, password).orElseThrow();
         if (admin != null) {
-            BaseSaveDto adminSaveDto = modelMapper.map(admin, BaseSaveDto.class);
-            return new ResponseEntity<>(adminSaveDto, HttpStatus.OK);
+            BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
+            return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/admin/{id}/{newPassword}")
-    public ResponseEntity<BaseResponseDto> changePassword(@PathVariable Integer id, @PathVariable String newPassword) {
+    @PutMapping("/{id}/{newPassword}")
+    public ResponseEntity<String> changePassword(@PathVariable Integer id,
+                                                          @PathVariable String newPassword) {
 
-         String password = adminService.changePassword(id, newPassword);
-
-        final BaseResponseDto map = modelMapper.map(password, BaseResponseDto.class);
-
-        return new ResponseEntity<>(map, HttpStatus.OK);
-
+      adminService.changePassword(id, newPassword);
+        return ResponseEntity.ok("password changed ! ");
     }
 
-    @PostMapping("/addSubDutyToExpert/{expertId}/{subDutyId}")
+/*    @PostMapping("/addSubDutyToExpert/{expertId}/{subDutyId}")
     public ResponseEntity<String> addingSubDutyToExpert(@PathVariable Integer expertId, @PathVariable Integer subDutyId) {
 
         adminService.addingSubDutyToExpert(expertId, subDutyId);
@@ -80,6 +77,6 @@ public class AdminController {
     public ResponseEntity<String> deletingSubDutyFromExpert(@PathVariable Integer expertId, @PathVariable Integer subDutyId) {
         adminService.deletingSubDutyToExpert(expertId, subDutyId);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 }

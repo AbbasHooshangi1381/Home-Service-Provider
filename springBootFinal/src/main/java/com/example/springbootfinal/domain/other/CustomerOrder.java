@@ -4,6 +4,9 @@ import com.example.springbootfinal.baseDomain.BaseEntity;
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Customer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -26,12 +29,15 @@ public class CustomerOrder extends BaseEntity<Integer> {
 
     String address;
 
+    @JsonBackReference
     @ManyToOne
     SubDuty subService;
 
+    @JsonBackReference
     @ManyToOne
     Customer customer;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "customerOrder")
     List<Suggestion> suggestionList;
 

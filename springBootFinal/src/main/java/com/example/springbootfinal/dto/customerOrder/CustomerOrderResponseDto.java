@@ -11,14 +11,22 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-public class CustomerOrderDTO {
+
+public class CustomerOrderResponseDto {
+    private Integer Id;
     private String descriptionOfOrder;
     private Double proposedPrice;
     private String timeOfWork;
     private String address;
-    private Integer customerId;
-    private Integer subDutyId;
     private StatusOfOrder statusOfOrder;
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public void setId(Integer id) {
+        Id = id;
+    }
 
     public String getDescriptionOfOrder() {
         return descriptionOfOrder;
@@ -28,11 +36,11 @@ public class CustomerOrderDTO {
         this.descriptionOfOrder = descriptionOfOrder;
     }
 
-    public double getProposedPrice() {
+    public Double getProposedPrice() {
         return proposedPrice;
     }
 
-    public void setProposedPrice(double proposedPrice) {
+    public void setProposedPrice(Double proposedPrice) {
         this.proposedPrice = proposedPrice;
     }
 
@@ -50,22 +58,6 @@ public class CustomerOrderDTO {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Integer getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public Integer getSubDutyId() {
-        return subDutyId;
-    }
-
-    public void setSubDutyId(Integer subDutyId) {
-        this.subDutyId = subDutyId;
     }
 
     public StatusOfOrder getStatusOfOrder() {

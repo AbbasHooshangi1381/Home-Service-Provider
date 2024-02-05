@@ -13,28 +13,22 @@ import java.util.Optional;
 @Service
 public class DutyServiceImpl implements DutyService {
     DutyRepository dutyRepository;
+
     public DutyServiceImpl(DutyRepository dutyRepository) {
         this.dutyRepository = dutyRepository;
     }
 
     @Override
     public Duty saveServiceByAdmin(String dutyName) {
-        Optional<Duty> duty1 = dutyRepository.findByName(dutyName);
-        if (duty1.isPresent()) {
+        Duty duty1 = dutyRepository.findByName(dutyName).get();
+        if (duty1 != null) {
             System.out.println("i have this service");
-        }
+            return null;
+        } else {
             Duty duty = new Duty(dutyName);
             dutyRepository.save(duty);
             System.out.println("service added to data base ! ");
             return duty;
-    }
-
-    @Override
-    public List<SubDuty> showSubDuty(String dutyName) {
-        Optional<Duty> electronic = dutyRepository.findByName(dutyName);
-        if (electronic.isEmpty()){
-            throw new NotFoundException("nothing!");
         }
-        return electronic.get().getSubServiceList();
     }
 }
