@@ -35,7 +35,8 @@ public class Customer extends BaseUser{
     Admin admin;
 
     public Customer(String firstName, String lastName, String email, String userName,
-                    String password, LocalDate dateOfSigningIn) {
+                    String password, LocalDate dateOfSigningIn,Wallet wallet) {
         super(firstName, lastName, email, userName, password, dateOfSigningIn);
+        this.wallet=wallet;
     }
 }

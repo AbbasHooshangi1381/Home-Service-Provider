@@ -50,4 +50,26 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException,notValid);
     }
+
+    @ExceptionHandler(value = InvalidDateException.class)
+    public ResponseEntity<Object>handleInvalidDateException(InvalidDateException n){
+        HttpStatus notValid=HttpStatus.NOT_ACCEPTABLE;
+        ApiException apiException=new ApiException(
+                n.getMessage(),
+                notValid
+
+        );
+        return new ResponseEntity<>(apiException,notValid);
+    }
+
+    @ExceptionHandler(value = NotEnoughCreditException.class)
+    public ResponseEntity<Object>handleNotEnoughCreditException(NotEnoughCreditException n){
+        HttpStatus notValid=HttpStatus.BAD_REQUEST;
+        ApiException apiException=new ApiException(
+                n.getMessage(),
+                notValid
+
+        );
+        return new ResponseEntity<>(apiException,notValid);
+    }
 }

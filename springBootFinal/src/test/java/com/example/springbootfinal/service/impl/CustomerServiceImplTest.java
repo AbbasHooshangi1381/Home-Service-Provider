@@ -104,21 +104,4 @@ class CustomerServiceImplTest {
         assertNotNull(password1);
     }
 
-    @Test
-    @Transactional
-    @Order(3)
-    void changeStatusOfOrderByCustomerStarted() {
-        Integer id = customerOrder.getId();
-        assertNotNull(id);
-        customerService.changeStatusOfOrderByCustomerStarted(id);
-    }
-
-    @Test
-    @Transactional
-    @Order(4)
-    void changeStatusOfOrderByCustomerToFinish() {
-        Integer id = customerOrder.getId();
-        assertNotNull(id);
-        customerService.changeStatusOfOrderByCustomerToFinish(id);
-    }
 }

@@ -20,8 +20,8 @@ public class DutyServiceImpl implements DutyService {
 
     @Override
     public Duty saveServiceByAdmin(String dutyName) {
-        Duty duty1 = dutyRepository.findByName(dutyName).get();
-        if (duty1 != null) {
+         Optional<Duty> byName = dutyRepository.findByName(dutyName);
+        if (byName.isPresent()) {
             System.out.println("i have this service");
             return null;
         } else {

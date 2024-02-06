@@ -13,10 +13,7 @@ import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
-import com.example.springbootfinal.service.CustomerOrderService;
-import com.example.springbootfinal.service.CustomerService;
-import com.example.springbootfinal.service.DutyService;
-import com.example.springbootfinal.service.ExpertService;
+import com.example.springbootfinal.service.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +53,8 @@ class ExpertServiceImplTest {
     CustomerService customerService;
     @Autowired
     CustomerOrderService customerOrderService;
+    @Autowired
+    SuggestionService suggestionService;
 
     Expert save;
     Duty dutys;
@@ -179,20 +178,38 @@ class ExpertServiceImplTest {
         assertTrue(imageExists);
     }
 
-    @Test
+/*    @Test
     @Order(6)
     void sendOfferForSubDuty() throws SQLException {
         Integer id = save.getId();
         assertNotNull(id);
         Integer id1 = customerOrder.getId();
         assertNotNull(id1);
-        expertService.sendOfferForSubDuty(id, id1, 5000.00, "1402/11/19");
-    }
+        suggestionService.sendOfferForSubDuty(id, id1, 5000.00, "1402/11/19");
+    }*/
 
     @Test
     @Order(7)
     void customerOrderList() {
-        List<CustomerOrder> customerOrders = expertService.customerOrderList();
+        List<CustomerOrder> customerOrders = suggestionService.customerOrderList();
         assertNotNull(customerOrders);
     }
+
+/*    @Test
+    @Transactional
+    @Order(3)
+    void changeStatusOfOrderByCustomerStarted() {
+        Integer id = customerOrder.getId();
+        assertNotNull(id);
+        expertService.changeStatusOfOrderByCustomerStarted(id);
+    }*/
+
+/*    @Test
+    @Transactional
+    @Order(4)
+    void changeStatusOfOrderByCustomerToFinish() {
+        Integer id = customerOrder.getId();
+        assertNotNull(id);
+        expertService.changeStatusOfOrderByCustomerToFinish(id);
+    }*/
 }

@@ -9,6 +9,4 @@ public interface CustomerService {
     Customer saveCustomer(String firstName, String lastName, String email, String userName);
     String changePassword(Integer id , String password);
     Optional<Customer> findByUserNameAndPassword(String username, String password);
-    void changeStatusOfOrderByCustomerStarted(Integer orderId);
-    void changeStatusOfOrderByCustomerToFinish(Integer orderId);
 }

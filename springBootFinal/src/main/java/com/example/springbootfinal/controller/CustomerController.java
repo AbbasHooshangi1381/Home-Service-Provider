@@ -54,24 +54,12 @@ public class CustomerController {
         }
     }
 
-    @PutMapping("/{id}/{password}")
+    @PutMapping("/changePassword/{id}/{password}")
     public ResponseEntity<String> changePassword(@PathVariable Integer id, @PathVariable String password) {
 
          customerService.changePassword(id, password);
 
         return ResponseEntity.ok("pasword changed !");
-    }
-
-    @PutMapping("/startOrder/{orderId}")
-    public ResponseEntity<String> startOrder(@PathVariable Integer orderId) {
-        customerService.changeStatusOfOrderByCustomerStarted(orderId);
-        return ResponseEntity.ok("Order " + orderId + " has been started.");
-    }
-
-    @PutMapping("/finish/{orderId}")
-    public ResponseEntity<String> finishOrder(@PathVariable Integer orderId) {
-        customerService.changeStatusOfOrderByCustomerToFinish(orderId);
-        return ResponseEntity.ok("Order " + orderId + " has been marked as finished.");
     }
 
 

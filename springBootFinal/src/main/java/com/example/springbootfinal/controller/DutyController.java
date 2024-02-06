@@ -29,7 +29,7 @@ public class DutyController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/{saveDuty}")
+    @PostMapping("saveDuty/{saveDuty}")
     public ResponseEntity<DutySaveDto> saveExpert(@PathVariable String saveDuty) {
         Duty duty = dutyService.saveServiceByAdmin(saveDuty);
         DutySaveDto map = modelMapper.map(duty, DutySaveDto.class);

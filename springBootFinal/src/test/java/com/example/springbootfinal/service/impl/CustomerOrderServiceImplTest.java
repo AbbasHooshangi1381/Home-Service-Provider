@@ -2,6 +2,7 @@ package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
+import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
@@ -13,6 +14,7 @@ import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.CustomerOrderService;
 import com.example.springbootfinal.service.CustomerService;
 import com.example.springbootfinal.service.SubDutyService;
+import com.example.springbootfinal.service.SuggestionService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,8 @@ class CustomerOrderServiceImplTest {
     CustomerOrderService customerOrderService;
     @Autowired
     CustomerService customerService;
+    @Autowired
+    SuggestionService suggestionService;
 
     private Customer customer;
     private Duty dutys;
@@ -86,8 +90,8 @@ class CustomerOrderServiceImplTest {
     void findByCustomerIdOrderByProposedPriceDesc() {
         Integer id = customer.getId();
         assertNotNull(id);
-        List<CustomerOrder> byCustomerIdOrderByProposedPriceDesc =
-                customerOrderService.findByCustomerIdOrderByProposedPriceDesc(id);
+        List<Suggestion> byCustomerIdOrderByProposedPriceDesc =
+                suggestionService.findByCustomerIdOrderByProposedPriceDesc(id);
         assertNotNull(byCustomerIdOrderByProposedPriceDesc);
     }
 
@@ -96,9 +100,8 @@ class CustomerOrderServiceImplTest {
     void findByCustomerIdOrderByExpertStarsDesc() {
         Integer id = customer.getId();
         assertNotNull(id);
-        final List<CustomerOrder> byCustomerIdOrderByExpertStarsDesc =
-                customerOrderService.findByCustomerIdOrderByExpertStarsDesc(id);
-        assertNotNull(byCustomerIdOrderByExpertStarsDesc);
+        final List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.findByCustomerOrderIdOrderByExpertStarsDesc(id);
+        assertNotNull(byCustomerOrderIdOrderByExpertStarsDesc);
     }
 
     @Test

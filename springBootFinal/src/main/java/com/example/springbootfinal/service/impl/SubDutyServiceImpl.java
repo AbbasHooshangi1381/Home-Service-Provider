@@ -4,6 +4,7 @@ import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.exception.InvalidDateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.SubDutyService;
@@ -15,6 +16,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,7 +87,7 @@ public class SubDutyServiceImpl implements SubDutyService {
     @Override
     public void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId) {
         SubDuty subDuty = subDutyRepository.findById(subServiceId)
-                .orElseThrow(() -> new NotFoundException("SubDuty with ID " + subServiceId + " not found"));
+                .orElseThrow(() -> new NotFoundException("expert with ID " + subServiceId + " not found"));
 
         if (subDuty != null) {
             List<Expert> allById = expertRepository.findAllById(Collections.singleton(expertId));
@@ -117,12 +120,22 @@ public class SubDutyServiceImpl implements SubDutyService {
     }
 
     public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {
-        LocalDate currentTime = LocalDate.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        LocalDate firstStartDate = LocalDate.parse("1402-10-27", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        //String inputTime = "1403-01-15 08:30:00";
+        LocalDateTime currentTime = LocalDateTime.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        LocalDateTime firstStartDate = LocalDateTime.parse("1402-10-27 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (currentTime.isAfter(firstStartDate)) {
             return inputTime;
         } else {
-            throw new IllegalArgumentException("You should choose a date after 1402-10-27");
+            throw new InvalidDateException("You should choose a date after 1402-10-27");
+        }
+    }
+    public static String checkAndRegisterDurationTimeOfWork(String inputTime) throws SQLException{
+        LocalTime currentTime = LocalTime.parse(inputTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        if (currentTime.isBefore(LocalTime.of(7, 0)) || currentTime.isAfter(LocalTime.of(22, 0))) {
+            return "Accepted: " + inputTime;
+        } else {
+            throw new InvalidDateException("Time should be before 7 AM or after 10 PM");
         }
     }
 }

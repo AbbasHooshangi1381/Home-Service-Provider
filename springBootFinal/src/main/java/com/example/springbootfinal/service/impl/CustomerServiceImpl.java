@@ -2,12 +2,14 @@ package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
+import com.example.springbootfinal.domain.other.Wallet;
 import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
+import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.CustomerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerRepository customerRepository;
     @Autowired
     CustomerOrderRepository customerOrderRepository;
+    @Autowired
+    WalletRepository walletRepository;
 
     @Override
     public Customer saveCustomer(String firstName, String lastName, String email, String userName) {
@@ -39,7 +43,10 @@ public class CustomerServiceImpl implements CustomerService {
         if (byEmail.isPresent()) {
             throw new NotValidException("ایمیل تکراری است.");
         }
-        Customer customer = new Customer(validatedFirstName, validatedLastName, validatedEmail, userName, password, timeOfSignIn);
+        Wallet wallet=new Wallet(500.00);
+        Wallet save = walletRepository.save(wallet);
+
+        Customer customer = new Customer(validatedFirstName, validatedLastName, validatedEmail, userName, password, timeOfSignIn,save);
         customerRepository.save(customer);
         return customer;
     }
@@ -64,30 +71,5 @@ public class CustomerServiceImpl implements CustomerService {
         return byUserNameAndPassword;
     }
 
-    @Override
-    public void changeStatusOfOrderByCustomerStarted(Integer orderId) {
-        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
-        if (byId.isEmpty()) {
-            throw new NotFoundException("i dont have this order ");
-        } else {
-            byId.ifPresent(customerOrder -> {
-                customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
-                customerOrderRepository.save(customerOrder);
-            });
-        }
-    }
-
-    @Override
-    public void changeStatusOfOrderByCustomerToFinish(Integer orderId) {
-        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
-        if (byId.isEmpty()) {
-            throw new NotFoundException("i dont have this order ");
-        } else {
-            byId.ifPresent(customerOrder -> {
-                customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
-                customerOrderRepository.save(customerOrder);
-            });
-        }
-    }
 }
 

@@ -1,11 +1,14 @@
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.ExpertStatus;
+import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
+import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
@@ -21,7 +24,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -114,41 +120,59 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
-    public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, double suggestionPrice, String timeOfWork) throws SQLException {
-        Optional<Expert> byId = expertRepository.findById(expertId);
-        Optional<CustomerOrder> customerOrderOpt = customerOrderRepository.findById(customerOrderId);
-        if (customerOrderOpt.isEmpty()) {
-            throw new IllegalArgumentException("Invalid customerOrderId");
-        }
-        CustomerOrder customerOrder = customerOrderOpt.get();
-        Suggestion suggestion = new Suggestion();
-        Double proposedPrice = customerOrder.getProposedPrice();
-        if (byId.isPresent()) {
-            if (suggestionPrice >= proposedPrice) {
-                Double validatedPrice = proposedPrice;
-                suggestion.setSuggestionPrice(validatedPrice);
-                String time = checkAndRegisterTimeOfLoan(timeOfWork);
-                suggestion.setTimeOfSendSuggestion(LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-                suggestion.setDurationTimeOfWork("2hours");
-                suggestionRepository.save(suggestion);
-                customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
+    public void changeStatusOfOrderByExpertStarted(Integer orderId) {
+        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
+
+        if (byId.isEmpty()) {
+            throw new NotFoundException("i dont have this order ");
+        } else {
+            byId.ifPresent(customerOrder -> {
+
+                customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
                 customerOrderRepository.save(customerOrder);
-            }
+            });
         }
     }
 
     @Override
-    public List<CustomerOrder> customerOrderList() {
-        List<CustomerOrder> all = customerOrderRepository.findAll();
-        List<CustomerOrder> filteredOrders = all.stream()
-                .filter(order ->
-                        order.getStatusOfOrder().equals(WAITING_FOR_EXPERT_SUGGESTIONS) ||
-                                order.getStatusOfOrder().equals(WAITING_FOR_SELECT_EXPERT)
-                )
-                .collect(Collectors.toList());
-        for (CustomerOrder order : filteredOrders) {
-            System.out.println(order);
+    public void changeStatusOfOrderByCustomerToFinish(Integer suggestionId,String timeOfFinishingWork) {
+         Optional<Suggestion> byId1 = suggestionRepository.findById(suggestionId);
+         if (byId1.isEmpty()) {
+            throw new NotFoundException("i dont have this order ");
+        } else {
+            byId1.ifPresent(suggestion -> {
+                String timeOfStartingWork = suggestion.getTimeOfStartingWork();
+                String durationTimeOfWork = suggestion.getDurationTimeOfWork();
+
+                LocalDateTime startWorkTime = LocalDateTime.parse(timeOfStartingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+                LocalTime durationTime = LocalTime.parse(durationTimeOfWork);
+                LocalDateTime expectedFinishTime = startWorkTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute()).plusSeconds(durationTime.getSecond());
+
+                LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+
+                if (actualFinishTime.isAfter(expectedFinishTime)){
+                    long delayHours = ChronoUnit.HOURS.between(actualFinishTime, expectedFinishTime);
+                    int ratingReduction = (int) delayHours;
+
+                     Expert expert = byId1.get().getExpert();
+                    int currentRating = expert.getStars();
+                    int updatedRating = Math.max(0, currentRating - ratingReduction);
+                    if (updatedRating<=0){
+                        expert.setExpertStatus(ExpertStatus.NEW);
+                        expertRepository.save(expert);
+                        throw new NotValidException(" your account is disAble");
+
+                    }else {
+                        expert.setStars(updatedRating);
+                        expertRepository.save(expert);
+                    }
+                }
+                CustomerOrder customerOrder = byId1.get().getCustomerOrder();
+                customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
+                customerOrderRepository.save(customerOrder);
+            });
         }
-        return filteredOrders;
     }
+
 }
+

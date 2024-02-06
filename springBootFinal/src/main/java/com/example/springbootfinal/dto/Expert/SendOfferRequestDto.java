@@ -8,10 +8,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 public class SendOfferRequestDto {
-    private Integer expertId;
-    private Integer customerOrderId;
-    private double suggestionPrice;
-    private String timeOfWork;
+    Integer expertId;
+    Integer customerOrderId;
+    Double suggestionPrice;
+    String timeOfWork;
+    String durationTimeOfWork;
 
     public Integer getExpertId() {
         return expertId;
@@ -29,11 +30,11 @@ public class SendOfferRequestDto {
         this.customerOrderId = customerOrderId;
     }
 
-    public double getSuggestionPrice() {
+    public Double getSuggestionPrice() {
         return suggestionPrice;
     }
 
-    public void setSuggestionPrice(double suggestionPrice) {
+    public void setSuggestionPrice(Double suggestionPrice) {
         this.suggestionPrice = suggestionPrice;
     }
 
@@ -43,5 +44,13 @@ public class SendOfferRequestDto {
 
     public void setTimeOfWork(String timeOfWork) {
         this.timeOfWork = timeOfWork;
+    }
+
+    public String getDurationTimeOfWork() {
+        return durationTimeOfWork;
+    }
+
+    public void setDurationTimeOfWork(String durationTimeOfWork) {
+        this.durationTimeOfWork = durationTimeOfWork;
     }
 }

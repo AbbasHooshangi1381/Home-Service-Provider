@@ -29,7 +29,7 @@ public class SubDuty extends BaseEntity<Integer> {
     Duty service;
 
     @ManyToMany
-    List<Expert> experts;
+    List<Expert>experts;
 
     @OneToMany(mappedBy = "subService")
     List<CustomerOrder> customerOrderList;

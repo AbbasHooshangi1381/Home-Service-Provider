@@ -14,6 +14,6 @@ public interface ExpertService {
      Optional<Expert> findByUserNameAndPassword(String username, String password);
      Expert changePassword(Integer id , String newPassword);
      byte[] saveImageByIdToSystem(Integer id) throws IOException;
-     void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,double suggestionPrice,String timeOfWork) throws SQLException;
-     List<CustomerOrder> customerOrderList();
+     void changeStatusOfOrderByExpertStarted(Integer orderId);
+     void changeStatusOfOrderByCustomerToFinish(Integer orderId,String timeOfFinishingWork);
 }

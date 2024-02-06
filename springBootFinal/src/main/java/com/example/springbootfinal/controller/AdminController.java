@@ -47,9 +47,9 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
 
-    @GetMapping("/{username}/{password}")
+    @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkAdmin(@PathVariable String username, @PathVariable String password) {
-        Admin admin = adminService.findByUserNameAndPassword(username, password).orElseThrow();
+        Admin admin = adminService.findByUserNameAndPassword(username, password).orElseThrow(()->new NotFoundException(" i can not found this user"));
         if (admin != null) {
             BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
@@ -57,26 +57,12 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/{id}/{newPassword}")
+    @PutMapping("/changePassword/{id}/{newPassword}")
     public ResponseEntity<String> changePassword(@PathVariable Integer id,
                                                           @PathVariable String newPassword) {
 
       adminService.changePassword(id, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }
-
-/*    @PostMapping("/addSubDutyToExpert/{expertId}/{subDutyId}")
-    public ResponseEntity<String> addingSubDutyToExpert(@PathVariable Integer expertId, @PathVariable Integer subDutyId) {
-
-        adminService.addingSubDutyToExpert(expertId, subDutyId);
-
-        return ResponseEntity.ok("SubDuty added to Expert successfully");
-    }
-
-    @DeleteMapping("/deletingSubDutyFromExpert/{expertId}/{subDutyId}")
-    public ResponseEntity<String> deletingSubDutyFromExpert(@PathVariable Integer expertId, @PathVariable Integer subDutyId) {
-        adminService.deletingSubDutyToExpert(expertId, subDutyId);
-        return ResponseEntity.noContent().build();
-    }*/
 
 }

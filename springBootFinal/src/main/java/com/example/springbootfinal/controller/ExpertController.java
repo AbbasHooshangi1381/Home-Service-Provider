@@ -12,6 +12,7 @@ import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.ExpertService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/expert")
 public class ExpertController {
-
+    @Autowired
     ExpertService expertService;
+    @Autowired
     ExpertRepository expertRepository;
+    @Autowired
     ModelMapper modelMapper;
+
 
     @PostMapping("/register-Expert")
     public ResponseEntity<BaseResponseDto> saveExpert(@RequestBody ExpertSaveDto expertSaveDto) throws IOException {
@@ -39,7 +42,7 @@ public class ExpertController {
         return ResponseEntity.status(HttpStatus.CREATED).body(map);
     }
 
-    @GetMapping("/{username}/{password}")
+    @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkExpert(@PathVariable String username, @PathVariable String password) {
         Expert expert = expertService.findByUserNameAndPassword(username, password).orElse(null);
         if (expert != null) {
@@ -50,7 +53,7 @@ public class ExpertController {
         }
     }
 
-    @PutMapping("/{id}/{newPassword}")
+    @PutMapping("/changePassword/{id}/{newPassword}")
     public ResponseEntity<String> changePassword(@PathVariable Integer id,
                                                  @PathVariable String newPassword) {
         expertService.changePassword(id, newPassword);
@@ -77,26 +80,16 @@ public class ExpertController {
         }
     }
 
-    @PostMapping("/sendOffer")
-    public ResponseEntity<String> sendOfferForSubDuty(@RequestBody SendOfferRequestDto request) {
-        try {
-            expertService.sendOfferForSubDuty(request.getExpertId(), request.getCustomerOrderId(),
-                    request.getSuggestionPrice(), request.getTimeOfWork());
-            return ResponseEntity.ok("send");
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(" i can not send it");
-        }
+    @PutMapping("/start/{orderId}")
+    public ResponseEntity<String> startOrder(@PathVariable Integer orderId ) {
+        expertService.changeStatusOfOrderByExpertStarted(orderId);
+        return ResponseEntity.ok("Order " + orderId + " has been started.");
     }
 
-    @GetMapping("/cusromerOrderList")
-    public ResponseEntity<List<CustomerOrder>> getCustomerOrderList() {
-        List<CustomerOrder> customerOrders = expertService.customerOrderList();
-        if (!customerOrders.isEmpty()) {
-            return ResponseEntity.ok(customerOrders);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
-
+    @PutMapping("/finish/{orderId}/{timeOfFinishWork}")
+    public ResponseEntity<String> finishOrder(@PathVariable Integer orderId ,@PathVariable String timeOfFinishWork) {
+        //"yyyy/MM/dd HH:mm:ss"
+        expertService.changeStatusOfOrderByCustomerToFinish(orderId,timeOfFinishWork);
+        return ResponseEntity.ok("Order " + orderId + " has been marked as finished.");
     }
 }

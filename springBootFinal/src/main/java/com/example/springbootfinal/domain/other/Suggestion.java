@@ -1,6 +1,7 @@
 package com.example.springbootfinal.domain.other;
 
 import com.example.springbootfinal.baseDomain.BaseEntity;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
@@ -15,19 +16,22 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Suggestion extends BaseEntity<Integer> {
 
-    LocalDate timeOfSendSuggestion;
+    String timeOfSendSuggestion;
 
     Double suggestionPrice;
 
-    LocalDate timeOfStartingWork;
+    String timeOfStartingWork;
 
     String durationTimeOfWork;
 
     @ManyToOne
     CustomerOrder customerOrder;
 
-    public Suggestion(LocalDate timeOfSendSuggestion, Double suggestionPrice,
-                      LocalDate timeOfStartingWork, String durationTimeOfWork) {
+    @ManyToOne
+    Expert expert;
+
+    public Suggestion(String timeOfSendSuggestion, Double suggestionPrice,
+                      String timeOfStartingWork, String durationTimeOfWork) {
         this.timeOfSendSuggestion = timeOfSendSuggestion;
         this.suggestionPrice = suggestionPrice;
         this.timeOfStartingWork = timeOfStartingWork;
