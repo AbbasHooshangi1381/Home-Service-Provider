@@ -17,12 +17,9 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseUser extends BaseEntity<Integer> {
-    @NotNull(message = " firstName should not be null ")
+    @Column(name = "firstName")
     String firstName;
-    @NotNull(message = " lastName should not be null ")
     String lastName;
-    @Column(unique = true)
-    @Email
     String email;
     String userName;
     String password;

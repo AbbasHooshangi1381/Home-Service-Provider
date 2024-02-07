@@ -46,13 +46,8 @@ public class CustomerOrderController {
 
         CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, statusOfOrder, customerId, subDutyId);
 
-        CustomerOrderResponseDto responseDto = new CustomerOrderResponseDto();
-        responseDto.setId(customerOrder.getId());
-        responseDto.setDescriptionOfOrder(customerOrder.getDescriptionOfOrder());
-        responseDto.setProposedPrice(customerOrder.getProposedPrice());
-        responseDto.setTimeOfWork(customerOrder.getTimeOfDoing());
-        responseDto.setAddress(customerOrder.getAddress());
-        responseDto.setStatusOfOrder(customerOrder.getStatusOfOrder());
+        CustomerOrderResponseDto responseDto = modelMapper.map(customerOrder,CustomerOrderResponseDto.class);
+
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }

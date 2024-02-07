@@ -18,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Duty extends BaseEntity<Integer> {
+
     @NotNull(message = " dutyName should not be null ")
     @Column(unique = true)
     private String name;

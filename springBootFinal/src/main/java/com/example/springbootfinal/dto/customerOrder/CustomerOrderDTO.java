@@ -1,6 +1,10 @@
 package com.example.springbootfinal.dto.customerOrder;
 
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,12 +16,27 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 public class CustomerOrderDTO {
+    @NotBlank
     private String descriptionOfOrder;
+
+    @NotNull
+    @Positive
     private Double proposedPrice;
+
+    @NotBlank
     private String timeOfWork;
+
+    @NotBlank
     private String address;
+
+    @NotNull
+    @Positive
     private Integer customerId;
+
+    @NotNull
+    @Positive
     private Integer subDutyId;
+    @NotNull
     private StatusOfOrder statusOfOrder;
 
     public String getDescriptionOfOrder() {

@@ -23,17 +23,14 @@ public class WalletController {
         this.walletRepository = walletRepository;
         this.walletService = walletService;
     }
-
     @PutMapping("/payByCreditOfAccount/{customerOrderId}/{expertId}")
     public ResponseEntity<String> payByCreditOfAccount(@PathVariable Integer customerOrderId,@PathVariable Integer expertId) {
             walletService.payByCreditOfAccount(customerOrderId,expertId);
             return ResponseEntity.ok("send");
-
     }
     @PutMapping("/payByCard/{customerOrderId}")
     public ResponseEntity<String> payByCard(@PathVariable Integer customerOrderId) {
         walletService.payByCard(customerOrderId);
         return ResponseEntity.ok("paid!");
-
     }
 }

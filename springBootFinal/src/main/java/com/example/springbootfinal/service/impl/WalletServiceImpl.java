@@ -30,38 +30,31 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void payByCreditOfAccount(Integer customerOrderId, Integer expertId) {
-        Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
-        Double creditAmount = wallet.getCreditAmount();
-
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException(" i can not found this customer order"));
-
-         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));
-
+        Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
+        Double creditAmount = wallet.getCreditAmount();
         Double price = customerOrder.getSubService().getPrice();
+        Double seventyPercentPrice = price * 0.7;
 
-        if (wallet != null) {
+        if (wallet == null) {
+            throw new NotEnoughCreditException("you dont have enough credit");
+        } else {
             Double newCredit = creditAmount - price;
             wallet.setCreditAmount(newCredit);
             customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
-        //    expert.setWallet();
+            Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));
+            wallet1.setCreditAmount(seventyPercentPrice);
             walletRepository.save(wallet);
+            walletRepository.save(wallet1);
             customerOrderRepository.save(customerOrder);
-
-        } else {
-
-            throw new NotEnoughCreditException("you dont have enough credit");
-
         }
-
-
     }
 
     @Override
     public void payByCard(Integer customerOrderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException(" i can not found this customer order"));
-
         customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
         customerOrderRepository.save(customerOrder);
 

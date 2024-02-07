@@ -1,6 +1,9 @@
 package com.example.springbootfinal.validation;
 
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class Validation {
@@ -23,14 +26,9 @@ public class Validation {
     }
 
     private static String shuffleString(String input) {
-        char[] characters = input.toCharArray();
-        for (int i = characters.length - 1; i > 0; i--) {
-            int randomIndex = (int) (Math.random() * (i + 1));
-            char temp = characters[i];
-            characters[i] = characters[randomIndex];
-            characters[randomIndex] = temp;
-        }
-        return new String(characters);
+        List<Character> characters = input.chars().mapToObj(e -> (char)e).collect(Collectors.toList());
+        Collections.shuffle(characters);
+        return characters.stream().map(String::valueOf).collect(Collectors.joining());
     }
 
 

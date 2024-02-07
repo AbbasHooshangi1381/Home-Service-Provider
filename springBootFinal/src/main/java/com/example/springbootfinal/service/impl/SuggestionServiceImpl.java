@@ -38,18 +38,16 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, Double suggestionPrice, String timeOfWork
             , String durationTimeOfWork) throws SQLException {
-        Optional<Expert> byId = expertRepository.findById(expertId);
+        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
 
         Suggestion suggestion = new Suggestion();
-        if (byId.isPresent()) {
+        if (expert!=null) {
             Double fixPrice = customerOrder.getProposedPrice();
             Double validatedPrice = validatePrice(suggestionPrice, fixPrice);
             suggestion.setSuggestionPrice(validatedPrice);
-
             String time = checkAndRegisterTimeOfLoan(timeOfWork);
             suggestion.setTimeOfStartingWork(time);
-
             suggestion.setTimeOfSendSuggestion(String.valueOf(LocalDate.now()));
             String time1 = checkAndRegisterDurationTimeOfWork(durationTimeOfWork);
             suggestion.setDurationTimeOfWork(time1);
@@ -76,7 +74,6 @@ public class SuggestionServiceImpl implements SuggestionService {
         }
         return filteredOrders;
     }
-
     @Override
     public List<Suggestion> findByCustomerIdOrderByProposedPriceDesc(Integer customerOrderId) {
         List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.findByCustomerOrderIdOrderByProposedPriceDesc(customerOrderId);
@@ -89,7 +86,6 @@ public class SuggestionServiceImpl implements SuggestionService {
         }
         return byCustomerOrderIdOrderByProposedPriceDesc;
     }
-
     @Override
     public List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
         List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc =
@@ -102,6 +98,5 @@ public class SuggestionServiceImpl implements SuggestionService {
             }
         }
         return byCustomerOrderIdOrderByExpertStarsDesc;
-
     }
 }

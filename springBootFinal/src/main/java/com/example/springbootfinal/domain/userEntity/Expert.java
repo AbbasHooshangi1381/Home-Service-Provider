@@ -1,12 +1,13 @@
 package com.example.springbootfinal.domain.userEntity;
 
-import com.example.springbootfinal.domain.enumurations.ActiveOrNonActive;
 import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.other.Wallet;
 
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,8 @@ public class Expert extends BaseUser {
     @Lob
     byte[] personalPhoto;
 
+    @Max(5)
     Integer stars;
-/*
-    @Enumerated(value = EnumType.STRING)
-    ActiveOrNonActive activeOrNonActive;*/
 
     @Enumerated(value = EnumType.STRING)
     ExpertStatus expertStatus;
@@ -38,6 +37,7 @@ public class Expert extends BaseUser {
     Wallet wallet;
 
     @ManyToOne
+  //  @Column(name = "id")
     Admin admin;
 
 

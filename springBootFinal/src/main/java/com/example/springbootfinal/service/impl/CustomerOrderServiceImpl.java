@@ -40,24 +40,12 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         dutyRepository.findAll().forEach(System.out::println);
         subDutyRepository.findAll().forEach(System.out::println);
 
-
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found with ID: " + customerId));
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with ID: " + subDutyId));
-
         Double fixPrice = subDuty.getPrice();
-
         Double validatedPrice = validatePrice(proposedPrice, fixPrice);
-
-         String time = checkAndRegisterTimeOfLoan(timeOfWork);
-
-        CustomerOrder customerOrder = new CustomerOrder();
-        customerOrder.setCustomer(customer);
-        customerOrder.setDescriptionOfOrder(descriptionOfOrder);
-        customerOrder.setAddress(address);
-        customerOrder.setStatusOfOrder(waitingForSuggestExpert);
-        customerOrder.setProposedPrice(validatedPrice);
-        customerOrder.setSubService(subDuty);
-        customerOrder.setTimeOfDoing(time);
+        String time = checkAndRegisterTimeOfLoan(timeOfWork);
+        CustomerOrder customerOrder = new CustomerOrder(descriptionOfOrder, validatedPrice, time, address, subDuty, customer, waitingForSuggestExpert);
 
         return customerOrderRepository.save(customerOrder);
     }

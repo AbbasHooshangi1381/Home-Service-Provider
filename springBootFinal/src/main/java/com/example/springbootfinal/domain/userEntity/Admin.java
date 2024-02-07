@@ -1,9 +1,6 @@
 package com.example.springbootfinal.domain.userEntity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,11 +16,12 @@ import java.util.List;
 public class Admin extends BaseUser {
 
     @OneToMany(mappedBy = "admin")
+   // @JoinColumn(name = "customer_id",referencedColumnName = "id")
     List<Customer> customerList;
 
     @OneToMany(mappedBy = "admin")
+   // @JoinColumn(name = "expert_id",referencedColumnName = "id")
     List<Expert> expertList;
-
 
 
     public Admin(String firstName, String lastName, String email, String userName,

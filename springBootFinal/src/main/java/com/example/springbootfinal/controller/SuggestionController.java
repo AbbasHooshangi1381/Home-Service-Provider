@@ -28,18 +28,12 @@ public class SuggestionController {
         this.suggestionService = suggestionService;
         this.modelMapper = modelMapper;
     }
-
     @PostMapping("/sendOffer")
-    public ResponseEntity<String> sendOfferForSubDuty(@RequestBody SendOfferRequestDto request) {
-        try {
+    public ResponseEntity<String> sendOfferForSubDuty(@RequestBody SendOfferRequestDto request) throws SQLException {
             suggestionService.sendOfferForSubDuty(request.getExpertId(), request.getCustomerOrderId(),
                     request.getSuggestionPrice(), request.getTimeOfWork(),request.getDurationTimeOfWork());
             return ResponseEntity.ok("send");
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(" i can not send it");
-        }
     }
-
     @GetMapping("/cusromerOrderList")
     public ResponseEntity<List<CustomerOrder>> getCustomerOrderList() {
         List<CustomerOrder> customerOrders = suggestionService.customerOrderList();
@@ -48,17 +42,12 @@ public class SuggestionController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
-
     }
-
-
     @GetMapping("/findByCustomerIdOrderByProposedPriceDesc/{customerOrderId}")
     public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.findByCustomerIdOrderByProposedPriceDesc(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
     }
-
     @GetMapping("/findByCustomerIdOrderByExpertStarsDesc/{customerOrderId}")
     public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.findByCustomerOrderIdOrderByExpertStarsDesc(customerOrderId);

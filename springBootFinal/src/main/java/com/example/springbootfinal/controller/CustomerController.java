@@ -37,21 +37,17 @@ public class CustomerController {
     public ResponseEntity<BaseResponseDto> saveCustomer(@RequestBody BaseSaveDto adminSaveDto) {
         Customer savedCustomer = customerService.saveCustomer(adminSaveDto.getFirstName(), adminSaveDto.getLastName(),
                 adminSaveDto.getEmail(), adminSaveDto.getUserName());
-
         BaseResponseDto adminResponseDto = modelMapper.map(savedCustomer, BaseResponseDto.class);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
 
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkCustomer(@PathVariable String username, @PathVariable String password) {
-        Customer customer = customerService.findByUserNameAndPassword(username, password).orElseThrow();
-        if (customer != null) {
+        Customer customer = customerService.findByUserNameAndPassword(username, password).get();
+
             BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
     }
 
     @PutMapping("/changePassword/{id}/{password}")

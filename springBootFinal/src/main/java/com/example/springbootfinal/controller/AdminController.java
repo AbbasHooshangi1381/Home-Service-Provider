@@ -49,13 +49,12 @@ public class AdminController {
 
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkAdmin(@PathVariable String username, @PathVariable String password) {
-        Admin admin = adminService.findByUserNameAndPassword(username, password).orElseThrow(()->new NotFoundException(" i can not found this user"));
-        if (admin != null) {
+        Admin admin = adminService.findByUserNameAndPassword(username, password).get();
+
             BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+
     }
     @PutMapping("/changePassword/{id}/{newPassword}")
     public ResponseEntity<String> changePassword(@PathVariable Integer id,
