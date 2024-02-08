@@ -4,6 +4,7 @@ import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
+import com.example.springbootfinal.domain.other.Wallet;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
@@ -11,10 +12,7 @@ import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.image.ImageInput;
-import com.example.springbootfinal.repository.CustomerOrderRepository;
-import com.example.springbootfinal.repository.ExpertRepository;
-import com.example.springbootfinal.repository.SubDutyRepository;
-import com.example.springbootfinal.repository.SuggestionRepository;
+import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.ExpertService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +43,8 @@ public class ExpertServiceImpl implements ExpertService {
     SubDutyRepository subDutyRepository;
     @Autowired
     SuggestionRepository suggestionRepository;
+    @Autowired
+    WalletRepository walletRepository;
 
 
     @Override
@@ -55,13 +55,15 @@ public class ExpertServiceImpl implements ExpertService {
         if (byEmail.isPresent()) {
             throw new DuplicateException("ایمیل تکراری است.");
         }
+        Wallet wallet = new Wallet(500.00);
+        Wallet save = walletRepository.save(wallet);
         byte[] imageData = ImageInput.uploadProfilePicture(filePath);
         ExpertStatus expertStatus = ExpertStatus.NEW;
         Integer star = 0;
         LocalDate timeOfSignIn = LocalDate.now();
 
         Expert expertSave = new Expert(firstName, lastName, email,
-                userName, password, timeOfSignIn, imageData, star, expertStatus);
+                userName, password, timeOfSignIn, imageData, star, expertStatus,save);
         return expertRepository.save(expertSave);
     }
 

@@ -12,6 +12,6 @@ public class RequestDto {
 
     private List<SearchRequestDto> searchRequestDto;
 
-    private GlobalOperator globalOperator;
+    //private GlobalOperator globalOperator;
 
 }

@@ -91,7 +91,7 @@ class CustomerOrderServiceImplTest {
         Integer id = customer.getId();
         assertNotNull(id);
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc =
-                suggestionService.findByCustomerIdOrderByProposedPriceDesc(id);
+                suggestionService.findAllPriceByCustomerOrderId(id);
         assertNotNull(byCustomerIdOrderByProposedPriceDesc);
     }
 

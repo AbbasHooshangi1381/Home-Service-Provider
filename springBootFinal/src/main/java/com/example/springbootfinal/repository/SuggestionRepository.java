@@ -12,9 +12,9 @@ import java.util.Optional;
 
 @Repository
 
-public interface SuggestionRepository  extends JpaRepository< Suggestion, Integer> {
-    @Query("SELECT o FROM Suggestion o WHERE o.customerOrder.id  = :customerOrderId ORDER BY o.suggestionPrice DESC")
-    List<Suggestion> findByCustomerOrderIdOrderByProposedPriceDesc(@Param("customerOrderId") Integer customerOrderId);
+public interface SuggestionRepository extends JpaRepository<Suggestion, Integer> {
+    @Query("SELECT o FROM Suggestion o WHERE o.customerOrder.id = :customerOrderId ORDER BY o.suggestionPrice DESC")
+    List<Suggestion> findAllPriceByCustomerOrderId(@Param("customerOrderId") Integer customerOrderId);
 
     @Query("SELECT o FROM Suggestion o JOIN o.customerOrder.subService.experts e WHERE" +
             " o.customerOrder.id = :customerOrderId ORDER BY e.stars DESC")

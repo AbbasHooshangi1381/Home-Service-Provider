@@ -9,13 +9,14 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@MappedSuperclass
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Entity
 public class BaseUser extends BaseEntity<Integer> {
     @Column(name = "firstName")
     String firstName;

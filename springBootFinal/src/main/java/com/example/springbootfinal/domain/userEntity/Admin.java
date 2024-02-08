@@ -7,12 +7,13 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+
 public class Admin extends BaseUser {
 
     @OneToMany(mappedBy = "admin")

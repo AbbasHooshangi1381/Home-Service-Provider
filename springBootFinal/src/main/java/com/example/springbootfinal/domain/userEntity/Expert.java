@@ -17,11 +17,11 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 public class Expert extends BaseUser {
 
     @Lob
@@ -45,11 +45,12 @@ public class Expert extends BaseUser {
     List<Suggestion>suggestionList;
 
     public Expert(String firstName, String lastName, String email, String userName, String password,
-                  LocalDate dateOfSigningIn, byte[] personalPhoto, Integer stars, ExpertStatus expertStatus) {
+                  LocalDate dateOfSigningIn, byte[] personalPhoto, Integer stars, ExpertStatus expertStatus,Wallet wallet) {
         super(firstName, lastName, email, userName, password, dateOfSigningIn);
         this.personalPhoto = personalPhoto;
         this.stars = stars;
         this.expertStatus = expertStatus;
+        this.wallet=wallet;
     }
     public Expert(String firstName, String lastName, String email, String userName, String password,
                   LocalDate dateOfSigningIn,ExpertStatus expertStatus, byte[] personalPhoto) {

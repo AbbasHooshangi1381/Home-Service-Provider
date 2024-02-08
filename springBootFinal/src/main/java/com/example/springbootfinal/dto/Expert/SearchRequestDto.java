@@ -11,5 +11,5 @@ public class SearchRequestDto {
     String column;
     String value;
     Operation operation;
-  //  String joinTable;
+
 }
