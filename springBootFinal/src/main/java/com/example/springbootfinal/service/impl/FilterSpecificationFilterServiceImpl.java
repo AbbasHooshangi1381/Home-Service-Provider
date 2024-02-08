@@ -18,35 +18,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.springbootfinal.domain.enumurations.Operation.*;
+
 @Service
 public class FilterSpecificationFilterServiceImpl<T> implements FilterSpecificationFilterService<T> {
 
-    public  Specification<T> getSearchSpecification(List<SearchRequestDto> searchRequestDto, GlobalOperator globalOperator) {
-        return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
 
-            for (SearchRequestDto requestDto : searchRequestDto) {
-                switch (requestDto.getOperation()) {
-                    case LIKE -> {
-                        Predicate like = criteriaBuilder.like(root.get(requestDto.getColumn()), "%" + requestDto.getValue() + "%");
-                        predicates.add(like);
-                    }
-                    case EQUAL -> {
-                        Predicate equal = criteriaBuilder.equal(root.get(requestDto.getColumn()), requestDto.getValue());
-                        predicates.add(equal);
-                    }
-                    case THE_BIGGEST -> {
-                        Predicate greaterThanOrEqualTo = criteriaBuilder.greaterThanOrEqualTo(root.get(requestDto.getColumn()), requestDto.getValue());
-                        predicates.add(greaterThanOrEqualTo);
-                    }
-                    case THE_LEAST -> {
-                        Predicate lessThanOrEqualTo = criteriaBuilder.lessThanOrEqualTo(root.get(requestDto.getColumn()), requestDto.getValue());
-                        predicates.add(lessThanOrEqualTo);
-                    }
-                    default -> throw new NotValidException("Unexpected value");
-                }
-            };
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+    @Override
+    public Specification<T> getSearchSpecification(SearchRequestDto searchRequestDto) {
+        return new Specification<T>() {
+            @Override
+            public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get(searchRequestDto.getColumn()),searchRequestDto.getValue());
+            }
         };
     }
 }

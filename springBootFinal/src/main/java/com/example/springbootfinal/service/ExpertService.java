@@ -16,4 +16,5 @@ public interface ExpertService {
      byte[] saveImageByIdToSystem(Integer id) throws IOException;
      void changeStatusOfOrderByExpertStarted(Integer orderId);
      void changeStatusOfOrderByCustomerToFinish(Integer orderId,String timeOfFinishingWork);
+     List<Expert> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId);
 }

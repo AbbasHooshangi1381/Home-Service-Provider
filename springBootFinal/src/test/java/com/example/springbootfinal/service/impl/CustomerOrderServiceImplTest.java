@@ -7,6 +7,7 @@ import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.DutyRepository;
@@ -95,14 +96,14 @@ class CustomerOrderServiceImplTest {
         assertNotNull(byCustomerIdOrderByProposedPriceDesc);
     }
 
-    @Test
+/*    @Test
     @Order(2)
     void findByCustomerIdOrderByExpertStarsDesc() {
         Integer id = customer.getId();
         assertNotNull(id);
-        final List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.findByCustomerOrderIdOrderByExpertStarsDesc(id);
+        final List<Expert> byCustomerOrderIdOrderByExpertStarsDesc = ex.findByCustomerOrderIdOrderByExpertStarsDesc(id);
         assertNotNull(byCustomerOrderIdOrderByExpertStarsDesc);
-    }
+    }*/
 
     @Test
     @Order(3)

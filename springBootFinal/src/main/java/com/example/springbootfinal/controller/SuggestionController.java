@@ -2,6 +2,7 @@ package com.example.springbootfinal.controller;
 
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Expert.SendOfferRequestDto;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.repository.SuggestionRepository;
@@ -47,10 +48,5 @@ public class SuggestionController {
     public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.findAllPriceByCustomerOrderId(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
-    }
-    @GetMapping("/findByCustomerIdOrderByExpertStarsDesc/{customerOrderId}")
-    public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
-        List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.findByCustomerOrderIdOrderByExpertStarsDesc(customerOrderId);
-        return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
     }
 }

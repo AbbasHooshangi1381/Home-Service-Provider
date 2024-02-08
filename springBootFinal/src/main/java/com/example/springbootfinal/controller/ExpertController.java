@@ -1,5 +1,6 @@
 package com.example.springbootfinal.controller;
 
+import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Expert.ExpertSaveDto;
@@ -76,6 +77,12 @@ public class ExpertController {
         //"yyyy/MM/dd HH:mm:ss"
         expertService.changeStatusOfOrderByCustomerToFinish(suggestionId,timeOfFinishWork);
         return ResponseEntity.ok("Order " + suggestionId + " has been marked as finished.");
+    }
+
+    @GetMapping("/findByCustomerIdOrderByExpertStarsDesc/{customerOrderId}")
+    public ResponseEntity<List<Expert>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
+        List<Expert> byCustomerOrderIdOrderByExpertStarsDesc = expertService.findByCustomerOrderIdOrderByExpertStarsDesc(customerOrderId);
+        return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
     }
 
 

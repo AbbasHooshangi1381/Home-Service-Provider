@@ -152,6 +152,20 @@ public class ExpertServiceImpl implements ExpertService {
         customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
+    @Override
+    public List<Expert> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
+        List<Expert> byCustomerOrderIdOrderByExpertStarsDesc =
+                expertRepository.findExpertsByOrderIdOrderByRatingDesc(customerOrderId);
+        if (byCustomerOrderIdOrderByExpertStarsDesc.isEmpty()) {
+            throw new NotFoundException("i can not find this customer order");
+        } else {
+            for (Expert expert : byCustomerOrderIdOrderByExpertStarsDesc) {
+                System.out.println(expert);
+                break;
+            }
+        }
+        return byCustomerOrderIdOrderByExpertStarsDesc;
+    }
 }
 
 

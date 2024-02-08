@@ -52,10 +52,21 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void payByCard(Integer customerOrderId) {
+    public void payByCard(Integer customerOrderId, Integer expertId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException(" i can not found this customer order"));
+
+        Double price = customerOrder.getSubService().getPrice();
+        Double seventyPercentPrice = price * 0.7;
+        Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
+        Double creditAmount = wallet.getCreditAmount();
+        Double newCredit = creditAmount - price;
+        wallet.setCreditAmount(newCredit);
         customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
+        Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));
+        wallet1.setCreditAmount(seventyPercentPrice);
+        walletRepository.save(wallet);
+        walletRepository.save(wallet1);
         customerOrderRepository.save(customerOrder);
 
     }

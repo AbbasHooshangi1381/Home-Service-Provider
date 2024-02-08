@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface FilterSpecificationFilterService<T> {
 
-    Specification<T> getSearchSpecification(List<SearchRequestDto> searchRequestDto, GlobalOperator globalOperator);
+    Specification<T> getSearchSpecification(SearchRequestDto searchRequestDto);
 
 
 }

@@ -77,28 +77,15 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public List<Suggestion> findAllPriceByCustomerOrderId(Integer customerOrderId) {
 
-        return suggestionRepository.findAllPriceByCustomerOrderId(customerOrderId);
-/*        List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.findAllByCustomerOrderId(customerOrderId);
+        List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.findAllPriceByCustomerOrderId(customerOrderId);
         if (byCustomerOrderIdOrderByProposedPriceDesc.isEmpty()) {
             throw new NotFoundException("i can not find this customer order");
         } else {
             for (Suggestion suggestion : byCustomerOrderIdOrderByProposedPriceDesc) {
                 System.out.println(suggestion);
+                break;
             }
         }
-        return byCustomerOrderIdOrderByProposedPriceDesc;*/
-    }
-    @Override
-    public List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
-        List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc =
-                suggestionRepository.findByCustomerOrderIdOrderByExpertStarsDesc(customerOrderId);
-        if (byCustomerOrderIdOrderByExpertStarsDesc.isEmpty()) {
-            throw new NotFoundException("i can not find this customer order");
-        } else {
-            for (Suggestion suggestion : byCustomerOrderIdOrderByExpertStarsDesc) {
-                System.out.println(suggestion);
-            }
-        }
-        return byCustomerOrderIdOrderByExpertStarsDesc;
+        return byCustomerOrderIdOrderByProposedPriceDesc;
     }
 }

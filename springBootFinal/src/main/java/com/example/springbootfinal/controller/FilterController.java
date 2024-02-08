@@ -6,13 +6,13 @@ import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Expert.RequestDto;
 import com.example.springbootfinal.repository.BaseUserRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
-import com.example.springbootfinal.service.BaseUserService;
 import com.example.springbootfinal.service.FilterSpecificationFilterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/filterController")
 public class FilterController {
@@ -21,17 +21,12 @@ public class FilterController {
     BaseUserRepository baseUserRepository;
     @Autowired
     FilterSpecificationFilterService<BaseUser> filterSpecificationFilterService;
-    @Autowired
-    BaseUserService baseUserService;
+
 
     @GetMapping("/specification")
-    public List<BaseUser> getExpert(@RequestBody RequestDto requestDto){
-         Specification<BaseUser> searchSpecification = filterSpecificationFilterService.getSearchSpecification(requestDto.getSearchRequestDto()/*, requestDto.getGlobalOperator()*/);
+    public List<BaseUser> getExpert(@RequestBody RequestDto requestDto) {
+        Specification<BaseUser> searchSpecification = filterSpecificationFilterService.getSearchSpecification(requestDto.getSearchRequestDto());
         return baseUserRepository.findAll(searchSpecification);
     }
 
-    @GetMapping("/Name/{name}")
-    public BaseUser getUsers(@PathVariable String name ){
-      return baseUserService.findByFirstName(name);
-    }
 }

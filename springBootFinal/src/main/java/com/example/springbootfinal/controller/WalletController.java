@@ -29,8 +29,8 @@ public class WalletController {
             return ResponseEntity.ok("send");
     }
     @PutMapping("/payByCard/{customerOrderId}")
-    public ResponseEntity<String> payByCard(@PathVariable Integer customerOrderId) {
-        walletService.payByCard(702);
+    public ResponseEntity<String> payByCard(@PathVariable Integer customerOrderId,Integer expertId) {
+        walletService.payByCard(752,154);
         return ResponseEntity.ok("paid!");
     }
 }
