@@ -1,5 +1,6 @@
 package com.example.springbootfinal.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service

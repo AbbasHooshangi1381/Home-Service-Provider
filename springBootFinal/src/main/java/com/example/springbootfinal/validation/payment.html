@@ -66,7 +66,7 @@ document.getElementById('submit').addEventListener('click', function() {
   const year = document.getElementById("yy").value;
   const password= document.getElementById("password").value;
 
-  const url = 'http://localhost:8089/wallet/payByCard/{{customerOrderId}}';
+  const url = 'http://localhost:8089/user/payment';
   const data = {
         cardNumber,
         cvv,
@@ -94,26 +94,6 @@ document.getElementById('submit').addEventListener('click', function() {
     console.log('An error occurred: ' + error);
   });
 });
-
-    var deadline = new Date();
-    deadline.setMinutes(deadline.getMinutes() + 10);
-
-    var x = setInterval(function() {
-    var now = new Date().getTime();
-    var distance = deadline - now;
-
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("ten-countdown").innerHTML = minutes + "m " + seconds + "s ";
-
-    if (distance < 0) {
-    clearInterval(x);
-    document.getElementById("ten-countdown").innerHTML = "EXPIRED";
-    document.getElementById("submit").disabled = true;
-}
-}, 1000);
-
 
 </script>
 

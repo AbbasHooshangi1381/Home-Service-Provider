@@ -4,9 +4,11 @@ package com.example.springbootfinal.controller;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.BaseChangePasswordDto;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Admin.BaseSaveDto;
+import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
 import com.example.springbootfinal.dto.customer.UserPassDto;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.AdminRepository;
@@ -21,6 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
@@ -58,5 +64,17 @@ public class CustomerController {
         return ResponseEntity.ok("pasword changed !");
     }
 
+    @PostMapping("/findAllCustomertByCriteria")
+    //firstname - lastname - email - specialistField(select a serviceName) - averageScoresOrderBy(asc or desc)
+    public List<CriteriaSearchDto> findAllCustomerByCriteria(@RequestBody Map<String, String> param) {
 
-}
+        List<CriteriaSearchDto> criteriaSearchDtoList = new ArrayList<>();
+        List<Customer> allSpecialistsByCriteria = customerService.findAllCustomerByCriteria(param);
+        for (Customer s : allSpecialistsByCriteria) {
+            CriteriaSearchDto criteriaSearchDto = modelMapper.map(s, CriteriaSearchDto.class);
+            criteriaSearchDtoList.add(criteriaSearchDto);
+        }
+        return criteriaSearchDtoList;
+    }
+    }
+

@@ -1,22 +1,25 @@
 package com.example.springbootfinal.service.impl;
 
-import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
-import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Wallet;
-import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
-import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.CustomerService;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.example.springbootfinal.validation.Validation.generateRandomPassword;
@@ -67,5 +70,47 @@ public class CustomerServiceImpl implements CustomerService {
         return Optional.ofNullable(customer);
     }
 
+    public List<Customer> findAllCustomerByCriteria(Map<String, String> criteria) {
+        Specification<Customer> spec = Specification.where(null);
+
+        for (Map.Entry<String, String> entry : criteria.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            if (value != null && !value.trim().isEmpty()) {
+                switch (key) {
+                    case "firstname":
+                        spec = spec.and(firstNameContains(value));
+                        break;
+                    case "lastname":
+                        spec = spec.and(lastNameContains(value));
+                        break;
+                    case "email":
+                        spec = spec.and(emailEquals(value));
+                        break;
+                }
+            }
+        }
+
+        return customerRepository.findAll(spec);
+    }
+
+    private Specification<Customer> firstNameContains(String value) {
+        return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
+                builder.like(root.get("firstName"), "%" + value + "%");
+    }
+
+    private Specification<Customer> lastNameContains(String value) {
+        return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
+                builder.like(root.get("lastName"), "%" + value + "%");
+    }
+
+    private Specification<Customer> emailEquals(String value) {
+        return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
+                builder.equal(root.get("email"), value);
+    }
+
 }
+
+
 

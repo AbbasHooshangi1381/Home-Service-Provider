@@ -2,6 +2,7 @@ package com.example.springbootfinal.domain.other;
 
 import com.example.springbootfinal.baseDomain.BaseEntity;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
@@ -25,9 +26,12 @@ public class Suggestion extends BaseEntity<Integer> {
     String durationTimeOfWork;
 
     @ManyToOne
+    @JsonIgnore
     CustomerOrder customerOrder;
 
     @ManyToOne
+    @JsonIgnore
+
     Expert expert;
 
     public Suggestion(String timeOfSendSuggestion, Double suggestionPrice,

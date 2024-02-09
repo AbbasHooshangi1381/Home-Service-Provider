@@ -133,7 +133,7 @@ public class SubDutyServiceImpl implements SubDutyService {
         LocalTime currentTime = LocalTime.parse(inputTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         if (currentTime.isBefore(LocalTime.of(7, 0)) || currentTime.isAfter(LocalTime.of(22, 0))) {
-            return "Accepted: " + inputTime;
+            return inputTime;
         } else {
             throw new InvalidDateException("Time should be before 7 AM or after 10 PM");
         }

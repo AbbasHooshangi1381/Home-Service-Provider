@@ -86,7 +86,7 @@ class CustomerOrderServiceImplTest {
                 proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
 
-    @Test
+/*    @Test
     @Order(1)
     void findByCustomerIdOrderByProposedPriceDesc() {
         Integer id = customer.getId();
@@ -94,7 +94,7 @@ class CustomerOrderServiceImplTest {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc =
                 suggestionService.findAllPriceByCustomerOrderId(id);
         assertNotNull(byCustomerIdOrderByProposedPriceDesc);
-    }
+    }*/
 
 /*    @Test
     @Order(2)

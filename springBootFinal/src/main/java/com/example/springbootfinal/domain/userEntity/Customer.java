@@ -3,11 +3,9 @@ package com.example.springbootfinal.domain.userEntity;
 import com.example.springbootfinal.domain.other.Comments;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Wallet;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -17,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 @Entity
 
 public class Customer extends BaseUser {
@@ -28,10 +27,11 @@ public class Customer extends BaseUser {
     Wallet wallet;
 
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     List<Comments> commentsList;
 
     @ManyToOne
-  //  @Column(name = "id")
+    //  @Column(name = "id")
     Admin admin;
 
     public Customer(String firstName, String lastName, String email, String userName,

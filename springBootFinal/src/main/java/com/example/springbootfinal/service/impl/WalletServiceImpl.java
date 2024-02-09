@@ -11,6 +11,7 @@ import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.WalletService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
 @Service
+@Transactional
 public class WalletServiceImpl implements WalletService {
 
     @Autowired

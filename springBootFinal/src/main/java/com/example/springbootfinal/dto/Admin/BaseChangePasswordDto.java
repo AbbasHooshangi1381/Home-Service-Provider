@@ -1,5 +1,7 @@
 package com.example.springbootfinal.dto.Admin;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,6 +11,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 public class BaseChangePasswordDto {
+
+    @NotBlank
+    @Size(min = 1, max = 15)
     String newPassword;
 
     public String getNewPassword() {

@@ -5,7 +5,6 @@ import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.other.Wallet;
-import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
@@ -14,20 +13,25 @@ import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.ExpertService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.example.springbootfinal.validation.Validation.generateRandomPassword;
@@ -45,6 +49,9 @@ public class ExpertServiceImpl implements ExpertService {
     SuggestionRepository suggestionRepository;
     @Autowired
     WalletRepository walletRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     @Override
@@ -120,53 +127,102 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public void changeStatusOfOrderByCustomerToFinish(Integer suggestionId, String timeOfFinishingWork) {
-        Suggestion suggestion = suggestionRepository.findById(suggestionId).orElseThrow(() -> new NotFoundException(" i can not found this suggestion"));
+        Suggestion suggestion = suggestionRepository.findById(suggestionId)
+                .orElseThrow(() -> new NotFoundException("i can not found this suggestion"));
 
         String timeOfStartingWork = suggestion.getTimeOfStartingWork();
         String durationTimeOfWork = suggestion.getDurationTimeOfWork();
 
         LocalDateTime startWorkTime = LocalDateTime.parse(timeOfStartingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        LocalTime durationTime = LocalTime.parse(durationTimeOfWork);
-        LocalDateTime expectedFinishTime = startWorkTime.plusHours(durationTime.getHour()).plusMinutes(durationTime.getMinute()).plusSeconds(durationTime.getSecond());
+        LocalTime durationTime = LocalTime.parse(durationTimeOfWork, DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-        LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        LocalDateTime expectedFinishTime = startWorkTime
+                .plusHours(durationTime.getHour())
+                .plusMinutes(durationTime.getMinute())
+                .plusSeconds(durationTime.getSecond());
+
+        LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         if (actualFinishTime.isAfter(expectedFinishTime)) {
-            long delayHours = ChronoUnit.HOURS.between(actualFinishTime, expectedFinishTime);
+            long delayHours = ChronoUnit.HOURS.between(expectedFinishTime, actualFinishTime);
             int ratingReduction = (int) delayHours;
 
             Expert expert = suggestion.getExpert();
             Integer currentRating = expert.getStars();
             int updatedRating = Math.max(0, currentRating - ratingReduction);
+
             if (updatedRating <= 0) {
                 expert.setExpertStatus(ExpertStatus.NEW);
                 expertRepository.save(expert);
-                throw new NotValidException(" your account is disAble");
-
+                throw new NotValidException("your account is disabled");
             } else {
                 expert.setStars(updatedRating);
                 expertRepository.save(expert);
             }
         }
+
         CustomerOrder customerOrder = suggestion.getCustomerOrder();
         customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
+
     @Override
-    public List<Expert> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
-        List<Expert> byCustomerOrderIdOrderByExpertStarsDesc =
-                expertRepository.findExpertsByOrderIdOrderByRatingDesc(customerOrderId);
-        if (byCustomerOrderIdOrderByExpertStarsDesc.isEmpty()) {
+    public List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
+         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
+         Customer customer = customerOrder.getCustomer();
+        final List<Suggestion> expertsByOrderIdOrderByStarDesc =
+                expertRepository.findExpertsByOrderIdOrderByStarDesc(customer);
+        if (expertsByOrderIdOrderByStarDesc.isEmpty()) {
             throw new NotFoundException("i can not find this customer order");
         } else {
-            for (Expert expert : byCustomerOrderIdOrderByExpertStarsDesc) {
-                System.out.println(expert);
+            for (Suggestion suggestion : expertsByOrderIdOrderByStarDesc) {
+                System.out.println(suggestion);
                 break;
             }
         }
-        return byCustomerOrderIdOrderByExpertStarsDesc;
+        return expertsByOrderIdOrderByStarDesc;
     }
-}
+
+        public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
+            Specification<Expert> specification = (root, query, criteriaBuilder) -> {
+                List<Predicate> predicates = new ArrayList<>();
+
+                if (param.containsKey("firstname") && param.get("firstname") != null) {
+                    predicates.add(criteriaBuilder.like(root.get("firstname"), "%" + param.get("firstname") + "%"));
+                }
+
+                if (param.containsKey("lastname") && param.get("lastname") != null) {
+                    predicates.add(criteriaBuilder.like(root.get("lastname"), "%" + param.get("lastname") + "%"));
+                }
+
+                if (param.containsKey("email") && param.get("email") != null) {
+                    predicates.add(criteriaBuilder.equal(root.get("email"), param.get("email")));
+                }
+
+        /*        if (param.containsKey("specialistField") && param.get("specialistField") != null) {
+                    predicates.add(criteriaBuilder.equal(root.join("subServices").get("serviceName"), param.get("specialistField")));
+                }*/
+
+                List<Order> orderList = new ArrayList<>();
+                if (param.containsKey("stars") && param.get("stars") != null) {
+                    if (param.get("stars").equalsIgnoreCase("ASC")) {
+                        orderList.add(criteriaBuilder.asc(root.get("stars")));
+                    } else if (param.get("stars").equalsIgnoreCase("DESC")) {
+                        orderList.add(criteriaBuilder.desc(root.get("stars")));
+                    }
+                }
+
+                if (!orderList.isEmpty()) {
+                    query.orderBy(orderList);
+                }
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            };
+
+            return expertRepository.findAll(specification);
+        }
+    }
+
 
 
 

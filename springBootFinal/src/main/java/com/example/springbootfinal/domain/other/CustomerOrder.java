@@ -18,6 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerOrder extends BaseEntity<Integer> {
 
@@ -31,14 +32,17 @@ public class CustomerOrder extends BaseEntity<Integer> {
 
     @JsonBackReference
     @ManyToOne
+    @JsonIgnore
     SubDuty subService;
 
     @JsonBackReference
     @ManyToOne
+    @JsonIgnore
     Customer customer;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "customerOrder")
+    @JsonIgnore
     List<Suggestion> suggestionList;
 
     @Enumerated(value = EnumType.STRING)
@@ -55,7 +59,7 @@ public class CustomerOrder extends BaseEntity<Integer> {
         this.statusOfOrder = statusOfOrder;
     }
 
-    public CustomerOrder( String descriptionOfOrder, Double proposedPrice, String timeOfDoing,
+    public CustomerOrder(String descriptionOfOrder, Double proposedPrice, String timeOfDoing,
                          String address, StatusOfOrder statusOfOrder) {
         this.descriptionOfOrder = descriptionOfOrder;
         this.proposedPrice = proposedPrice;

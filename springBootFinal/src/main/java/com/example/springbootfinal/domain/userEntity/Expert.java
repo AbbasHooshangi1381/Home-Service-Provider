@@ -8,11 +8,9 @@ import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,10 +19,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 @Entity
 public class Expert extends BaseUser {
 
     @Lob
+    //@Type(type = "org.hibernate.type.ImageType")
     byte[] personalPhoto;
 
     @Max(5)
@@ -37,7 +37,6 @@ public class Expert extends BaseUser {
     Wallet wallet;
 
     @ManyToOne
-  //  @Column(name = "id")
     Admin admin;
 
 

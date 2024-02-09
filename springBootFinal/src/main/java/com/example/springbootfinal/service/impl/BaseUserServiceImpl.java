@@ -11,8 +11,5 @@ public class BaseUserServiceImpl implements BaseUserService {
     @Autowired
     BaseUserRepository baseUserRepository;
 
-    @Override
-    public BaseUser findByFirstName(String name) {
-        return baseUserRepository.findByFirstName(name);
-    }
+
 }
