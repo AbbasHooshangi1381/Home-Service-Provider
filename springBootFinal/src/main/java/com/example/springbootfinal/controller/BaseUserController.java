@@ -1,31 +1,61 @@
 package com.example.springbootfinal.controller;
 
 import com.example.springbootfinal.domain.userEntity.BaseUser;
+import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.BaseUserDto;
+import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
 import com.example.springbootfinal.repository.BaseUserRepository;
-import com.example.springbootfinal.service.impl.BaseUserSpecification;
+import com.example.springbootfinal.service.CustomerService;
+import com.example.springbootfinal.service.ExpertService;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/baseUsers")
 public class BaseUserController {
-    private final BaseUserRepository baseUserRepository;
 
-    public BaseUserController(BaseUserRepository baseUserRepository) {
-        this.baseUserRepository = baseUserRepository;
+
+    private CustomerService customerService;
+    private ExpertService expertService;
+    private ModelMapper modelMapper;
+
+    public BaseUserController(CustomerService customerService, ExpertService expertService, ModelMapper modelMapper) {
+        this.customerService = customerService;
+        this.expertService = expertService;
+        this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/searchUser")
-    public List<BaseUser> searchUser(@RequestBody BaseUserDto baseUserDto) {
-        Specification<BaseUser> spec = Specification.where(BaseUserSpecification.isExpertOrCustomer())
-                .and(BaseUserSpecification.hasFirstName(baseUserDto.getFirstName()))
-                .and(BaseUserSpecification.hasLastName(baseUserDto.getLastName()))
-                .and(BaseUserSpecification.hasSubDuty(baseUserDto.getSubDuty()))
-                .and(BaseUserSpecification.minRating(baseUserDto.getMinRating()))
-                .and(BaseUserSpecification.maxRating(baseUserDto.getMaxRating()));
 
-        return baseUserRepository.findAll(spec);
+    @PostMapping("/findAllCustomertByCriteria")
+    //firstname - lastname - email - specialistField(select a serviceName) - averageScoresOrderBy(asc or desc)
+    public List<CriteriaSearchDto> findAllCustomerByCriteria(@RequestBody Map<String, String> param) {
+
+        List<CriteriaSearchDto> criteriaSearchDtoList = new ArrayList<>();
+        List<Customer> allSpecialistsByCriteria = customerService.findAllCustomerByCriteria(param);
+        for (Customer s : allSpecialistsByCriteria) {
+            CriteriaSearchDto criteriaSearchDto = modelMapper.map(s, CriteriaSearchDto.class);
+            criteriaSearchDtoList.add(criteriaSearchDto);
+        }
+        return criteriaSearchDtoList;
     }
+
+    @PostMapping("/findAllExpertByCriteria")
+    //firstname - lastname - email - specialistField(select a serviceName) - averageScoresOrderBy(asc or desc)
+    public List<CriteriaSearchDto> findAllExpertByCriteria(@RequestBody Map<String, String> param) {
+
+        List<CriteriaSearchDto> criteriaSearchDtoList = new ArrayList<>();
+        List<Expert> allSpecialistsByCriteria = expertService.findAllExpertsByCriteria(param);
+        for (Expert s : allSpecialistsByCriteria) {
+            CriteriaSearchDto criteriaSearchDto = modelMapper.map(s, CriteriaSearchDto.class);
+            criteriaSearchDtoList.add(criteriaSearchDto);
+        }
+        return criteriaSearchDtoList;
+    }
+
 }
