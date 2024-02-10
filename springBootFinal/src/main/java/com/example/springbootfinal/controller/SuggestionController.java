@@ -8,6 +8,7 @@ import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.repository.SuggestionRepository;
 import com.example.springbootfinal.service.SubDutyService;
 import com.example.springbootfinal.service.SuggestionService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class SuggestionController {
         this.modelMapper = modelMapper;
     }
     @PostMapping("/sendOffer")
-    public ResponseEntity<String> sendOfferForSubDuty(@RequestBody SendOfferRequestDto request) throws SQLException {
+    public ResponseEntity<String> sendOfferForSubDuty(@Valid @RequestBody SendOfferRequestDto request) throws SQLException {
             suggestionService.sendOfferForSubDuty(request.getExpertId(), request.getCustomerOrderId(),
                     request.getSuggestionPrice(), request.getTimeOfWork(),request.getDurationTimeOfWork());
             return ResponseEntity.ok("send");
@@ -45,7 +46,7 @@ public class SuggestionController {
         }
     }
     @GetMapping("/findAllPriceByCustomerOrderId/{customerOrderId}")
-    public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@PathVariable Integer customerOrderId) {
+    public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@Valid @PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.findAllPriceByCustomerId(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
     }

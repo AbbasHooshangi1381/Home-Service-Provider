@@ -2,6 +2,7 @@ package com.example.springbootfinal.controller;
 
 import com.example.springbootfinal.service.impl.CaptchaService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class CaptchaController {
         return ResponseEntity.ok(captcha);
     }
     @PostMapping("/verify-captcha")
-    public ResponseEntity<String> verifyCaptcha(@RequestBody Map<String, String > body, HttpSession session) {
+    public ResponseEntity<String> verifyCaptcha(@Valid @RequestBody Map<String, String > body, HttpSession session) {
         boolean valid = captchaService.validateCaptcha(body.get("captchaAnswer"), session);
         return valid ? ResponseEntity.ok("Captcha is valid") : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid captcha");
     }

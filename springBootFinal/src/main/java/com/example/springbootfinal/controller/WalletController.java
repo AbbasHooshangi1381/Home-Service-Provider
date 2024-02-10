@@ -3,6 +3,7 @@ package com.example.springbootfinal.controller;
 import com.example.springbootfinal.dto.Expert.SendOfferRequestDto;
 import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.WalletService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class WalletController {
         this.walletService = walletService;
     }
     @PutMapping("/payByCreditOfAccount/{customerOrderId}/{expertId}")
-    public ResponseEntity<String> payByCreditOfAccount(@PathVariable Integer customerOrderId,@PathVariable Integer expertId) {
+    public ResponseEntity<String> payByCreditOfAccount(@Valid @PathVariable Integer customerOrderId, @PathVariable Integer expertId) {
             walletService.payByCreditOfAccount(customerOrderId,expertId);
             return ResponseEntity.ok("send");
     }

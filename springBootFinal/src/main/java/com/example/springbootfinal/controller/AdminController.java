@@ -10,6 +10,7 @@ import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.AdminService;
 import com.example.springbootfinal.service.SubDutyService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -38,20 +39,20 @@ public class AdminController {
     }
 
     @PostMapping("/register-user")
-    public ResponseEntity<BaseResponseDto> saveAdmin(@RequestBody BaseSaveDto adminSaveDto) {
+    public ResponseEntity<BaseResponseDto> saveAdmin(@Valid @RequestBody BaseSaveDto adminSaveDto) {
         Admin savedAdmin = adminService.saveAdmin(adminSaveDto.getFirstName(), adminSaveDto.getLastName(),
                 adminSaveDto.getEmail(), adminSaveDto.getUserName());
         BaseResponseDto adminResponseDto = modelMapper.map(savedAdmin, BaseResponseDto.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
     @GetMapping("/login/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkAdmin(@PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkAdmin(@Valid @PathVariable String username, @PathVariable String password) {
         Admin admin = adminService.findByUserNameAndPassword(username, password).get();
             BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
     @PutMapping("/changePassword/{id}/{newPassword}")
-    public ResponseEntity<String> changePassword(@PathVariable Integer id, @PathVariable String newPassword) {
+    public ResponseEntity<String> changePassword(@Valid @PathVariable Integer id, @PathVariable String newPassword) {
       adminService.changePassword(id, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }

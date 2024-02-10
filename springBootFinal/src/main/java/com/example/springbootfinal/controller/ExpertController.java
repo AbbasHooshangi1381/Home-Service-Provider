@@ -7,6 +7,7 @@ import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
 import com.example.springbootfinal.dto.Expert.ExpertSaveDto;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.ExpertService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class ExpertController {
     ModelMapper modelMapper;
 
     @PostMapping("/register-Expert")
-    public ResponseEntity<BaseResponseDto> saveExpert(@RequestBody ExpertSaveDto expertSaveDto) throws IOException {
+    public ResponseEntity<BaseResponseDto> saveExpert(@Valid @RequestBody ExpertSaveDto expertSaveDto) throws IOException {
         Expert savedExpert = expertService.saveExpert(expertSaveDto.getFirstName(), expertSaveDto.getLastName(),
                 expertSaveDto.getEmail(), expertSaveDto.getUserName(), expertSaveDto.getFilePath());
 

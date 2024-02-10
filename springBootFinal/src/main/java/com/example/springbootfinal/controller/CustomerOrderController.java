@@ -12,6 +12,7 @@ import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.CustomerOrderService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class CustomerOrderController {
     }
 
     @PostMapping("/saveOrder")
-    public ResponseEntity<CustomerOrderResponseDto> saveOrder(@RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
+    public ResponseEntity<CustomerOrderResponseDto> saveOrder(@Valid @RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
         String descriptionOfOrder = customerOrderDto.getDescriptionOfOrder();
         Double proposedPrice = customerOrderDto.getProposedPrice();
         String timeOfWork = customerOrderDto.getTimeOfWork();
@@ -49,7 +50,7 @@ public class CustomerOrderController {
     }
 
     @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}/change-status")
-    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome(@PathVariable Integer orderId) {
+    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome(@Valid @PathVariable Integer orderId) {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
     }
