@@ -1,19 +1,14 @@
 package com.example.springbootfinal.controller;
 
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
-import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutyResponseDto;
-import com.example.springbootfinal.dto.subDity.SubDutySaveDto;
-import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.dto.subDity.SubDutySaveRequestDto;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.SubDutyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/subDuty")
@@ -28,13 +23,12 @@ public class SubDutyController {
         this.modelMapper=modelMapper;
     }
     @PostMapping("/saveSubDuty")
-    public ResponseEntity<SubDutyResponseDto> saveSubDuty(@RequestBody SubDutySaveDto subDutySaveDto) {
+    public ResponseEntity<SubDutyResponseDto> saveSubDuty(@RequestBody SubDutySaveRequestDto subDutySaveDto) {
         Integer dutyId = subDutySaveDto.getDutyId();
         Double priceOfSubDuty = subDutySaveDto.getPriceOfSubDuty();
         String description = subDutySaveDto.getDescription();
         String subServiceName = subDutySaveDto.getSubServiceName();
          SubDuty subDuty = subDutyService.saveSubDutyByAdmin(dutyId, subServiceName, priceOfSubDuty, description);
-
          SubDutyResponseDto map = modelMapper.map(subDuty, SubDutyResponseDto.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(map);
     }

@@ -15,7 +15,6 @@ public class CaptchaService {
         session.setAttribute("captcha", captcha);
         return captcha;
     }
-
     private String generateRandomString(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         StringBuilder captcha = new StringBuilder();
@@ -26,7 +25,6 @@ public class CaptchaService {
         }
         return captcha.toString();
     }
-
     public boolean validateCaptcha(String captchaValue, HttpSession session) {
         String sessionCaptcha = (String) session.getAttribute("captcha");
         return captchaValue.equals(sessionCaptcha);

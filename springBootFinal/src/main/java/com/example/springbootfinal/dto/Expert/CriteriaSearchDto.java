@@ -8,7 +8,5 @@ import lombok.Setter;
 public class CriteriaSearchDto {
     String firstName;
     String lastName;
-    String email;
-    String specialistField;
     Integer stars;
 }

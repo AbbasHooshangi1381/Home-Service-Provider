@@ -10,6 +10,4 @@ public interface SuggestionService  {
     void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,Double suggestionPrice,String timeOfWork, String durationTimeOfWork) throws SQLException;
     List<CustomerOrder> customerOrderList();
     List<Suggestion> findAllPriceByCustomerId(Integer customerId);
-
-
 }

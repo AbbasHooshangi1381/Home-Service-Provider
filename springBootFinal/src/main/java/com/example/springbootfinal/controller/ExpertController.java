@@ -5,16 +5,10 @@ import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
 import com.example.springbootfinal.dto.Expert.ExpertSaveDto;
-import com.example.springbootfinal.dto.Expert.RequestDto;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.ExpertService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,9 +90,7 @@ public class ExpertController {
     }
 
     @PostMapping("/findAllExpertByCriteria")
-    //firstname - lastname - email - specialistField(select a serviceName) - averageScoresOrderBy(asc or desc)
     public List<CriteriaSearchDto> findAllSpecialistsByCriteria(@RequestBody Map<String, String> param) {
-
         List<CriteriaSearchDto> criteriaSearchDtoList = new ArrayList<>();
         List<Expert> allSpecialistsByCriteria = expertService.findAllExpertsByCriteria(param);
         for (Expert s : allSpecialistsByCriteria) {

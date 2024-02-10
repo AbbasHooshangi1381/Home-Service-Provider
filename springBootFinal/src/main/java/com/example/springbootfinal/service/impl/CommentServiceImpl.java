@@ -33,7 +33,6 @@ public class CommentServiceImpl implements CommentService {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("I cannot find this customerOrder"));
         Customer customer = customerOrder.getCustomer();
         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("I cannot find this expert"));
-
         if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)) {
             Comments comment = new Comments();
             comment.setComments(comments);

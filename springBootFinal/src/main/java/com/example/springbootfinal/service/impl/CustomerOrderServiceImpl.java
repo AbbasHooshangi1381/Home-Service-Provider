@@ -36,10 +36,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     public CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
                                    StatusOfOrder waitingForSuggestExpert, Integer customerId, Integer subDutyId) throws SQLException {
-
         dutyRepository.findAll().forEach(System.out::println);
         subDutyRepository.findAll().forEach(System.out::println);
-
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found with ID: " + customerId));
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty not found with ID: " + subDutyId));
         Double fixPrice = subDuty.getPrice();
@@ -49,8 +47,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
         return customerOrderRepository.save(customerOrder);
     }
-
-
     @Override
     public List<CustomerOrder> findCustomerOrderOfOneSubDuty(String subDuty) {
         List<CustomerOrder> bySubServiceName = customerOrderRepository.findBySubServiceName(subDuty);
@@ -59,20 +55,16 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         }
         return bySubServiceName;
     }
-
     @Override
     public void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(" i can not find customerOrder"));
         SubDuty subDuty = customerOrder.getSubService();
         Double proposedPrice = customerOrder.getProposedPrice();
         subDuty.setPrice(proposedPrice);
-
         customerOrder.setStatusOfOrder(StatusOfOrder.WAITING_FOR_COMING_EXPERT);
         subDutyRepository.save(subDuty);
         customerOrderRepository.save(customerOrder);
     }
-
-
     public static Double validatePrice(Double proposedPrice, Double fixPrice) {
         Double validatedPrice = null;
         if (proposedPrice >= fixPrice) {

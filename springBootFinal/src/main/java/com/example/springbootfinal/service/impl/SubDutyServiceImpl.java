@@ -61,7 +61,6 @@ public class SubDutyServiceImpl implements SubDutyService {
             }
         }
     }
-
     @Override
     public void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription) {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
@@ -72,7 +71,6 @@ public class SubDutyServiceImpl implements SubDutyService {
             System.out.println("You cannot change the password. admin with ID " + subDutyId + " does not exist.");
         }
     }
-
     @Override
     public void changePriceOfSubDutyByAdmin(Integer subDutyId, Double newPrice) {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
@@ -83,7 +81,6 @@ public class SubDutyServiceImpl implements SubDutyService {
             System.out.println(" i do not have this id in subDuty !");
         }
     }
-
     @Override
     public void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId) {
         SubDuty subDuty = subDutyRepository.findById(subServiceId)
@@ -98,7 +95,6 @@ public class SubDutyServiceImpl implements SubDutyService {
             subDutyRepository.save(subDuty);
         }
     }
-
     @Override
     public void deleteExpertInSubDutyField(Integer subDutyId) {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID not found"));
@@ -107,18 +103,14 @@ public class SubDutyServiceImpl implements SubDutyService {
             subDutyRepository.save(subDuty);
         }
     }
-
     @Override
     public List<SubDuty> showSubDutyOfOneDuty(String dutyName) {
         List<SubDuty> subDuties = subDutyRepository.findSubDutyByServiceName(dutyName);
         if (subDuties.isEmpty()) {
             throw new NotFoundException("I cannot find this subDuty and duty");
         }
-
         return subDuties;
-
     }
-
     public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {
         //String inputTime = "1403-01-15 08:30:00";
         LocalDateTime currentTime = LocalDateTime.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));

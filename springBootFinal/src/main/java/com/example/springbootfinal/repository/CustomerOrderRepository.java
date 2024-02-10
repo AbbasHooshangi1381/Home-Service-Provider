@@ -10,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
-
     @Query("SELECT co FROM CustomerOrder co WHERE co.subService.subServiceName = :subServiceName")
     List<CustomerOrder> findBySubServiceName(@Param("subServiceName") String subServiceName);
-
 }

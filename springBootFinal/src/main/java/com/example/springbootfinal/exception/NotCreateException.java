@@ -8,7 +8,6 @@ public class NotCreateException extends RuntimeException {
     public NotCreateException(String message) {
         super(message);
     }
-
     public NotCreateException(String message, Throwable cause) {
         super(message, cause);
     }

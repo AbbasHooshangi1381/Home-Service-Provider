@@ -1,5 +1,7 @@
 package com.example.springbootfinal.dto.subDity;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,10 +12,16 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-public class SubDutySaveDto {
+public class SubDutySaveRequestDto {
+    @NotNull
+    @Min(0)
     Integer dutyId;
+    @NotNull
     String subServiceName;
+    @NotNull
+    @Min(0)
     Double priceOfSubDuty;
+    @NotNull
     String description;
 
     public Integer getDutyId() {

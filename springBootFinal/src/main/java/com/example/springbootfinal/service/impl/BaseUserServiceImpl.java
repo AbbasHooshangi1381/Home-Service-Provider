@@ -20,7 +20,6 @@ import java.util.Map;
 @Service
 public class BaseUserServiceImpl implements BaseUserService  {
 
-
     ExpertRepository expertRepository;
     CustomerRepository customerRepository;
 
@@ -28,27 +27,21 @@ public class BaseUserServiceImpl implements BaseUserService  {
         this.expertRepository = expertRepository;
         this.customerRepository = customerRepository;
     }
-
     public List<Expert> findAllExpertByCriteria(Map<String, String> param) {
         Specification<Expert> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-
             if (param.containsKey("firstname") && param.get("firstname") != null) {
                 predicates.add(criteriaBuilder.like(root.get("firstname"), "%" + param.get("firstname") + "%"));
             }
-
             if (param.containsKey("lastname") && param.get("lastname") != null) {
                 predicates.add(criteriaBuilder.like(root.get("lastname"), "%" + param.get("lastname") + "%"));
             }
-
             if (param.containsKey("email") && param.get("email") != null) {
                 predicates.add(criteriaBuilder.equal(root.get("email"), param.get("email")));
             }
-
             if (param.containsKey("specialistField") && param.get("specialistField") != null) {
                 predicates.add(criteriaBuilder.equal(root.join("subServices").get("serviceName"), param.get("specialistField")));
             }
-
             List<Order> orderList = new ArrayList<>();
             if (param.containsKey("averageScoresOrderBy") && param.get("averageScoresOrderBy") != null) {
                 if (param.get("averageScoresOrderBy").equalsIgnoreCase("asc")) {
@@ -57,38 +50,28 @@ public class BaseUserServiceImpl implements BaseUserService  {
                     orderList.add(criteriaBuilder.desc(root.get("averageScores")));
                 }
             }
-
             if (!orderList.isEmpty()) {
                 query.orderBy(orderList);
             }
-
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
-
         return expertRepository.findAll(specification);
     }
-
-
     public List<Customer> findAllCustomersByCriteria(Map<String, String> param) {
         Specification<Customer> specification = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-
             if (param.containsKey("firstname") && param.get("firstname") != null) {
                 predicates.add(criteriaBuilder.like(root.get("firstname"), "%" + param.get("firstname") + "%"));
             }
-
             if (param.containsKey("lastname") && param.get("lastname") != null) {
                 predicates.add(criteriaBuilder.like(root.get("lastname"), "%" + param.get("lastname") + "%"));
             }
-
             if (param.containsKey("email") && param.get("email") != null) {
                 predicates.add(criteriaBuilder.equal(root.get("email"), param.get("email")));
             }
-
             if (param.containsKey("subService") && param.get("subService") != null) {
                 predicates.add(criteriaBuilder.equal(root.join("subServices").get("subServiceName"), param.get("subServiceName")));
             }
-
             List<Order> orderList = new ArrayList<>();
             if (param.containsKey("stars") && param.get("stars") != null) {
                 if (param.get("stars").equalsIgnoreCase("asc")) {
@@ -97,51 +80,12 @@ public class BaseUserServiceImpl implements BaseUserService  {
                     orderList.add(criteriaBuilder.desc(root.get("stars")));
                 }
             }
-
             if (!orderList.isEmpty()) {
                 query.orderBy(orderList);
             }
-
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
 
         return customerRepository.findAll(specification);
     }
 }
-
-/*    public static Specification<BaseUser> isExpertOrCustomer() {
-        return new Specification<BaseUser>() {
-            @Override
-            public Predicate toPredicate(Root<BaseUser> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                query.distinct(true);
-
-                Predicate expertPredicate = criteriaBuilder.equal(root.get("DTYPE"), "Expert");
-                Predicate customerPredicate = criteriaBuilder.equal(root.get("DTYPE"), "Customer");
-
-                return criteriaBuilder.or(expertPredicate, customerPredicate);
-            }
-        };
-    }
-
-    public static Specification<BaseUser> hasFirstName(String firstName) {
-        return (root, query, cb) -> cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%");
-    }
-
-    public static Specification<BaseUser> hasLastName(String lastName) {
-        return (root, query, cb) -> cb.like(cb.lower(root.get("lastName")), "%" + lastName.toLowerCase() + "%");
-    }
-
-    public static <T extends BaseUser> Specification<T> hasSubDuty(String subDutyName) {
-        return (root, query, cb) -> {
-            Join<T, SubDuty> subDutyJoin = root.join("subDuty");
-            return cb.like(cb.lower(subDutyJoin.get("subServiceName")), "%" + subDutyName.toLowerCase() + "%");
-        };
-    }
-
-    public static <T extends BaseUser> Specification<T> minRating(Integer stars) {
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("stars"), stars);
-    }
-
-    public static <T extends BaseUser> Specification<T> maxRating(Integer stars) {
-        return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("stars"), stars);
-    }*/

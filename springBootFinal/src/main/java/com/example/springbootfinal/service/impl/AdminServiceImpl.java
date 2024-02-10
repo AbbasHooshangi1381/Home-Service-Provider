@@ -67,9 +67,4 @@ public class AdminServiceImpl implements AdminService {
             throw new NotFoundException("i dont have this admin");
         }
     }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 }

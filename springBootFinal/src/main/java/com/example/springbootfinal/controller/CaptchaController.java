@@ -21,7 +21,6 @@ public class CaptchaController {
         String captcha = captchaService.generateCaptchaToken(session);
         return ResponseEntity.ok(captcha);
     }
-
     @PostMapping("/verify-captcha")
     public ResponseEntity<String> verifyCaptcha(@RequestBody Map<String, String > body, HttpSession session) {
         boolean valid = captchaService.validateCaptcha(body.get("captchaAnswer"), session);

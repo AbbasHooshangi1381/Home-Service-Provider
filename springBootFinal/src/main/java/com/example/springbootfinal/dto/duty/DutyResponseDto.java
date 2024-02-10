@@ -1,6 +1,5 @@
 package com.example.springbootfinal.dto.duty;
 
-import jakarta.persistence.Column;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
-public class DutySaveDto {
+public class DutyResponseDto {
     String dutyName;
     Integer dutyId;
 

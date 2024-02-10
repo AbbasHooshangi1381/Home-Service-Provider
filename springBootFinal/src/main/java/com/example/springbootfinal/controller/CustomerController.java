@@ -9,6 +9,7 @@ import com.example.springbootfinal.dto.Admin.BaseChangePasswordDto;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Admin.BaseSaveDto;
 import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
+import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
 import com.example.springbootfinal.dto.customer.UserPassDto;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.AdminRepository;
@@ -38,7 +39,6 @@ public class CustomerController {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @PostMapping("/register-user")
     public ResponseEntity<BaseResponseDto> saveCustomer(@RequestBody BaseSaveDto adminSaveDto) {
         Customer savedCustomer = customerService.saveCustomer(adminSaveDto.getFirstName(), adminSaveDto.getLastName(),
@@ -46,35 +46,27 @@ public class CustomerController {
         BaseResponseDto adminResponseDto = modelMapper.map(savedCustomer, BaseResponseDto.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
-
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkCustomer(@PathVariable String username, @PathVariable String password) {
         Customer customer = customerService.findByUserNameAndPassword(username, password).get();
 
-            BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
-            return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
-
+        BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
+        return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
-
     @PutMapping("/changePassword/{id}/{password}")
     public ResponseEntity<String> changePassword(@PathVariable Integer id, @PathVariable String password) {
-
-         customerService.changePassword(id, password);
-
+        customerService.changePassword(id, password);
         return ResponseEntity.ok("pasword changed !");
     }
-
     @PostMapping("/findAllCustomertByCriteria")
-    //firstname - lastname - email - specialistField(select a serviceName) - averageScoresOrderBy(asc or desc)
-    public List<CriteriaSearchDto> findAllCustomerByCriteria(@RequestBody Map<String, String> param) {
-
-        List<CriteriaSearchDto> criteriaSearchDtoList = new ArrayList<>();
+    public List<CriteriaSearchDtoOfCustomer> findAllCustomerByCriteria(@RequestBody Map<String, String> param) {
+        List<CriteriaSearchDtoOfCustomer> criteriaSearchDtoOfCustomerList = new ArrayList<>();
         List<Customer> allSpecialistsByCriteria = customerService.findAllCustomerByCriteria(param);
         for (Customer s : allSpecialistsByCriteria) {
-            CriteriaSearchDto criteriaSearchDto = modelMapper.map(s, CriteriaSearchDto.class);
-            criteriaSearchDtoList.add(criteriaSearchDto);
+            CriteriaSearchDtoOfCustomer map = modelMapper.map(s, CriteriaSearchDtoOfCustomer.class);
+            criteriaSearchDtoOfCustomerList.add(map);
         }
-        return criteriaSearchDtoList;
+        return criteriaSearchDtoOfCustomerList;
     }
-    }
+}
 

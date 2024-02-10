@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/comments")
 public class CommentsController {
-
     @Autowired
     CommentService commentService;
     @Autowired
@@ -32,9 +31,6 @@ public class CommentsController {
     public ResponseEntity<Integer> saveComments(@RequestBody CommentsRequestDto commentsRequestDto) {
         commentService.writCommentForExpert(commentsRequestDto.getCustomerOrderId(), commentsRequestDto.getExpertId(),
                 commentsRequestDto.getComments(), commentsRequestDto.getStar());
-
         return ResponseEntity.status(HttpStatus.CREATED).body(commentsRequestDto.getStar());
     }
-
-
 }

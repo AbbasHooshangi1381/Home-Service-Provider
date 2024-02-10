@@ -10,9 +10,7 @@ public interface CustomerOrderService {
 
     CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
                             StatusOfOrder waitingForSuggestExpert, Integer customerId, Integer subDutyId) throws SQLException;
-
     List<CustomerOrder> findCustomerOrderOfOneSubDuty(String subDuty);
-
     void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId);
 
 }

@@ -37,7 +37,6 @@ public class SuggestionServiceImpl implements SuggestionService {
     ExpertRepository expertRepository;
     @Autowired
     CustomerRepository customerRepository;
-
     @Autowired
     CustomerOrderRepository customerOrderRepository;
 
@@ -46,7 +45,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             , String durationTimeOfWork) throws SQLException {
         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
-
         Suggestion suggestion = new Suggestion();
         if (expert != null) {
             Double fixPrice = customerOrder.getProposedPrice();
@@ -65,30 +63,24 @@ public class SuggestionServiceImpl implements SuggestionService {
             customerOrderRepository.save(customerOrder);
         }
     }
-
-
     @Override
     public List<CustomerOrder> customerOrderList() {
         List<CustomerOrder> all = customerOrderRepository.findAll();
         List<CustomerOrder> filteredOrders = all.stream()
                 .filter(order ->
                         order.getStatusOfOrder().equals(WAITING_FOR_EXPERT_SUGGESTIONS) ||
-                                order.getStatusOfOrder().equals(WAITING_FOR_SELECT_EXPERT)
-                )
+                                order.getStatusOfOrder().equals(WAITING_FOR_SELECT_EXPERT))
                 .collect(Collectors.toList());
         for (CustomerOrder order : filteredOrders) {
             System.out.println(order);
         }
         return filteredOrders;
     }
-
     @Override
     public List<Suggestion> findAllPriceByCustomerId(Integer customerId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Could not find the customer order"));
          Customer customer = customerOrder.getCustomer();
-
         List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.showCustomerOrderOfSpecificCustomerBasedOnPriceOfSuggestions(customer);
-
         if (byCustomerOrderIdOrderByProposedPriceDesc.isEmpty()) {
             throw new NotFoundException("I cannot find suggestions for this customer order");
         } else {

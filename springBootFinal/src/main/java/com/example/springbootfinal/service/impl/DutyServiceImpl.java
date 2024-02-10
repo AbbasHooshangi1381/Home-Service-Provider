@@ -17,7 +17,6 @@ public class DutyServiceImpl implements DutyService {
     public DutyServiceImpl(DutyRepository dutyRepository) {
         this.dutyRepository = dutyRepository;
     }
-
     @Override
     public Duty saveServiceByAdmin(String dutyName) {
          Optional<Duty> byName = dutyRepository.findByName(dutyName);

@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 @ToString
 public class SubDutyResponseDto {
     String subServiceName;
-   // Double priceOfSubDuty;
     String description;
 
     public String getSubServiceName() {
@@ -23,11 +22,4 @@ public class SubDutyResponseDto {
         this.subServiceName = subServiceName;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

@@ -1,5 +1,7 @@
 package com.example.springbootfinal.dto.Expert;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,10 +10,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 public class SendOfferRequestDto {
+    @NotNull
+    @Min(0)
     Integer expertId;
+    @NotNull
+    @Min(0)
     Integer customerOrderId;
+    @NotNull
+    @Min(0)
     Double suggestionPrice;
+    @NotNull
     String timeOfWork;
+    @NotNull
     String durationTimeOfWork;
 
     public Integer getExpertId() {

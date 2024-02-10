@@ -15,7 +15,6 @@ public class Validation {
         SecureRandom random = new SecureRandom();
         password.append(uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length())));
         password.append(specialCharacters.charAt(random.nextInt(specialCharacters.length())));
-
         for (int i = 2; i < 8; i++) {
             int randomIndex = random.nextInt(lowercaseLettersAndNumbers.length());
             char randomChar = lowercaseLettersAndNumbers.charAt(randomIndex);
@@ -24,13 +23,10 @@ public class Validation {
         String shuffledPassword = shuffleString(password.toString());
         return shuffledPassword;
     }
-
     private static String shuffleString(String input) {
         List<Character> characters = input.chars().mapToObj(e -> (char)e).collect(Collectors.toList());
         Collections.shuffle(characters);
         return characters.stream().map(String::valueOf).collect(Collectors.joining());
     }
-
-
 }
 

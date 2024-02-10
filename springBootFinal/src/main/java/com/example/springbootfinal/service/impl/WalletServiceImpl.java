@@ -29,7 +29,6 @@ public class WalletServiceImpl implements WalletService {
     @Autowired
     ExpertRepository expertRepository;
 
-
     @Override
     public void payByCreditOfAccount(Integer customerOrderId, Integer expertId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
@@ -38,7 +37,6 @@ public class WalletServiceImpl implements WalletService {
         Double creditAmount = wallet.getCreditAmount();
         Double price = customerOrder.getSubService().getPrice();
         Double seventyPercentPrice = price * 0.7;
-
         if (wallet == null) {
             throw new NotEnoughCreditException("you dont have enough credit");
         } else {
@@ -52,12 +50,10 @@ public class WalletServiceImpl implements WalletService {
             customerOrderRepository.save(customerOrder);
         }
     }
-
     @Override
     public void payByCard(Integer customerOrderId, Integer expertId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException(" i can not found this customer order"));
-
         Double price = customerOrder.getSubService().getPrice();
         Double seventyPercentPrice = price * 0.7;
         Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
@@ -70,6 +66,5 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.save(wallet);
         walletRepository.save(wallet1);
         customerOrderRepository.save(customerOrder);
-
     }
 }

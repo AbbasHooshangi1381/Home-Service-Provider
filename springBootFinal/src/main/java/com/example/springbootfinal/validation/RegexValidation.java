@@ -13,5 +13,4 @@ public class RegexValidation {
     public static boolean validateEmail(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
     }
-
 }

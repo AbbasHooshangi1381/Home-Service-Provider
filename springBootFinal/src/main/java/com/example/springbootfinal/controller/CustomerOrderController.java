@@ -43,12 +43,8 @@ public class CustomerOrderController {
         StatusOfOrder statusOfOrder = customerOrderDto.getStatusOfOrder();
         Integer customerId = customerOrderDto.getCustomerId();
         Integer subDutyId = customerOrderDto.getSubDutyId();
-
         CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, statusOfOrder, customerId, subDutyId);
-
         CustomerOrderResponseDto responseDto = modelMapper.map(customerOrder,CustomerOrderResponseDto.class);
-
-
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 

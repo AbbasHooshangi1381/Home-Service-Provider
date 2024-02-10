@@ -36,8 +36,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer saveCustomer(String firstName, String lastName, String email, String userName) {
-
-
         String password = generateRandomPassword();
         LocalDate timeOfSignIn = LocalDate.now();
          Optional<Customer> byEmail = customerRepository.findByEmail(email);
@@ -46,21 +44,17 @@ public class CustomerServiceImpl implements CustomerService {
         }
         Wallet wallet = new Wallet(500.00);
         Wallet save = walletRepository.save(wallet);
-
         Customer customer = new Customer(firstName, lastName, email, userName, password, timeOfSignIn, save);
         customerRepository.save(customer);
         return customer;
     }
-
     @Override
     public String changePassword(Integer id, String password) {
         final Customer customer = customerRepository.findById(id).orElseThrow(() -> new NotFoundException(" i can not found this customer"));
         customer.setPassword(password);
         customerRepository.save(customer);
         return "Password changed successfully for customer with ID " + id;
-
     }
-
     @Override
     public Optional<Customer> findByUserNameAndPassword(String username, String password) {
          Customer customer = customerRepository.findByUserNameAndPassword(username, password).orElseThrow(() -> new NotFoundException(" i can not found this user"));
@@ -69,14 +63,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return Optional.ofNullable(customer);
     }
-
     public List<Customer> findAllCustomerByCriteria(Map<String, String> criteria) {
         Specification<Customer> spec = Specification.where(null);
-
         for (Map.Entry<String, String> entry : criteria.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-
             if (value != null && !value.trim().isEmpty()) {
                 switch (key) {
                     case "firstname":
@@ -91,25 +82,20 @@ public class CustomerServiceImpl implements CustomerService {
                 }
             }
         }
-
         return customerRepository.findAll(spec);
     }
-
     private Specification<Customer> firstNameContains(String value) {
         return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
                 builder.like(root.get("firstName"), "%" + value + "%");
     }
-
     private Specification<Customer> lastNameContains(String value) {
         return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
                 builder.like(root.get("lastName"), "%" + value + "%");
     }
-
     private Specification<Customer> emailEquals(String value) {
         return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
                 builder.equal(root.get("email"), value);
     }
-
 }
 
 

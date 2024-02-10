@@ -50,13 +50,8 @@ public class ExpertServiceImpl implements ExpertService {
     @Autowired
     WalletRepository walletRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-
     @Override
     public Expert saveExpert(String firstName, String lastName, String email, String userName, String filePath) throws IOException {
-
         String password = generateRandomPassword();
         Optional<Expert> byEmail = expertRepository.findByEmail(email);
         if (byEmail.isPresent()) {
@@ -68,12 +63,10 @@ public class ExpertServiceImpl implements ExpertService {
         ExpertStatus expertStatus = ExpertStatus.NEW;
         Integer star = 0;
         LocalDate timeOfSignIn = LocalDate.now();
-
         Expert expertSave = new Expert(firstName, lastName, email,
                 userName, password, timeOfSignIn, imageData, star, expertStatus,save);
         return expertRepository.save(expertSave);
     }
-
     @Override
     public Optional<Expert> findByUserNameAndPassword(String username, String password) {
         Expert expert = expertRepository.findByUserNameAndPassword(username, password).orElseThrow(() -> new NotFoundException(" i can not found this expert"));
@@ -82,7 +75,6 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return Optional.ofNullable(expert);
     }
-
     @Override
     public Expert changeStatusOfExpertByAdmin(Integer id) {
         Expert expert1 = expertRepository.findById(id)
@@ -91,7 +83,6 @@ public class ExpertServiceImpl implements ExpertService {
         expertRepository.save(expert1);
         return expert1;
     }
-
     @Override
     public Expert changePassword(Integer id, String newPassword) {
         Expert expert1 = expertRepository.findById(id).orElseThrow(() -> new NotFoundException(" i can not found this expert"));
@@ -101,7 +92,6 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return expert1;
     }
-
     @Override
     public byte[] saveImageByIdToSystem(Integer id) throws IOException {
         Expert expert = expertRepository.findById(id).orElseThrow(FileNotFoundException::new);
@@ -111,7 +101,6 @@ public class ExpertServiceImpl implements ExpertService {
         fos.close();
         return personalPhoto;
     }
-
     @Override
     public void changeStatusOfOrderByExpertStarted(Integer orderId) {
         Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
@@ -124,33 +113,25 @@ public class ExpertServiceImpl implements ExpertService {
             });
         }
     }
-
     @Override
     public void changeStatusOfOrderByCustomerToFinish(Integer suggestionId, String timeOfFinishingWork) {
         Suggestion suggestion = suggestionRepository.findById(suggestionId)
                 .orElseThrow(() -> new NotFoundException("i can not found this suggestion"));
-
         String timeOfStartingWork = suggestion.getTimeOfStartingWork();
         String durationTimeOfWork = suggestion.getDurationTimeOfWork();
-
         LocalDateTime startWorkTime = LocalDateTime.parse(timeOfStartingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
         LocalTime durationTime = LocalTime.parse(durationTimeOfWork, DateTimeFormatter.ofPattern("HH:mm:ss"));
-
         LocalDateTime expectedFinishTime = startWorkTime
                 .plusHours(durationTime.getHour())
                 .plusMinutes(durationTime.getMinute())
                 .plusSeconds(durationTime.getSecond());
-
         LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
         if (actualFinishTime.isAfter(expectedFinishTime)) {
             long delayHours = ChronoUnit.HOURS.between(expectedFinishTime, actualFinishTime);
             int ratingReduction = (int) delayHours;
-
             Expert expert = suggestion.getExpert();
             Integer currentRating = expert.getStars();
             int updatedRating = Math.max(0, currentRating - ratingReduction);
-
             if (updatedRating <= 0) {
                 expert.setExpertStatus(ExpertStatus.NEW);
                 expertRepository.save(expert);
@@ -160,12 +141,10 @@ public class ExpertServiceImpl implements ExpertService {
                 expertRepository.save(expert);
             }
         }
-
         CustomerOrder customerOrder = suggestion.getCustomerOrder();
         customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
-
     @Override
     public List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
          CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
@@ -182,27 +161,19 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return expertsByOrderIdOrderByStarDesc;
     }
-
         public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
             Specification<Expert> specification = (root, query, criteriaBuilder) -> {
                 List<Predicate> predicates = new ArrayList<>();
-
                 if (param.containsKey("firstname") && param.get("firstname") != null) {
                     predicates.add(criteriaBuilder.like(root.get("firstname"), "%" + param.get("firstname") + "%"));
                 }
-
                 if (param.containsKey("lastname") && param.get("lastname") != null) {
                     predicates.add(criteriaBuilder.like(root.get("lastname"), "%" + param.get("lastname") + "%"));
                 }
 
-                if (param.containsKey("email") && param.get("email") != null) {
-                    predicates.add(criteriaBuilder.equal(root.get("email"), param.get("email")));
+                if (param.containsKey("subDuty") && param.get("subDuty") != null) {
+                    predicates.add(criteriaBuilder.equal(root.join("subDuty").get("subDuty"), param.get("subDuty")));
                 }
-
-        /*        if (param.containsKey("specialistField") && param.get("specialistField") != null) {
-                    predicates.add(criteriaBuilder.equal(root.join("subServices").get("serviceName"), param.get("specialistField")));
-                }*/
-
                 List<Order> orderList = new ArrayList<>();
                 if (param.containsKey("stars") && param.get("stars") != null) {
                     if (param.get("stars").equalsIgnoreCase("ASC")) {
@@ -211,7 +182,6 @@ public class ExpertServiceImpl implements ExpertService {
                         orderList.add(criteriaBuilder.desc(root.get("stars")));
                     }
                 }
-
                 if (!orderList.isEmpty()) {
                     query.orderBy(orderList);
                 }
