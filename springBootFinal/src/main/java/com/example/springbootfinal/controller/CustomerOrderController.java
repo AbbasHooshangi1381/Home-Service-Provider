@@ -50,7 +50,7 @@ public class CustomerOrderController {
     }
 
     @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}/change-status")
-    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome(@Valid @PathVariable Integer orderId) {
+    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome( @PathVariable Integer orderId) {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
     }

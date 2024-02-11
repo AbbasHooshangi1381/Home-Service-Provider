@@ -46,7 +46,7 @@ public class SuggestionController {
         }
     }
     @GetMapping("/findAllPriceByCustomerOrderId/{customerOrderId}")
-    public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@Valid @PathVariable Integer customerOrderId) {
+    public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc( @PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.findAllPriceByCustomerId(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
     }

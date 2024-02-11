@@ -25,7 +25,7 @@ public class WalletController {
         this.walletService = walletService;
     }
     @PutMapping("/payByCreditOfAccount/{customerOrderId}/{expertId}")
-    public ResponseEntity<String> payByCreditOfAccount(@Valid @PathVariable Integer customerOrderId, @PathVariable Integer expertId) {
+    public ResponseEntity<String> payByCreditOfAccount( @PathVariable Integer customerOrderId, @PathVariable Integer expertId) {
             walletService.payByCreditOfAccount(customerOrderId,expertId);
             return ResponseEntity.ok("send");
     }

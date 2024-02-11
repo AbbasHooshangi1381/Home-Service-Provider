@@ -48,14 +48,14 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
     @GetMapping("/login/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkCustomer(@Valid @PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkCustomer( @PathVariable String username, @PathVariable String password) {
         Customer customer = customerService.findByUserNameAndPassword(username, password).get();
 
         BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
         return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
     @PutMapping("/changePassword/{id}/{password}")
-    public ResponseEntity<String> changePassword(@Valid @PathVariable Integer id, @PathVariable String password) {
+    public ResponseEntity<String> changePassword( @PathVariable Integer id, @PathVariable String password) {
         customerService.changePassword(id, password);
         return ResponseEntity.ok("pasword changed !");
     }

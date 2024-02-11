@@ -46,13 +46,13 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
     }
     @GetMapping("/login/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkAdmin(@Valid @PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkAdmin( @PathVariable String username, @PathVariable String password) {
         Admin admin = adminService.findByUserNameAndPassword(username, password).get();
             BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
     @PutMapping("/changePassword/{id}/{newPassword}")
-    public ResponseEntity<String> changePassword(@Valid @PathVariable Integer id, @PathVariable String newPassword) {
+    public ResponseEntity<String> changePassword( @PathVariable Integer id, @PathVariable String newPassword) {
       adminService.changePassword(id, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }

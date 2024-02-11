@@ -41,7 +41,7 @@ public class ExpertController {
     }
 
     @GetMapping("/login/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkExpert(@PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkExpert( String username, @PathVariable String password) {
         Expert expert = expertService.findByUserNameAndPassword(username, password).get();
         BaseResponseDto map = modelMapper.map(expert, BaseResponseDto.class);
         return new ResponseEntity<>(map, HttpStatus.OK);
