@@ -59,10 +59,10 @@ public class CustomerController {
         customerService.changePassword(id, password);
         return ResponseEntity.ok("pasword changed !");
     }
-    @PostMapping("/findAllCustomertByCriteria")
+    @GetMapping("/findAllCustomertByCriteria")
     public List<CriteriaSearchDtoOfCustomer> findAllCustomerByCriteria(@Valid @RequestBody Map<String, String> param) {
         List<CriteriaSearchDtoOfCustomer> criteriaSearchDtoOfCustomerList = new ArrayList<>();
-        List<Customer> allSpecialistsByCriteria = customerService.findAllCustomerByCriteria(param);
+        List<Customer> allSpecialistsByCriteria = customerService.findAllCustomersByCriteria(param);
         for (Customer s : allSpecialistsByCriteria) {
             CriteriaSearchDtoOfCustomer map = modelMapper.map(s, CriteriaSearchDtoOfCustomer.class);
             criteriaSearchDtoOfCustomerList.add(map);

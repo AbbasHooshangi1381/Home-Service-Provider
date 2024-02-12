@@ -91,7 +91,7 @@ public class ExpertController {
         return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
     }
 
-    @PostMapping("/findAllExpertByCriteria")
+    @GetMapping("/findAllExpertByCriteria")
     public ResponseEntity<List<CriteriaSearchDto>> findAllSpecialistsByCriteria(@RequestBody Map<String, String> param) {
         List<Expert> allExpertsByCriteria = expertService.findAllExpertsByCriteria(param);
         List<CriteriaSearchDto> criteriaSearchDtoList = allExpertsByCriteria.stream()

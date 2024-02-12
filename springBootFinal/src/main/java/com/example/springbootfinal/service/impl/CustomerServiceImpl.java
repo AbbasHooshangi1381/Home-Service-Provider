@@ -9,15 +9,14 @@ import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.CustomerService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -63,32 +62,19 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return Optional.ofNullable(customer);
     }
-    public List<Customer> findAllCustomerByCriteria(Map<String, String> criteria) {
-        Specification<Customer> spec = Specification.where(null);
-        for (Map.Entry<String, String> entry : criteria.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (value != null && !value.trim().isEmpty()) {
-                switch (key) {
-                    case "firstname":
-                        spec = spec.and(firstNameContains(value));
-                        break;
-                    case "lastname":
-                        spec = spec.and(lastNameContains(value));
-                        break;
-
-                }
+    public List<Customer> findAllCustomersByCriteria(Map<String, String> param) {
+        Specification<Customer> specification = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (param.containsKey("firstName") && param.get("firstName") != null) {
+                predicates.add(cb.like(cb.lower(root.get("firstName")), "%" + param.get("firstName").toLowerCase() + "%"));
             }
-        }
-        return customerRepository.findAll(spec);
-    }
-    private Specification<Customer> firstNameContains(String value) {
-        return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
-                builder.like(root.get("firstName"), "%" + value + "%");
-    }
-    private Specification<Customer> lastNameContains(String value) {
-        return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
-                builder.like(root.get("lastName"), "%" + value + "%");
+            if (param.containsKey("lastName") && param.get("lastName") != null) {
+                predicates.add(cb.like(cb.lower(root.get("lastName")), "%" + param.get("lastName").toLowerCase() + "%"));
+            }
+            query.distinct(true);
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        return customerRepository.findAll(specification);
     }
 }
 
