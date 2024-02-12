@@ -99,5 +99,13 @@ public class ExpertController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(criteriaSearchDtoList);
     }
+    @GetMapping("/findExpertsByStar")
+    public ResponseEntity<List<CriteriaSearchDto>> findExpertsByStar(@RequestParam Map<String, String> params) {
+        List<Expert> allExpertsByCriteria = expertService.findExpertByStar(params);
+        List<CriteriaSearchDto> criteriaSearchDtoList = allExpertsByCriteria.stream()
+                .map(expert -> modelMapper.map(expert, CriteriaSearchDto.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(criteriaSearchDtoList);
+    }
 
 }

@@ -20,4 +20,6 @@ public interface ExpertService {
      void changeStatusOfOrderByCustomerToFinish(Integer orderId,String timeOfFinishingWork);
      List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId);
      List<Expert> findAllExpertsByCriteria(Map<String, String> criteria);
+     List<Expert> findExpertByStar(Map<String, String> params);
+
 }

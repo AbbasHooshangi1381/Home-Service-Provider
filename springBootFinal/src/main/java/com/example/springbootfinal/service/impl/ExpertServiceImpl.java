@@ -64,9 +64,10 @@ public class ExpertServiceImpl implements ExpertService {
         Integer star = 0;
         LocalDate timeOfSignIn = LocalDate.now();
         Expert expertSave = new Expert(firstName, lastName, email,
-                userName, password, timeOfSignIn, imageData, star, expertStatus,save);
+                userName, password, timeOfSignIn, imageData, star, expertStatus, save);
         return expertRepository.save(expertSave);
     }
+
     @Override
     public Optional<Expert> findByUserNameAndPassword(String username, String password) {
         Expert expert = expertRepository.findByUserNameAndPassword(username, password).orElseThrow(() -> new NotFoundException(" i can not found this expert"));
@@ -75,6 +76,7 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return Optional.ofNullable(expert);
     }
+
     @Override
     public Expert changeStatusOfExpertByAdmin(Integer id) {
         Expert expert1 = expertRepository.findById(id)
@@ -83,6 +85,7 @@ public class ExpertServiceImpl implements ExpertService {
         expertRepository.save(expert1);
         return expert1;
     }
+
     @Override
     public Expert changePassword(Integer id, String newPassword) {
         Expert expert1 = expertRepository.findById(id).orElseThrow(() -> new NotFoundException(" i can not found this expert"));
@@ -92,6 +95,7 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return expert1;
     }
+
     @Override
     public byte[] saveImageByIdToSystem(Integer id) throws IOException {
         Expert expert = expertRepository.findById(id).orElseThrow(FileNotFoundException::new);
@@ -101,6 +105,7 @@ public class ExpertServiceImpl implements ExpertService {
         fos.close();
         return personalPhoto;
     }
+
     @Override
     public void changeStatusOfOrderByExpertStarted(Integer orderId) {
         Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
@@ -113,6 +118,7 @@ public class ExpertServiceImpl implements ExpertService {
             });
         }
     }
+
     @Override
     public void changeStatusOfOrderByCustomerToFinish(Integer suggestionId, String timeOfFinishingWork) {
         Suggestion suggestion = suggestionRepository.findById(suggestionId)
@@ -145,10 +151,11 @@ public class ExpertServiceImpl implements ExpertService {
         customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
+
     @Override
     public List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
-         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
-         Customer customer = customerOrder.getCustomer();
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
+        Customer customer = customerOrder.getCustomer();
         final List<Suggestion> expertsByOrderIdOrderByStarDesc =
                 expertRepository.findExpertsByOrderIdOrderByStarDesc(customer);
         if (expertsByOrderIdOrderByStarDesc.isEmpty()) {
@@ -161,6 +168,7 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return expertsByOrderIdOrderByStarDesc;
     }
+
     public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
         Specification<Expert> specification = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -172,17 +180,6 @@ public class ExpertServiceImpl implements ExpertService {
             }
 
             query.distinct(true);
-            List<Order> orderList = new ArrayList<>();
-            String starsSorting = param.get("stars");
-            if ("ASC".equalsIgnoreCase(starsSorting)) {
-                orderList.add(cb.asc(root.get("stars")));
-            } else if ("DESC".equalsIgnoreCase(starsSorting)) {
-                orderList.add(cb.desc(root.get("stars")));
-            }
-
-            if (!orderList.isEmpty()) {
-                query.orderBy(orderList);
-            }
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
@@ -190,7 +187,27 @@ public class ExpertServiceImpl implements ExpertService {
         return expertRepository.findAll(specification);
     }
 
+    public List<Expert> findExpertByStar(Map<String, String> params) {
+        Specification<Expert> specification = buildSpecification(params);
+        return expertRepository.findAll(specification);
     }
+
+    private Specification<Expert> buildSpecification(Map<String, String> params) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (params.containsKey("rate")) {
+                String rate = params.get("rate");
+                Order order = "DESC".equals(rate)
+                        ? criteriaBuilder.desc(root.get("stars"))
+                        : criteriaBuilder.asc(root.get("stars"));
+                query.orderBy(order);
+            }
+            query.distinct(true);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+}
 
 
 
