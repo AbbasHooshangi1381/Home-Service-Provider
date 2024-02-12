@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -91,15 +92,12 @@ public class ExpertController {
     }
 
     @PostMapping("/findAllExpertByCriteria")
-    public List<CriteriaSearchDto> findAllSpecialistsByCriteria(@RequestBody Map<String, String> param) {
-        List<CriteriaSearchDto> criteriaSearchDtoList = new ArrayList<>();
-        List<Expert> allSpecialistsByCriteria = expertService.findAllExpertsByCriteria(param);
-        for (Expert s : allSpecialistsByCriteria) {
-            CriteriaSearchDto criteriaSearchDto = modelMapper.map(s, CriteriaSearchDto.class);
-            criteriaSearchDtoList.add(criteriaSearchDto);
-        }
-        return criteriaSearchDtoList;
+    public ResponseEntity<List<CriteriaSearchDto>> findAllSpecialistsByCriteria(@RequestBody Map<String, String> param) {
+        List<Expert> allExpertsByCriteria = expertService.findAllExpertsByCriteria(param);
+        List<CriteriaSearchDto> criteriaSearchDtoList = allExpertsByCriteria.stream()
+                .map(expert -> modelMapper.map(expert, CriteriaSearchDto.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(criteriaSearchDtoList);
     }
-
 
 }

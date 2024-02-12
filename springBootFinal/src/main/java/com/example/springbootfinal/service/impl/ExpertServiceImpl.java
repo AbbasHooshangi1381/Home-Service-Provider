@@ -161,36 +161,35 @@ public class ExpertServiceImpl implements ExpertService {
         }
         return expertsByOrderIdOrderByStarDesc;
     }
-        public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
-            Specification<Expert> specification = (root, query, criteriaBuilder) -> {
-                List<Predicate> predicates = new ArrayList<>();
-                if (param.containsKey("firstname") && param.get("firstname") != null) {
-                    predicates.add(criteriaBuilder.like(root.get("firstname"), "%" + param.get("firstname") + "%"));
-                }
-                if (param.containsKey("lastname") && param.get("lastname") != null) {
-                    predicates.add(criteriaBuilder.like(root.get("lastname"), "%" + param.get("lastname") + "%"));
-                }
+    public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
+        Specification<Expert> specification = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (param.containsKey("firstName") && param.get("firstName") != null) {
+                predicates.add(cb.like(cb.lower(root.get("firstName")), "%" + param.get("firstName").toLowerCase() + "%"));
+            }
+            if (param.containsKey("lastName") && param.get("lastName") != null) {
+                predicates.add(cb.like(cb.lower(root.get("lastName")), "%" + param.get("lastName").toLowerCase() + "%"));
+            }
 
-                if (param.containsKey("subDuty") && param.get("subDuty") != null) {
-                    predicates.add(criteriaBuilder.equal(root.join("subDuty").get("subDuty"), param.get("subDuty")));
-                }
-                List<Order> orderList = new ArrayList<>();
-                if (param.containsKey("stars") && param.get("stars") != null) {
-                    if (param.get("stars").equalsIgnoreCase("ASC")) {
-                        orderList.add(criteriaBuilder.asc(root.get("stars")));
-                    } else if (param.get("stars").equalsIgnoreCase("DESC")) {
-                        orderList.add(criteriaBuilder.desc(root.get("stars")));
-                    }
-                }
-                if (!orderList.isEmpty()) {
-                    query.orderBy(orderList);
-                }
+            query.distinct(true);
+            List<Order> orderList = new ArrayList<>();
+            String starsSorting = param.get("stars");
+            if ("ASC".equalsIgnoreCase(starsSorting)) {
+                orderList.add(cb.asc(root.get("stars")));
+            } else if ("DESC".equalsIgnoreCase(starsSorting)) {
+                orderList.add(cb.desc(root.get("stars")));
+            }
 
-                return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-            };
+            if (!orderList.isEmpty()) {
+                query.orderBy(orderList);
+            }
 
-            return expertRepository.findAll(specification);
-        }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return expertRepository.findAll(specification);
+    }
+
     }
 
 

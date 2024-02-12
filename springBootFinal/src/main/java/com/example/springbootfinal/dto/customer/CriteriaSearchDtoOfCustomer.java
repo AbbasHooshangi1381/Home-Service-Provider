@@ -9,5 +9,4 @@ public class CriteriaSearchDtoOfCustomer {
 
     String firstName;
     String lastName;
-    String subDutyName;
 }

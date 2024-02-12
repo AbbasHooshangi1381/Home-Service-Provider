@@ -76,9 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
                     case "lastname":
                         spec = spec.and(lastNameContains(value));
                         break;
-                    case "email":
-                        spec = spec.and(emailEquals(value));
-                        break;
+
                 }
             }
         }
@@ -91,10 +89,6 @@ public class CustomerServiceImpl implements CustomerService {
     private Specification<Customer> lastNameContains(String value) {
         return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
                 builder.like(root.get("lastName"), "%" + value + "%");
-    }
-    private Specification<Customer> emailEquals(String value) {
-        return (Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder builder) ->
-                builder.equal(root.get("email"), value);
     }
 }
 
