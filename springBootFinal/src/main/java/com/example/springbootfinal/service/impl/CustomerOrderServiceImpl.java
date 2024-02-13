@@ -4,12 +4,10 @@ import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
-import com.example.springbootfinal.repository.CustomerOrderRepository;
-import com.example.springbootfinal.repository.CustomerRepository;
-import com.example.springbootfinal.repository.DutyRepository;
-import com.example.springbootfinal.repository.SubDutyRepository;
+import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.CustomerOrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     CustomerOrderRepository customerOrderRepository;
     @Autowired
     DutyRepository dutyRepository;
+    @Autowired
+    ExpertRepository expertRepository;
 
     @Override
     public CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
@@ -47,17 +47,13 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
         return customerOrderRepository.save(customerOrder);
     }
-    @Override
-    public List<CustomerOrder> findCustomerOrderOfOneSubDuty(String subDuty) {
-        List<CustomerOrder> bySubServiceName = customerOrderRepository.findBySubServiceName(subDuty);
-        if (bySubServiceName.isEmpty()) {
-            throw new NotFoundException("i do not have this subService");
-        }
-        return bySubServiceName;
-    }
+    
     @Override
     public void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(" i can not find customerOrder"));
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)){
+            throw new DuplicateException("you changed this customer order");
+        }
         SubDuty subDuty = customerOrder.getSubService();
         Double proposedPrice = customerOrder.getProposedPrice();
         subDuty.setPrice(proposedPrice);
@@ -65,6 +61,17 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         subDutyRepository.save(subDuty);
         customerOrderRepository.save(customerOrder);
     }
+
+    @Override
+    public List<CustomerOrder> findOrdersByExpertId(Integer expertId) {
+        expertRepository.findById(expertId).orElseThrow(()->new NotFoundException(" I CAN NOT FOUND THIS EXPERT"));
+         List<CustomerOrder> ordersByExpertId = customerOrderRepository.findOrdersByExpertId(expertId);
+         if (ordersByExpertId.isEmpty()){
+             throw new NotFoundException(" i can not found this order");
+         }
+         return ordersByExpertId;
+    }
+
     public static Double validatePrice(Double proposedPrice, Double fixPrice) {
         Double validatedPrice = null;
         if (proposedPrice >= fixPrice) {

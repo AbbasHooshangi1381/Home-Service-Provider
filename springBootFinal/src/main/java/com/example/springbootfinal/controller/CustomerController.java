@@ -54,9 +54,9 @@ public class CustomerController {
         BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
         return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
-    @PutMapping("/changePassword/{id}/{password}")
-    public ResponseEntity<String> changePassword( @PathVariable Integer id, @PathVariable String password) {
-        customerService.changePassword(id, password);
+    @PutMapping("/changePassword/{oldPassword}/{password}")
+    public ResponseEntity<String> changePassword( @PathVariable String oldPassword, @PathVariable String password) {
+        customerService.changePassword(oldPassword, password);
         return ResponseEntity.ok("pasword changed !");
     }
     @GetMapping("/findAllCustomertByCriteria")

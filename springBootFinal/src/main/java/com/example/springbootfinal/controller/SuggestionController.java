@@ -45,9 +45,14 @@ public class SuggestionController {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/findAllPriceByCustomerOrderId/{customerOrderId}")
+    @GetMapping("/showSuggestionByPrice/{customerOrderId}")
     public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc( @PathVariable Integer customerOrderId) {
-        List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.findAllPriceByCustomerId(customerOrderId);
+        List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.showSuggestionOrderByPriceOfSuggestions(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
+    }
+    @GetMapping("/showSuggestionsByExpertStar/{customerOrderId}")
+    public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
+        List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.showSuggestionOrderByExpertStars(customerOrderId);
+        return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
     }
 }

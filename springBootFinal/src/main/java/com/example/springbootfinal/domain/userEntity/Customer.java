@@ -1,5 +1,6 @@
 package com.example.springbootfinal.domain.userEntity;
 
+import com.example.springbootfinal.domain.other.Card;
 import com.example.springbootfinal.domain.other.Comments;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Wallet;
@@ -31,8 +32,10 @@ public class Customer extends BaseUser {
     List<Comments> commentsList;
 
     @ManyToOne
-    //  @Column(name = "id")
     Admin admin;
+
+    @OneToMany(mappedBy = "customer")
+    List<Card>cardList;
 
     public Customer(String firstName, String lastName, String email, String userName,
                     String password, LocalDate dateOfSigningIn, Wallet wallet) {

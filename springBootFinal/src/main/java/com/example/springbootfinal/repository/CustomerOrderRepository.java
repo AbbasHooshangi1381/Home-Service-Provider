@@ -12,4 +12,8 @@ import java.util.List;
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
     @Query("SELECT co FROM CustomerOrder co WHERE co.subService.subServiceName = :subServiceName")
     List<CustomerOrder> findBySubServiceName(@Param("subServiceName") String subServiceName);
+
+    @Query("SELECT co FROM CustomerOrder co INNER JOIN co.subService sd INNER JOIN sd.experts ex " +
+            "WHERE ex.id = :expertId")
+    List<CustomerOrder> findOrdersByExpertId(@Param("expertId") Integer expertId);
 }

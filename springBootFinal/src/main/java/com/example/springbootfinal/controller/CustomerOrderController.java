@@ -54,4 +54,10 @@ public class CustomerOrderController {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
     }
+
+    @GetMapping("/findOrdersOfExpertSubDuties/{expertId}")
+    public ResponseEntity<List<CustomerOrder>> findOrdersOfExpertSubDuties(@PathVariable Integer expertId) {
+        List<CustomerOrder> ordersByExpertId = customerOrderService.findOrdersByExpertId(expertId);
+        return ResponseEntity.ok(ordersByExpertId);
+    }
 }

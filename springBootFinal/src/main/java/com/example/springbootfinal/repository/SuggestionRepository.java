@@ -17,5 +17,9 @@ public interface SuggestionRepository extends JpaRepository<Suggestion, Integer>
     @Query("SELECT s FROM Suggestion s " +
             "JOIN FETCH s.customerOrder co " +
             "WHERE co.customer = :customer " +
-            "ORDER BY s.suggestionPrice desc ")
-    List<Suggestion> showCustomerOrderOfSpecificCustomerBasedOnPriceOfSuggestions(@Param("customer") Customer customer);}
+            "ORDER BY s.suggestionPrice DESC")
+    List<Suggestion> showSuggestionOrderByPriceOfSuggestion(@Param("customer") Customer customer);
+
+
+
+}

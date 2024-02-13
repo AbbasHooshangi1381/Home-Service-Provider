@@ -30,6 +30,9 @@ public class SubDutyController {
         String description = subDutySaveDto.getDescription();
         String subServiceName = subDutySaveDto.getSubServiceName();
          SubDuty subDuty = subDutyService.saveSubDutyByAdmin(dutyId, subServiceName, priceOfSubDuty, description);
+         if (subDuty==null){
+             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+         }
          SubDutyResponseDto map = modelMapper.map(subDuty, SubDutyResponseDto.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(map);
     }

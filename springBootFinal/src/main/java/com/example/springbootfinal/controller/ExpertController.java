@@ -48,10 +48,10 @@ public class ExpertController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PutMapping("/changePassword/{id}/{newPassword}")
-    public ResponseEntity<String> changePassword(@PathVariable Integer id,
+    @PutMapping("/changePassword/{oldPassword}/{newPassword}")
+    public ResponseEntity<String> changePassword(@PathVariable String oldPassword,
                                                  @PathVariable String newPassword) {
-        expertService.changePassword(id, newPassword);
+        expertService.changePassword(oldPassword, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }
 
@@ -85,14 +85,8 @@ public class ExpertController {
         return ResponseEntity.ok("Order " + suggestionId + " has been marked as finished.");
     }
 
-    @GetMapping("/findByCustomerIdOrderByExpertStarsDesc/{customerOrderId}")
-    public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
-        List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = expertService.findByCustomerOrderIdOrderByExpertStarsDesc(customerOrderId);
-        return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
-    }
-
-    @GetMapping("/findAllExpertByCriteria")
-    public ResponseEntity<List<CriteriaSearchDto>> findAllSpecialistsByCriteria(@RequestBody Map<String, String> param) {
+    @GetMapping("/findAllExpertsByCriteria")
+    public ResponseEntity<List<CriteriaSearchDto>> findAllExpertsByCriteria(@RequestBody Map<String, String> param) {
         List<Expert> allExpertsByCriteria = expertService.findAllExpertsByCriteria(param);
         List<CriteriaSearchDto> criteriaSearchDtoList = allExpertsByCriteria.stream()
                 .map(expert -> modelMapper.map(expert, CriteriaSearchDto.class))

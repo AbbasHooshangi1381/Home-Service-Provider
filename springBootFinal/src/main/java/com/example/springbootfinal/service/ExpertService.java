@@ -12,13 +12,12 @@ import java.util.Optional;
 
 public interface ExpertService {
      Expert changeStatusOfExpertByAdmin(Integer expertId);
-     Expert saveExpert(String firstName, String lastName, String email, String userName, String filePath) throws IOException ;
+     Expert saveExpert(String firstName, String lastName, String email, String userName, String file) throws IOException ;
      Optional<Expert> findByUserNameAndPassword(String username, String password);
-     Expert changePassword(Integer id , String newPassword);
+     Expert changePassword(String oldPassword,String newPassword);
      byte[] saveImageByIdToSystem(Integer id) throws IOException;
      void changeStatusOfOrderByExpertStarted(Integer orderId);
      void changeStatusOfOrderByCustomerToFinish(Integer orderId,String timeOfFinishingWork);
-     List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId);
      List<Expert> findAllExpertsByCriteria(Map<String, String> criteria);
      List<Expert> findExpertByStar(Map<String, String> params);
 

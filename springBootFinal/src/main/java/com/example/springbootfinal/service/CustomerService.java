@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CustomerService {
     Customer saveCustomer(String firstName, String lastName, String email, String userName);
-    String changePassword(Integer id , String password);
+    String changePassword(String oldPassword,String newPassword);
     Optional<Customer> findByUserNameAndPassword(String username, String password);
     List<Customer> findAllCustomersByCriteria(Map<String, String> param);
 }

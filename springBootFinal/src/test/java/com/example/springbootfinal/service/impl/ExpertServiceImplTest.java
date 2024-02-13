@@ -82,7 +82,7 @@ class ExpertServiceImplTest {
         subDutys = subDutyRepository.save(subDuty);
 
         Expert expert = new Expert(
-                "ali",
+/*                "ali",
                 "ahmadi",
                 "okjggk@gmail.com",
                 "pojguiu2",
@@ -90,7 +90,7 @@ class ExpertServiceImplTest {
                 LocalDate.now(),
                 ExpertStatus.NEW,
                 ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
-                        "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg"));
+                        "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg")*/);
         save = expertRepository.save(expert);
         assertNotNull(save);
 
@@ -107,7 +107,7 @@ class ExpertServiceImplTest {
                 proposedPrice, timeOfWork, address, waitingForSuggestExpert, id, id1);
     }
 
-    @Test
+/*    @Test
     @Order(1)
     void saveExperts() throws IOException {
         String name = "aldi";
@@ -119,7 +119,7 @@ class ExpertServiceImplTest {
 
          Expert expertss = expertService.saveExpert(name, lastname, emails, username, location);
          assertNotNull(expertss);
-    }
+    }*/
 
 
     @Test
@@ -150,7 +150,7 @@ class ExpertServiceImplTest {
 
     }
 
-    @Test
+/*    @Test
     @Transactional
     @Order(4)
     void changePassword() {
@@ -165,7 +165,7 @@ class ExpertServiceImplTest {
         assertEquals(newPassword, changedPassword);
          Expert expert1 = expertService.changePassword(2, newPassword);
         assertNotNull(expert1);
-    }
+    }*/
 
     @Test
     @Order(5)

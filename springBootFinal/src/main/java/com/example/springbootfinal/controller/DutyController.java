@@ -24,8 +24,13 @@ public class DutyController {
         this.modelMapper = modelMapper;
     }
     @PostMapping("saveDuty/{saveDuty}")
-    public ResponseEntity<DutyResponseDto> saveExpert( @PathVariable String saveDuty) {
+    public ResponseEntity<DutyResponseDto> saveExpert(@PathVariable String saveDuty) {
         Duty duty = dutyService.saveServiceByAdmin(saveDuty);
+
+        if (duty == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
         DutyResponseDto map = modelMapper.map(duty, DutyResponseDto.class);
         return new ResponseEntity<>(map, HttpStatus.CREATED);
     }

@@ -31,7 +31,7 @@ public class WalletController {
     }
     @PutMapping("/payByCard")
     public ResponseEntity<String> payByCard() {
-        walletService.payByCard(852,452);
+        walletService.payByCard(902,652);
         return ResponseEntity.ok("paid!");
     }
 }

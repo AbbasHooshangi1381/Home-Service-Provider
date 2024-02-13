@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface AdminService {
-    Admin changePassword(Integer id, String newPassword);
+    Admin changePassword(String oldPassword,String newPassword);
     Admin saveAdmin(String firstName, String lastName, String email, String userName);
     Optional<Admin> findByUserNameAndPassword(String username, String password);
 }

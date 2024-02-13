@@ -11,4 +11,5 @@ public interface AdminRepository extends JpaRepository<Admin,Integer> {
     boolean existsByEmail(String email);
     Optional<Admin> findByUserNameAndPassword(String username, String password);
     Optional<Admin> findByEmail(String email);
+    Optional<Admin> findByPassword(String password);
 }

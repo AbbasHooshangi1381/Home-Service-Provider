@@ -22,6 +22,7 @@ import static com.example.springbootfinal.validation.RegexValidation.validationN
 import static com.example.springbootfinal.validation.Validation.generateRandomPassword;
 @Service
 @Transactional
+@SuppressWarnings("unused")
 public class AdminServiceImpl implements AdminService {
     AdminRepository adminRepository;
     DutyRepository dutyRepository;
@@ -56,15 +57,10 @@ public class AdminServiceImpl implements AdminService {
         return Optional.ofNullable(admin);
     }
     @Override
-    public Admin changePassword(Integer id, String newPassword) {
-        Optional<Admin> optionalAdmin = adminRepository.findById(id);
-        if (optionalAdmin.isPresent()) {
-            Admin admin = optionalAdmin.get();
-            admin.setPassword(newPassword);
-            adminRepository.save(admin);
-            return admin;
-        } else {
-            throw new NotFoundException("i dont have this admin");
-        }
+    public Admin changePassword(String oldPassword, String newPassword) {
+         Admin admin = adminRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
+        admin.setPassword(newPassword);
+        return admin;
+
     }
 }

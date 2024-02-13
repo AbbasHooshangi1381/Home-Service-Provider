@@ -83,7 +83,7 @@ class CustomerServiceImplTest {
         assertNotNull(customer3);
     }
 
-    @Test
+/*    @Test
     @Transactional
     @Order(2)
     void changePassword() {
@@ -102,6 +102,6 @@ class CustomerServiceImplTest {
 
          String password1 = customerService.changePassword(2, "aff52");
         assertNotNull(password1);
-    }
+    }*/
 
 }

@@ -48,11 +48,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
     @Override
-    public String changePassword(Integer id, String password) {
-        final Customer customer = customerRepository.findById(id).orElseThrow(() -> new NotFoundException(" i can not found this customer"));
-        customer.setPassword(password);
-        customerRepository.save(customer);
-        return "Password changed successfully for customer with ID " + id;
+    public String changePassword(String oldPassword,String newPassword) {
+         Customer customer = customerRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
+        customer.setPassword(newPassword);
+        return "you changed the password";
     }
     @Override
     public Optional<Customer> findByUserNameAndPassword(String username, String password) {
@@ -70,6 +69,9 @@ public class CustomerServiceImpl implements CustomerService {
             }
             if (param.containsKey("lastName") && param.get("lastName") != null) {
                 predicates.add(cb.like(cb.lower(root.get("lastName")), "%" + param.get("lastName").toLowerCase() + "%"));
+            }
+            if (param.containsKey("email") && param.get("email") != null) {
+                predicates.add(cb.like(cb.lower(root.get("email")), "%" + param.get("email").toLowerCase() + "%"));
             }
             query.distinct(true);
             return cb.and(predicates.toArray(new Predicate[0]));

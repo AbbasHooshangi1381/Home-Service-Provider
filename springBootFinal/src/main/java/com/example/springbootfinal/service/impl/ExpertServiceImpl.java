@@ -13,10 +13,9 @@ import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.ExpertService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -38,6 +37,8 @@ import static com.example.springbootfinal.validation.Validation.generateRandomPa
 
 @Service
 @Transactional
+
+@SuppressWarnings("unused")
 public class ExpertServiceImpl implements ExpertService {
     @Autowired
     ExpertRepository expertRepository;
@@ -53,8 +54,8 @@ public class ExpertServiceImpl implements ExpertService {
     @Override
     public Expert saveExpert(String firstName, String lastName, String email, String userName, String filePath) throws IOException {
         String password = generateRandomPassword();
-        Optional<Expert> byEmail = expertRepository.findByEmail(email);
-        if (byEmail.isPresent()) {
+        boolean present = expertRepository.findByEmail(email).isPresent();
+        if (present) {
             throw new DuplicateException("ایمیل تکراری است.");
         }
         Wallet wallet = new Wallet(500.00);
@@ -79,21 +80,21 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public Expert changeStatusOfExpertByAdmin(Integer id) {
-        Expert expert1 = expertRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Expert not found"));
+        Expert expert1 = expertRepository.findById(id).orElseThrow(() -> new NotFoundException("Expert not found"));
+        ExpertStatus expertStatus = expert1.getExpertStatus();
+        if (expertStatus.equals(ExpertStatus.CONFIRMED)) {
+            throw new DuplicateException("you confirmed this email");
+        }
         expert1.setExpertStatus(ExpertStatus.CONFIRMED);
         expertRepository.save(expert1);
         return expert1;
     }
 
     @Override
-    public Expert changePassword(Integer id, String newPassword) {
-        Expert expert1 = expertRepository.findById(id).orElseThrow(() -> new NotFoundException(" i can not found this expert"));
-        if (expert1 != null) {
-            expert1.setPassword(newPassword);
-            return expertRepository.save(expert1);
-        }
-        return expert1;
+    public Expert changePassword(String oldPassword, String newPassword) {
+        Expert expert = expertRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
+        expert.setPassword(newPassword);
+        return expert;
     }
 
     @Override
@@ -108,21 +109,21 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public void changeStatusOfOrderByExpertStarted(Integer orderId) {
-        Optional<CustomerOrder> byId = customerOrderRepository.findById(orderId);
-        if (byId.isEmpty()) {
-            throw new NotFoundException("i dont have this order ");
-        } else {
-            byId.ifPresent(customerOrder -> {
-                customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
-                customerOrderRepository.save(customerOrder);
-            });
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("i can not found this order"));
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.STARTED)){
+            throw new DuplicateException("you started this order");
         }
+        customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
+        customerOrderRepository.save(customerOrder);
+
+
     }
 
     @Override
     public void changeStatusOfOrderByCustomerToFinish(Integer suggestionId, String timeOfFinishingWork) {
         Suggestion suggestion = suggestionRepository.findById(suggestionId)
                 .orElseThrow(() -> new NotFoundException("i can not found this suggestion"));
+
         String timeOfStartingWork = suggestion.getTimeOfStartingWork();
         String durationTimeOfWork = suggestion.getDurationTimeOfWork();
         LocalDateTime startWorkTime = LocalDateTime.parse(timeOfStartingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
@@ -148,26 +149,14 @@ public class ExpertServiceImpl implements ExpertService {
             }
         }
         CustomerOrder customerOrder = suggestion.getCustomerOrder();
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)){
+            throw new DuplicateException("you done this work at past");
+        }
         customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
 
-    @Override
-    public List<Suggestion> findByCustomerOrderIdOrderByExpertStarsDesc(Integer customerOrderId) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
-        Customer customer = customerOrder.getCustomer();
-        final List<Suggestion> expertsByOrderIdOrderByStarDesc =
-                expertRepository.findExpertsByOrderIdOrderByStarDesc(customer);
-        if (expertsByOrderIdOrderByStarDesc.isEmpty()) {
-            throw new NotFoundException("i can not find this customer order");
-        } else {
-            for (Suggestion suggestion : expertsByOrderIdOrderByStarDesc) {
-                System.out.println(suggestion);
-                break;
-            }
-        }
-        return expertsByOrderIdOrderByStarDesc;
-    }
+
 
     public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
         Specification<Expert> specification = (root, query, cb) -> {
@@ -177,6 +166,9 @@ public class ExpertServiceImpl implements ExpertService {
             }
             if (param.containsKey("lastName") && param.get("lastName") != null) {
                 predicates.add(cb.like(cb.lower(root.get("lastName")), "%" + param.get("lastName").toLowerCase() + "%"));
+            }
+            if (param.containsKey("email") && param.get("email") != null) {
+                predicates.add(cb.like(cb.lower(root.get("email")), "%" + param.get("email").toLowerCase() + "%"));
             }
 
             query.distinct(true);
@@ -188,6 +180,7 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     public List<Expert> findExpertByStar(Map<String, String> params) {
+
         Specification<Expert> specification = buildSpecification(params);
         return expertRepository.findAll(specification);
     }

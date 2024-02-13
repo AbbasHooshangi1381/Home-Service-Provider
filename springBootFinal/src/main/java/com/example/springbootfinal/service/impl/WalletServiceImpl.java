@@ -34,6 +34,9 @@ public class WalletServiceImpl implements WalletService {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException(" i can not found this customer order"));
         Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
+        if (wallet==null){
+            throw new NotFoundException("i can not found this wallet");
+        }
         Double creditAmount = wallet.getCreditAmount();
         Double price = customerOrder.getSubService().getPrice();
         Double seventyPercentPrice = price * 0.7;
@@ -41,6 +44,9 @@ public class WalletServiceImpl implements WalletService {
             throw new NotEnoughCreditException("you dont have enough credit");
         } else {
             Double newCredit = creditAmount - price;
+            if (newCredit<0){
+                throw new NotEnoughCreditException("you do not have enough credit to pay");
+            }
             wallet.setCreditAmount(newCredit);
             customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
             Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));
@@ -57,8 +63,14 @@ public class WalletServiceImpl implements WalletService {
         Double price = customerOrder.getSubService().getPrice();
         Double seventyPercentPrice = price * 0.7;
         Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
+        if (wallet==null){
+            throw new NotFoundException("i can not found this wallet");
+        }
         Double creditAmount = wallet.getCreditAmount();
         Double newCredit = creditAmount - price;
+        if (newCredit<0){
+            throw new NotEnoughCreditException("you do not have enough credit to pay");
+        }
         wallet.setCreditAmount(newCredit);
         customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
         Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));

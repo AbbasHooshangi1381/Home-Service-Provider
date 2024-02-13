@@ -51,9 +51,9 @@ public class AdminController {
             BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
-    @PutMapping("/changePassword/{id}/{newPassword}")
-    public ResponseEntity<String> changePassword( @PathVariable Integer id, @PathVariable String newPassword) {
-      adminService.changePassword(id, newPassword);
+    @PutMapping("/changePassword/{oldPassword}/{newPassword}")
+    public ResponseEntity<String> changePassword( @PathVariable String oldPassword, @PathVariable String newPassword) {
+      adminService.changePassword(oldPassword, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }
 }

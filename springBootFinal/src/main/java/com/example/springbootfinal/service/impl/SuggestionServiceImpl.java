@@ -63,6 +63,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             customerOrderRepository.save(customerOrder);
         }
     }
+
     @Override
     public List<CustomerOrder> customerOrderList() {
         List<CustomerOrder> all = customerOrderRepository.findAll();
@@ -76,11 +77,12 @@ public class SuggestionServiceImpl implements SuggestionService {
         }
         return filteredOrders;
     }
+
     @Override
-    public List<Suggestion> findAllPriceByCustomerId(Integer customerId) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Could not find the customer order"));
-         Customer customer = customerOrder.getCustomer();
-        List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.showCustomerOrderOfSpecificCustomerBasedOnPriceOfSuggestions(customer);
+    public List<Suggestion> showSuggestionOrderByPriceOfSuggestions(Integer customerOrderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("Could not find the customer order"));
+        Customer customer = customerOrder.getCustomer();
+        List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.showSuggestionOrderByPriceOfSuggestion(customer);
         if (byCustomerOrderIdOrderByProposedPriceDesc.isEmpty()) {
             throw new NotFoundException("I cannot find suggestions for this customer order");
         } else {
@@ -89,5 +91,21 @@ public class SuggestionServiceImpl implements SuggestionService {
             }
         }
         return byCustomerOrderIdOrderByProposedPriceDesc;
+    }
+    @Override
+    public List<Suggestion> showSuggestionOrderByExpertStars(Integer customerOrderId) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
+        Customer customer = customerOrder.getCustomer();
+        final List<Suggestion> expertsByOrderIdOrderByStarDesc =
+                expertRepository.findExpertsByOrderIdOrderByStarDesc(customer);
+        if (expertsByOrderIdOrderByStarDesc.isEmpty()) {
+            throw new NotFoundException("i can not find this customer order");
+        } else {
+            for (Suggestion suggestion : expertsByOrderIdOrderByStarDesc) {
+                System.out.println(suggestion);
+                break;
+            }
+        }
+        return expertsByOrderIdOrderByStarDesc;
     }
 }

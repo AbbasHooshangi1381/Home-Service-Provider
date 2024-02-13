@@ -5,6 +5,7 @@ import com.example.springbootfinal.domain.other.Comments;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.CommentsRepository;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
@@ -29,8 +30,12 @@ public class CommentServiceImpl implements CommentService {
     ExpertRepository expertRepository;
 
     @Override
-    public Comments writCommentForExpert(Integer customerOrderId, Integer expertId, String comments, Integer star) {
+    public void writCommentForExpert(Integer customerOrderId, Integer expertId, String comments, Integer star) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("I cannot find this customerOrder"));
+        boolean present = commentsRepository.findByComments(comments).isPresent();
+        if (present) {
+            throw new DuplicateException("you added descriptions in previous");
+        }
         Customer customer = customerOrder.getCustomer();
         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("I cannot find this expert"));
         if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)) {
@@ -40,10 +45,8 @@ public class CommentServiceImpl implements CommentService {
             expert.setStars(star);
             commentsRepository.save(comment);
             expertRepository.save(expert);
-            return comment;
         } else {
             System.out.println("You cannot write comments");
-            return null;
         }
     }
 }
