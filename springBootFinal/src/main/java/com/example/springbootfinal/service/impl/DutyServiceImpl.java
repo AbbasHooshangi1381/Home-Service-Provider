@@ -1,13 +1,11 @@
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.serviceEntity.Duty;
-import com.example.springbootfinal.domain.serviceEntity.SubDuty;
-import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.service.DutyService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,15 +17,15 @@ public class DutyServiceImpl implements DutyService {
     }
     @Override
     public Duty saveServiceByAdmin(String dutyName) {
-         Optional<Duty> byName = dutyRepository.findByName(dutyName);
-        if (byName.isPresent()) {
-            System.out.println("i have this service");
-            return null;
+         boolean present = dutyRepository.findByName(dutyName).isPresent();
+        if (present) {
+            throw  new DuplicateException("i have this service");
         } else {
             Duty duty = new Duty(dutyName);
             dutyRepository.save(duty);
             System.out.println("service added to data base ! ");
             return duty;
         }
+
     }
 }

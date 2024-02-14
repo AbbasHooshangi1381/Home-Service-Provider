@@ -18,5 +18,8 @@ public interface SubDutyRepository extends JpaRepository<SubDuty, Integer> {
     @Query("SELECT s FROM SubDuty s WHERE s.service.name = :serviceName")
     List<SubDuty> findSubDutyByServiceName(@Param("serviceName") String serviceName);
 
+    Optional<SubDuty>findByDescription(String description);
+    Optional<SubDuty>findByPrice(Double price);
+
 
 }

@@ -22,10 +22,8 @@ public class CardRequestDto {
     private String month;
 
     private String year;
-
+    @Pattern(regexp = "^\\d{4}$", message = "Please enter 4 number")
     private String password;
-
-    private Integer customerId;
 
 
 }

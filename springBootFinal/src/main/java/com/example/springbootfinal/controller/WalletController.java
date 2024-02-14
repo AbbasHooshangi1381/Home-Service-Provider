@@ -1,6 +1,7 @@
 package com.example.springbootfinal.controller;
 
 import com.example.springbootfinal.dto.Expert.SendOfferRequestDto;
+import com.example.springbootfinal.dto.card.CardRequestDto;
 import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.WalletService;
 import jakarta.validation.Valid;
@@ -30,8 +31,9 @@ public class WalletController {
             return ResponseEntity.ok("send");
     }
     @PutMapping("/payByCard")
-    public ResponseEntity<String> payByCard() {
-        walletService.payByCard(902,652);
+    @CrossOrigin
+    public ResponseEntity<String> payByCard( @RequestBody CardRequestDto cardRequestDto) {
+        walletService.payByCard(952,855);
         return ResponseEntity.ok("paid!");
     }
 }

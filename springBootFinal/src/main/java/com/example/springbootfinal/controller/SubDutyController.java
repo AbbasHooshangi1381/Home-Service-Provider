@@ -51,9 +51,9 @@ public class SubDutyController {
         subDutyService.registerExpertInOneSubDuty(expertId, subServiceId);
         return ResponseEntity.ok("Expert with ID " + expertId + " added to SubService with ID " + subServiceId);
     }
-    @PutMapping("/deleteExpertInSubDutyField/{subServiceId}")
-    public ResponseEntity<String> deleteExpertInSubDutyField( @PathVariable Integer subServiceId){
-        subDutyService.deleteExpertInSubDutyField(subServiceId);
+    @PutMapping("/deleteExpertInSubDutyField/{subServiceId}/{expertId}")
+    public ResponseEntity<String> deleteExpertInSubDutyField( @PathVariable Integer subServiceId,@PathVariable Integer expertId){
+        subDutyService.deleteExpertInSubDutyField(subServiceId,expertId);
         return ResponseEntity.ok(" subDuty with ID"+subServiceId+"has deleted ");
     }
 }

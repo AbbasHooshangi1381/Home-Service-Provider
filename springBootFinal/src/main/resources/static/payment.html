@@ -31,29 +31,36 @@
                         <div class="rounded-bottom" style="background-color: darkkhaki;">
                             <div class="card-body">
                                 <p class="mb-4">Your payment details</p>
-
                                 <div class="form-outline mb-3">
-                                    <input type="text" id="cardNumber" class="form-control" placeholder="1234567812345678"/>
+                                    <input type="text" id="cardNumber" class="form-control"
+                                           placeholder="1234567812345678"/>
                                     <label class="form-label" for="cardNumber">Card Number</label>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="form-outline">
-                                        <input type="password" maxlength="6" minlength="3" id="cvv" class="form-control" placeholder="Cvv2"/>
+                                        <input type="password" id="cvv" class="form-control"
+                                               placeholder="Cvv2"/>
                                         <label class="form-label" for="cvv">CVV</label>
                                         <input type="text" id="mm" class="form-control" placeholder="MM"/>
                                         <label class="form-label" for="mm">Month</label>
                                         <input type="text" id="yy" class="form-control" placeholder="YY"/>
                                         <label class="form-label" for="yy">Year</label>
-                                        <input type="password" maxlength="8" minlength="4" id="password" class="form-control" placeholder="Password"/>
+                                        <input type="password" id="password"
+                                               class="form-control" placeholder="Password"/>
                                         <label class="form-label" for="password">Password</label>
-                                        <input type="text" id="captchaLoad" class="form-control" placeholder="Enter captcha" disabled/>
+
+                                        <input type="text" id="captchaLoad" class="form-control"
+                                               placeholder="Enter captcha" disabled/>
                                         <label class="form-label" for="captchaLoad">LOADED CAPTCHA</label>
-                                        <input type="text" id="captcha" class="form-control" placeholder="Enter captcha" required/>
+                                        <input type="text" id="captcha" class="form-control" placeholder="Enter captcha"
+                                               required/>
                                         <label class="form-label" for="captcha">CAPTCHA</label>
                                     </div>
                                 </div>
-                                <button type="submit" value="submit" id="submit" class="btn btn-info btn-block">Pay now</button>
+                                <button type="submit" value="submit" id="submit" class="btn btn-info btn-block">Pay
+                                    now
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -78,14 +85,13 @@
     document.getElementById('submit').addEventListener('click', function (event) {
         event.preventDefault();
         const data = {
+            "captchaAnswer": document.getElementById("captcha").value,
             "bankAccountNumber": document.getElementById("cardNumber").value,
             "cvv2": document.getElementById("cvv").value,
             "month": document.getElementById("mm").value,
             "year": document.getElementById("yy").value,
             "password": document.getElementById("password").value,
-            "captchaAnswer": document.getElementById("captcha").value,
-        };
-
+        }
         fetch('http://localhost:8088/api/verify-captcha', {
             method: 'POST',
             headers: {
@@ -93,6 +99,19 @@
             },
             body: JSON.stringify({captchaAnswer: data.captchaAnswer})
         })
+/*            .then(response => {
+                if (response.ok) {
+                    return fetch('http://localhost:8088/card/saveCard', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(paymentData)
+                    });
+                } else {
+                    throw new Error("Invalid CAPTCHA");
+                }
+            })*/
             .then(response => {
                 if (response.ok) {
                     return fetch('http://localhost:8088/wallet/payByCard', {
@@ -100,10 +119,16 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify({
+                            bankAccountNumber: data.bankAccountNumber,
+                            cvv2: data.cvv2,
+                            year: data.year,
+                            month: data.month,
+                            password: data.password
+                        })
                     });
                 } else {
-                    throw new Error("Invalid CAPTCHA");
+                    throw new Error('Failed to save card');
                 }
             })
             .then(response => {
@@ -121,7 +146,7 @@
     var deadline = new Date();
     deadline.setMinutes(deadline.getMinutes() + 10);
 
-    var x = setInterval(function() {
+    var x = setInterval(function () {
         var now = new Date().getTime();
         var distance = deadline - now;
 

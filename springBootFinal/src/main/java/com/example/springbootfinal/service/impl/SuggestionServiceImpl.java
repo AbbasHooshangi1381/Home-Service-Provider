@@ -95,9 +95,9 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public List<Suggestion> showSuggestionOrderByExpertStars(Integer customerOrderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
-        Customer customer = customerOrder.getCustomer();
-        final List<Suggestion> expertsByOrderIdOrderByStarDesc =
-                expertRepository.findExpertsByOrderIdOrderByStarDesc(customer);
+         Integer id = customerOrder.getCustomer().getId();
+        List<Suggestion> expertsByOrderIdOrderByStarDesc =
+                expertRepository.findExpertsByOrderIdOrderByStarDesc(id);
         if (expertsByOrderIdOrderByStarDesc.isEmpty()) {
             throw new NotFoundException("i can not find this customer order");
         } else {

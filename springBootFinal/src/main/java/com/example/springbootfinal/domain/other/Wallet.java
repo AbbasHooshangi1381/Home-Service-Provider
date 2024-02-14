@@ -30,4 +30,7 @@ public class Wallet extends BaseEntity<Integer> {
 
     @OneToOne(mappedBy = "wallet")
     Customer customer;
+
+    @OneToOne
+    Card card;
 }

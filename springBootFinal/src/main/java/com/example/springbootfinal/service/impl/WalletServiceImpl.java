@@ -5,6 +5,7 @@ import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Wallet;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
+import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotEnoughCreditException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
@@ -60,6 +61,9 @@ public class WalletServiceImpl implements WalletService {
     public void payByCard(Integer customerOrderId, Integer expertId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException(" i can not found this customer order"));
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.PAID)){
+            throw new DuplicateException("you paid in past !");
+        }
         Double price = customerOrder.getSubService().getPrice();
         Double seventyPercentPrice = price * 0.7;
         Wallet wallet = walletRepository.findCreditAmountByCustomerOrderId(customerOrderId);
@@ -75,8 +79,8 @@ public class WalletServiceImpl implements WalletService {
         customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
         Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));
         wallet1.setCreditAmount(seventyPercentPrice);
-        walletRepository.save(wallet);
-        walletRepository.save(wallet1);
-        customerOrderRepository.save(customerOrder);
+        walletRepository.saveAndFlush(wallet);
+        walletRepository.saveAndFlush(wallet1);
+        customerOrderRepository.saveAndFlush(customerOrder);
     }
 }

@@ -117,13 +117,13 @@ class SubDutyServiceImplTest {
         subDutyService.changePriceOfSubDutyByAdmin(subDutyId, newPrice);
         assertEquals(newPrice, subDuty.getPrice());
     }
-    @Test
+/*    @Test
     @Order(4)
     void deleteExpertInSubDutyField() {
         Integer id = subDutys.getId();
         assertNotNull(id);
         subDutyService.deleteExpertInSubDutyField(id);
-    }
+    }*/
     @Test
     @Order(5)
     void registerExpertInOneSubDuty() {

@@ -92,6 +92,10 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public Expert changePassword(String oldPassword, String newPassword) {
+         boolean present = expertRepository.findByPassword(newPassword).isPresent();
+        if (present){
+            throw new NotValidException(" you have this password in database");
+        }
         Expert expert = expertRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
         expert.setPassword(newPassword);
         return expert;
@@ -120,6 +124,7 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
+    @Transactional
     public void changeStatusOfOrderByCustomerToFinish(Integer suggestionId, String timeOfFinishingWork) {
         Suggestion suggestion = suggestionRepository.findById(suggestionId)
                 .orElseThrow(() -> new NotFoundException("i can not found this suggestion"));
@@ -135,14 +140,14 @@ public class ExpertServiceImpl implements ExpertService {
         LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (actualFinishTime.isAfter(expectedFinishTime)) {
             long delayHours = ChronoUnit.HOURS.between(expectedFinishTime, actualFinishTime);
-            int ratingReduction = (int) delayHours;
+            Integer ratingReduction = (int) delayHours;
             Expert expert = suggestion.getExpert();
             Integer currentRating = expert.getStars();
-            int updatedRating = Math.max(0, currentRating - ratingReduction);
+            Integer updatedRating = currentRating - ratingReduction;
             if (updatedRating <= 0) {
                 expert.setExpertStatus(ExpertStatus.NEW);
+                expert.setStars(updatedRating);
                 expertRepository.save(expert);
-                throw new NotValidException("your account is disabled");
             } else {
                 expert.setStars(updatedRating);
                 expertRepository.save(expert);
@@ -178,6 +183,8 @@ public class ExpertServiceImpl implements ExpertService {
 
         return expertRepository.findAll(specification);
     }
+
+
 
     public List<Expert> findExpertByStar(Map<String, String> params) {
 

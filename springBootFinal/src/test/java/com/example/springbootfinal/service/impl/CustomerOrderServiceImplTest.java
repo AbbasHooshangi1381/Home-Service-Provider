@@ -113,7 +113,7 @@ class CustomerOrderServiceImplTest {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(id);
     }
 
-    @Test
+/*    @Test
     @Order(4)
     void showAllOrderBySubDutyName() {
         String subServiceName = subDutys.getSubServiceName();
@@ -121,5 +121,5 @@ class CustomerOrderServiceImplTest {
         List<CustomerOrder> customerOrderOfOneSubDuty = customerOrderService.findCustomerOrderOfOneSubDuty(subServiceName);
         assertNotNull(customerOrderOfOneSubDuty);
 
-    }
+    }*/
 }

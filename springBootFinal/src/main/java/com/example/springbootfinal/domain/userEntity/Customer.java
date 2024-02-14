@@ -34,9 +34,6 @@ public class Customer extends BaseUser {
     @ManyToOne
     Admin admin;
 
-    @OneToMany(mappedBy = "customer")
-    List<Card>cardList;
-
     public Customer(String firstName, String lastName, String email, String userName,
                     String password, LocalDate dateOfSigningIn, Wallet wallet) {
         super(firstName, lastName, email, userName, password, dateOfSigningIn);

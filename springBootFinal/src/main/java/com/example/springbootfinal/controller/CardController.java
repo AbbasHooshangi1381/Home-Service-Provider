@@ -28,8 +28,8 @@ public class CardController {
                 ,cardRequestDto.getCvv2(),
                 cardRequestDto.getMonth(),
                 cardRequestDto.getPassword(),
-                cardRequestDto.getYear(),
-                cardRequestDto.getCustomerId());
+                cardRequestDto.getYear()
+                );
 
         return ResponseEntity.status(HttpStatus.CREATED).body("card saved!");
     }

@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface BaseUserService {
-    List<Expert> findAllExpertByCriteria(Map<String, String> param);
-    List<Customer> findAllCustomersByCriteria(Map<String, String> param);
+
 }

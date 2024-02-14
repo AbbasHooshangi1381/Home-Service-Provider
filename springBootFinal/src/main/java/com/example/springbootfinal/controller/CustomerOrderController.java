@@ -49,7 +49,7 @@ public class CustomerOrderController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}/change-status")
+    @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}")
     public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome( @PathVariable Integer orderId) {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");

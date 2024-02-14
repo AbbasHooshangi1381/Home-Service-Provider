@@ -5,6 +5,7 @@ import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.WalletRepository;
@@ -49,7 +50,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
     @Override
     public String changePassword(String oldPassword,String newPassword) {
-         Customer customer = customerRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
+         boolean present = customerRepository.findByPassword(newPassword).isPresent();
+        if (present){
+            throw new NotValidException(" you have this password in database");
+        }
+        Customer customer = customerRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
+
         customer.setPassword(newPassword);
         return "you changed the password";
     }

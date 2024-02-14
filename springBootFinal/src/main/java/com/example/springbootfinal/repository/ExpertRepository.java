@@ -20,6 +20,6 @@ public interface ExpertRepository extends JpaRepository<Expert,Integer>,JpaSpeci
      Optional<Expert> findByUserNameAndPassword(String username, String password);
      Optional<Expert> findByPassword(String password);
 
-     @Query("SELECT s FROM Suggestion s WHERE s.customerOrder.customer= :customer ORDER BY s.expert.stars DESC ")
-     List<Suggestion> findExpertsByOrderIdOrderByStarDesc(@Param("customer") Customer customer);
+     @Query("SELECT s FROM Suggestion s WHERE s.customerOrder.customer.id= :customerId ORDER BY s.expert.stars DESC ")
+     List<Suggestion> findExpertsByOrderIdOrderByStarDesc(@Param("customerId") Integer customerId);
 }
