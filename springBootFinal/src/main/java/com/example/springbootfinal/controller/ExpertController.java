@@ -1,12 +1,16 @@
 package com.example.springbootfinal.controller;
 
+import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
 import com.example.springbootfinal.dto.Expert.ExpertSaveDto;
+import com.example.springbootfinal.dto.Expert.SendOfferRequestDto;
 import com.example.springbootfinal.repository.ExpertRepository;
+import com.example.springbootfinal.service.CustomerOrderService;
 import com.example.springbootfinal.service.ExpertService;
+import com.example.springbootfinal.service.SuggestionService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +35,10 @@ public class ExpertController {
     ExpertRepository expertRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    CustomerOrderService customerOrderService;
+    @Autowired
+    SuggestionService suggestionService;
 
     @PostMapping("/register-Expert")
     public ResponseEntity<BaseResponseDto> saveExpert(@Valid @RequestBody ExpertSaveDto expertSaveDto) throws IOException {
@@ -100,6 +109,29 @@ public class ExpertController {
                 .map(expert -> modelMapper.map(expert, CriteriaSearchDto.class))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(criteriaSearchDtoList);
+    }
+
+    ////////////////////////////////////////////////
+    @GetMapping("/findOrdersOfExpertSubDuties/{expertId}")
+    public ResponseEntity<List<CustomerOrder>> findOrdersOfExpertSubDuties(@PathVariable Integer expertId) {
+        List<CustomerOrder> ordersByExpertId = customerOrderService.findOrdersByExpertId(expertId);
+        return ResponseEntity.ok(ordersByExpertId);
+    }
+
+    @PostMapping("/sendOffer")
+    public ResponseEntity<String> sendOfferForSubDuty(@Valid @RequestBody SendOfferRequestDto request) throws SQLException {
+        suggestionService.sendOfferForSubDuty(request.getExpertId(), request.getCustomerOrderId(),
+                request.getSuggestionPrice(), request.getTimeOfWork(),request.getDurationTimeOfWork());
+        return ResponseEntity.ok("send");
+    }
+    @GetMapping("/cusromerOrderList")
+    public ResponseEntity<List<CustomerOrder>> getCustomerOrderList() {
+        List<CustomerOrder> customerOrders = suggestionService.customerOrderList();
+        if (!customerOrders.isEmpty()) {
+            return ResponseEntity.ok(customerOrders);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,10 +34,13 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerOrderRepository customerOrderRepository;
     @Autowired
     WalletRepository walletRepository;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public Customer saveCustomer(String firstName, String lastName, String email, String userName) {
         String password = generateRandomPassword();
+        String hashCode=passwordEncoder.encode(password);
         LocalDate timeOfSignIn = LocalDate.now();
          Optional<Customer> byEmail = customerRepository.findByEmail(email);
         if (byEmail.isPresent()) {
@@ -44,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         Wallet wallet = new Wallet(500.00);
         Wallet save = walletRepository.save(wallet);
-        Customer customer = new Customer(firstName, lastName, email, userName, password, timeOfSignIn, save);
+        Customer customer = new Customer(firstName, lastName, email, userName, hashCode, timeOfSignIn, save);
         customerRepository.save(customer);
         return customer;
     }

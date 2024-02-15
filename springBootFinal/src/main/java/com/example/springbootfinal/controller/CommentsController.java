@@ -28,10 +28,10 @@ public class CommentsController {
     @Autowired
     CommentsRepository commentsRepository;
 
-    @PostMapping("/register-comments")
+/*    @PostMapping("/register-comments")
     public ResponseEntity<Integer> saveComments(@Valid @RequestBody CommentsRequestDto commentsRequestDto) {
         commentService.writCommentForExpert(commentsRequestDto.getCustomerOrderId(), commentsRequestDto.getExpertId(),
                 commentsRequestDto.getComments(), commentsRequestDto.getStar());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentsRequestDto.getStar());
-    }
+    }*/
 }

@@ -11,6 +11,7 @@ import com.example.springbootfinal.repository.DutyRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.AdminService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,23 +32,27 @@ public class AdminServiceImpl implements AdminService {
     DutyRepository dutyRepository;
     SubDutyRepository subDutyRepository;
     ExpertRepository expertRepository;
+    BCryptPasswordEncoder passwordEncoder;
 
     public AdminServiceImpl(AdminRepository adminRepository, DutyRepository dutyRepository,
-                            SubDutyRepository subDutyRepository, ExpertRepository expertRepository) {
+                            SubDutyRepository subDutyRepository, ExpertRepository expertRepository,BCryptPasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
         this.dutyRepository = dutyRepository;
         this.subDutyRepository = subDutyRepository;
         this.expertRepository = expertRepository;
+        this.passwordEncoder=passwordEncoder;
     }
 
     @Override
     public Admin saveAdmin(String firstName, String lastName, String email, String userName) {
         String password = generateRandomPassword();
+        String hashCode=passwordEncoder.encode(password);
+
         LocalDate timeOfSignIn = LocalDate.now();
         if (adminRepository.existsByEmail(email)) {
             throw new DuplicateException("ایمیل تکراری است.");
         }
-        Admin admin = new Admin(firstName, lastName, email, userName, password, timeOfSignIn);
+        Admin admin = new Admin(firstName, lastName, email, userName, hashCode, timeOfSignIn);
         adminRepository.save(admin);
         return admin;
     }

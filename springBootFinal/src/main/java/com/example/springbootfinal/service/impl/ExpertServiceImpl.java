@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -50,10 +51,14 @@ public class ExpertServiceImpl implements ExpertService {
     SuggestionRepository suggestionRepository;
     @Autowired
     WalletRepository walletRepository;
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public Expert saveExpert(String firstName, String lastName, String email, String userName, String filePath) throws IOException {
         String password = generateRandomPassword();
+        String hashCode=passwordEncoder.encode(password);
+
         boolean present = expertRepository.findByEmail(email).isPresent();
         if (present) {
             throw new DuplicateException("ایمیل تکراری است.");
@@ -65,7 +70,7 @@ public class ExpertServiceImpl implements ExpertService {
         Integer star = 0;
         LocalDate timeOfSignIn = LocalDate.now();
         Expert expertSave = new Expert(firstName, lastName, email,
-                userName, password, timeOfSignIn, imageData, star, expertStatus, save);
+                userName, hashCode, timeOfSignIn, imageData, star, expertStatus, save);
         return expertRepository.save(expertSave);
     }
 

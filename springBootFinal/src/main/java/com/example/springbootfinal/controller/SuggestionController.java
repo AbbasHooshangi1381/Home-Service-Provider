@@ -30,7 +30,7 @@ public class SuggestionController {
         this.suggestionService = suggestionService;
         this.modelMapper = modelMapper;
     }
-    @PostMapping("/sendOffer")
+/*    @PostMapping("/sendOffer")
     public ResponseEntity<String> sendOfferForSubDuty(@Valid @RequestBody SendOfferRequestDto request) throws SQLException {
             suggestionService.sendOfferForSubDuty(request.getExpertId(), request.getCustomerOrderId(),
                     request.getSuggestionPrice(), request.getTimeOfWork(),request.getDurationTimeOfWork());
@@ -44,8 +44,8 @@ public class SuggestionController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-    @GetMapping("/showSuggestionByPrice/{customerOrderId}")
+    }*/
+/*    @GetMapping("/showSuggestionByPrice/{customerOrderId}")
     public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc( @PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.showSuggestionOrderByPriceOfSuggestions(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
@@ -54,5 +54,5 @@ public class SuggestionController {
     public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.showSuggestionOrderByExpertStars(customerOrderId);
         return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
-    }
+    }*/
 }

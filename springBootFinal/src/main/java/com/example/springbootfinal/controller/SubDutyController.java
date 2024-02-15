@@ -23,7 +23,7 @@ public class SubDutyController {
         this.subDutyService = subDutyService;
         this.modelMapper=modelMapper;
     }
-    @PostMapping("/saveSubDuty")
+/*    @PostMapping("/saveSubDuty")
     public ResponseEntity<SubDutyResponseDto> saveSubDuty(@Valid @RequestBody SubDutySaveRequestDto subDutySaveDto) {
         Integer dutyId = subDutySaveDto.getDutyId();
         Double priceOfSubDuty = subDutySaveDto.getPriceOfSubDuty();
@@ -55,5 +55,5 @@ public class SubDutyController {
     public ResponseEntity<String> deleteExpertInSubDutyField( @PathVariable Integer subServiceId,@PathVariable Integer expertId){
         subDutyService.deleteExpertInSubDutyField(subServiceId,expertId);
         return ResponseEntity.ok(" subDuty with ID"+subServiceId+"has deleted ");
-    }
+    }*/
 }

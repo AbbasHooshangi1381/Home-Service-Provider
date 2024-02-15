@@ -23,7 +23,7 @@ public class DutyController {
         this.dutyRepository = dutyRepository;
         this.modelMapper = modelMapper;
     }
-    @PostMapping("saveDuty/{saveDuty}")
+/*    @PostMapping("saveDuty/{saveDuty}")
     public ResponseEntity<String> saveExpert(@PathVariable String saveDuty) {
         Duty duty = dutyService.saveServiceByAdmin(saveDuty);
 
@@ -32,5 +32,5 @@ public class DutyController {
         }
 
         return new ResponseEntity<>("saved!", HttpStatus.CREATED);
-    }
+    }*/
 }

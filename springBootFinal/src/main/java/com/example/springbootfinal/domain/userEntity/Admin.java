@@ -17,11 +17,9 @@ import java.util.List;
 public class Admin extends BaseUser {
 
     @OneToMany(mappedBy = "admin")
-   // @JoinColumn(name = "customer_id",referencedColumnName = "id")
     List<Customer> customerList;
 
     @OneToMany(mappedBy = "admin")
-   // @JoinColumn(name = "expert_id",referencedColumnName = "id")
     List<Expert> expertList;
 
 

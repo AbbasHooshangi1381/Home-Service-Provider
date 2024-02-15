@@ -21,7 +21,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 @Entity
-public class Expert extends BaseUser {
+public class Expert extends BaseUser  {
 
     @Lob
     //@Type(type = "org.hibernate.type.ImageType")

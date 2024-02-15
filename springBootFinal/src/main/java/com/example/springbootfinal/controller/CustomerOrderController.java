@@ -35,7 +35,7 @@ public class CustomerOrderController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/saveOrder")
+/*    @PostMapping("/saveOrder")
     public ResponseEntity<CustomerOrderResponseDto> saveOrder(@Valid @RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
         String descriptionOfOrder = customerOrderDto.getDescriptionOfOrder();
         Double proposedPrice = customerOrderDto.getProposedPrice();
@@ -53,11 +53,11 @@ public class CustomerOrderController {
     public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome( @PathVariable Integer orderId) {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
-    }
+    }*/
 
-    @GetMapping("/findOrdersOfExpertSubDuties/{expertId}")
+/*    @GetMapping("/findOrdersOfExpertSubDuties/{expertId}")
     public ResponseEntity<List<CustomerOrder>> findOrdersOfExpertSubDuties(@PathVariable Integer expertId) {
         List<CustomerOrder> ordersByExpertId = customerOrderService.findOrdersByExpertId(expertId);
         return ResponseEntity.ok(ordersByExpertId);
-    }
+    }*/
 }

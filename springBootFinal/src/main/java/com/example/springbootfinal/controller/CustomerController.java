@@ -1,7 +1,9 @@
 package com.example.springbootfinal.controller;
 
 
+import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
+import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.userEntity.Admin;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
@@ -9,16 +11,18 @@ import com.example.springbootfinal.dto.Admin.BaseChangePasswordDto;
 import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Admin.BaseSaveDto;
 import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
+import com.example.springbootfinal.dto.card.CardRequestDto;
+import com.example.springbootfinal.dto.comments.CommentsRequestDto;
 import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
 import com.example.springbootfinal.dto.customer.UserPassDto;
+import com.example.springbootfinal.dto.customerOrder.CustomerOrderDTO;
+import com.example.springbootfinal.dto.customerOrder.CustomerOrderResponseDto;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SubDutyRepository;
-import com.example.springbootfinal.service.AdminService;
-import com.example.springbootfinal.service.CustomerOrderService;
-import com.example.springbootfinal.service.CustomerService;
+import com.example.springbootfinal.service.*;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +40,15 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerOrderService customerOrderService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    CommentService commentService;
+    @Autowired
+    SuggestionService suggestionService;
+    @Autowired
+    WalletService walletService;
 
     @PostMapping("/register-user")
     public ResponseEntity<BaseResponseDto> saveCustomer(@Valid @RequestBody BaseSaveDto adminSaveDto) {
@@ -68,6 +78,55 @@ public class CustomerController {
             criteriaSearchDtoOfCustomerList.add(map);
         }
         return criteriaSearchDtoOfCustomerList;
+    }
+    //////////////////////////////////////////////////////////////////
+    @PostMapping("/register-comments")
+    public ResponseEntity<Integer> saveComments(@Valid @RequestBody CommentsRequestDto commentsRequestDto) {
+        commentService.writCommentForExpert(commentsRequestDto.getCustomerOrderId(), commentsRequestDto.getExpertId(),
+                commentsRequestDto.getComments(), commentsRequestDto.getStar());
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentsRequestDto.getStar());
+    }
+    @PostMapping("/saveOrder")
+    public ResponseEntity<CustomerOrderResponseDto> saveOrder(@Valid @RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
+        String descriptionOfOrder = customerOrderDto.getDescriptionOfOrder();
+        Double proposedPrice = customerOrderDto.getProposedPrice();
+        String timeOfWork = customerOrderDto.getTimeOfWork();
+        String address = customerOrderDto.getAddress();
+        StatusOfOrder statusOfOrder = customerOrderDto.getStatusOfOrder();
+        Integer customerId = customerOrderDto.getCustomerId();
+        Integer subDutyId = customerOrderDto.getSubDutyId();
+        CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, statusOfOrder, customerId, subDutyId);
+        CustomerOrderResponseDto responseDto = modelMapper.map(customerOrder,CustomerOrderResponseDto.class);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}")
+    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome( @PathVariable Integer orderId) {
+        customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
+        return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
+    }
+
+    @GetMapping("/showSuggestionByPrice/{customerOrderId}")
+    public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@PathVariable Integer customerOrderId) {
+        List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.showSuggestionOrderByPriceOfSuggestions(customerOrderId);
+        return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
+    }
+    @GetMapping("/showSuggestionsByExpertStar/{customerOrderId}")
+    public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
+        List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.showSuggestionOrderByExpertStars(customerOrderId);
+        return ResponseEntity.ok(byCustomerOrderIdOrderByExpertStarsDesc);
+    }
+
+    @PutMapping("/payByCreditOfAccount/{customerOrderId}/{expertId}")
+    public ResponseEntity<String> payByCreditOfAccount( @PathVariable Integer customerOrderId, @PathVariable Integer expertId) {
+        walletService.payByCreditOfAccount(customerOrderId,expertId);
+        return ResponseEntity.ok("send");
+    }
+    @PutMapping("/payByCard")
+    @CrossOrigin
+    public ResponseEntity<String> payByCard( @RequestBody CardRequestDto cardRequestDto) {
+        walletService.payByCard(952,855);
+        return ResponseEntity.ok("paid!");
     }
 }
 
