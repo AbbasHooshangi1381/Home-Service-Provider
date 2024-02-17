@@ -11,23 +11,20 @@ import com.example.springbootfinal.repository.CommentsRepository;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.CommentService;
-import com.example.springbootfinal.service.CustomerOrderService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    @Autowired
-    CustomerOrderService customerOrderService;
-    @Autowired
     CustomerOrderRepository customerOrderRepository;
-    @Autowired
-    ModelMapper modelMapper;
-    @Autowired
     CommentsRepository commentsRepository;
-    @Autowired
     ExpertRepository expertRepository;
+
+    public CommentServiceImpl(CustomerOrderRepository customerOrderRepository,
+                              CommentsRepository commentsRepository, ExpertRepository expertRepository) {
+        this.customerOrderRepository = customerOrderRepository;
+        this.commentsRepository = commentsRepository;
+        this.expertRepository = expertRepository;
+    }
 
     @Override
     public void writCommentForExpert(Integer customerOrderId, Integer expertId, String comments, Integer star) {

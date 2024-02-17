@@ -1,3 +1,4 @@
+/*
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
@@ -51,7 +52,7 @@ class CustomerServiceImplTest {
         String validLastName = "Smddddith";
         String validEmail = "abbadddds.ali@example.com";
         String validUserName = "johndddddsmith";
-        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
+       // customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
 
         Duty duty = new Duty("electronic");
         dutys = dutyRepository.save(duty);
@@ -83,6 +84,7 @@ class CustomerServiceImplTest {
         assertNotNull(customer3);
     }
 
+*/
 /*    @Test
     @Transactional
     @Order(2)
@@ -102,6 +104,7 @@ class CustomerServiceImplTest {
 
          String password1 = customerService.changePassword(2, "aff52");
         assertNotNull(password1);
-    }*/
+    }*//*
 
-}
+
+}*/

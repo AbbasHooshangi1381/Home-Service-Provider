@@ -1,4 +1,4 @@
-package com.example.springbootfinal.dto.Admin;
+package com.example.springbootfinal.registeration;
 
 import com.example.springbootfinal.domain.enumurations.Role;
 import jakarta.persistence.EnumType;
@@ -10,13 +10,13 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PUBLIC)
 @ToString
-public class BaseSaveDto {
+public class RegistrationRequest {
     @NotBlank
     @Size(min = 2, max = 50)
     private String firstName;
@@ -36,6 +36,4 @@ public class BaseSaveDto {
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$",message = "your password is not valid")
     private String password;
-
-
 }

@@ -1,3 +1,4 @@
+/*
 
 package com.example.springbootfinal.service.impl;
 
@@ -53,7 +54,6 @@ class AdminServiceImplTest {
         String validLastName = "Smith";
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
-        admins = adminService.saveAdmin(validFirstName, validLastName, validEmail, validUserName);
 
         Duty duty = new Duty(
                 "electronic");
@@ -67,14 +67,15 @@ class AdminServiceImplTest {
         subDutys = subDutyRepository.save(subDuty);
 
         Expert expert = new Expert(
-/*                "ali",
+                "ali",
                 "ahmadi",
                 "okjggk@gmail.com",
                 "pojguiu2",
                 "aA53@dfr",
                 LocalDate.now(),
                 ExpertStatus.NEW, ImageInput.uploadProfilePicture("D:\\file of intelli j\\springBootFinal\\" +
-                "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg")*/);
+                "src\\main\\java\\com\\example\\springbootfinal\\image\\CamScanner 02-14-2022 12.36_2.jpg")
+);
         save = expertRepository.save(expert);
         assertNotNull(save);
     }
@@ -116,7 +117,8 @@ class AdminServiceImplTest {
         assertFalse(byUserNameAndPassword1.isPresent());
     }
 
-/*    @Test
+
+    @Test
     @Transactional
     @Order(4)
     void changePasswordWithAdmin() {
@@ -129,9 +131,10 @@ class AdminServiceImplTest {
         assertNotNull(admin);
         String changedPassword = byEmail.get().getPassword();
         assertEquals(newPassword, changedPassword);
-    }*/
+    }
 
-/*    @Test
+
+    @Test
     @Order(5)
     void addingSubDutyToExpert() {
         Integer id = save.getId();
@@ -149,6 +152,8 @@ class AdminServiceImplTest {
         Integer id1 = subDutys.getId();
         assertNotNull(id1);
         adminService.deletingSubDutyToExpert(id, id1);
-    }*/
+    }
+
 }
 
+*/

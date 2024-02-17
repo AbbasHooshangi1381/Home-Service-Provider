@@ -1,5 +1,6 @@
 package com.example.springbootfinal.domain.userEntity;
 
+import com.example.springbootfinal.domain.enumurations.Role;
 import com.example.springbootfinal.domain.other.Card;
 import com.example.springbootfinal.domain.other.Comments;
 import com.example.springbootfinal.domain.other.CustomerOrder;
@@ -34,9 +35,17 @@ public class Customer extends BaseUser {
     @ManyToOne
     Admin admin;
 
+
     public Customer(String firstName, String lastName, String email, String userName,
-                    String password, LocalDate dateOfSigningIn, Wallet wallet) {
-        super(firstName, lastName, email, userName, password, dateOfSigningIn);
+                    String password, LocalDate dateOfSigningIn, Wallet wallet, Boolean enabled, Role role) {
+        super(firstName, lastName, email, userName, password, dateOfSigningIn,enabled,role);
         this.wallet = wallet;
+    }
+
+
+
+    @Override
+    public boolean isEnabled() {
+        return super.isEnabled();
     }
 }

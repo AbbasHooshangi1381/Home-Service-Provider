@@ -9,15 +9,11 @@ import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.SubDutyService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,16 +21,22 @@ import java.util.Objects;
 @Transactional
 @SuppressWarnings("unused")
 public class SubDutyServiceImpl implements SubDutyService {
-    @Autowired
+
     DutyRepository dutyRepository;
-    @Autowired
     SubDutyRepository subDutyRepository;
-    @Autowired
     CustomerRepository customerRepository;
-    @Autowired
     CustomerOrderRepository customerOrderRepository;
-    @Autowired
     ExpertRepository expertRepository;
+
+    public SubDutyServiceImpl(DutyRepository dutyRepository, SubDutyRepository subDutyRepository,
+                              CustomerRepository customerRepository, CustomerOrderRepository customerOrderRepository,
+                              ExpertRepository expertRepository) {
+        this.dutyRepository = dutyRepository;
+        this.subDutyRepository = subDutyRepository;
+        this.customerRepository = customerRepository;
+        this.customerOrderRepository = customerOrderRepository;
+        this.expertRepository = expertRepository;
+    }
 
     @Override
     public SubDuty saveSubDutyByAdmin(Integer dutyId, String subServiceName, Double priceOfSubDuty, String description) {
@@ -59,7 +61,8 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription) {
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
+                new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
         if (subDuty != null) {
              boolean present = subDutyRepository.findByDescription(newDescription).isPresent();
              if (present){
@@ -74,7 +77,8 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void changePriceOfSubDutyByAdmin(Integer subDutyId, Double newPrice) {
-        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
+                new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
         if (subDuty != null) {
              boolean present = subDutyRepository.findByPrice(newPrice).isPresent();
              if (present){
@@ -108,7 +112,8 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void deleteExpertInSubDutyField(Integer subDutyId, Integer expertId) {
-            SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() -> new NotFoundException("SubDuty with ID not found"));
+            SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
+                    new NotFoundException("SubDuty with ID not found"));
              List<Expert> experts = subDuty.getExperts();
         if (experts != null) {
             experts.removeIf(expert -> Objects.equals(expert.getId(), expertId));
@@ -128,10 +133,11 @@ public class SubDutyServiceImpl implements SubDutyService {
         return subDuties;
     }
 
-    public static String checkAndRegisterTimeOfLoan(String inputTime) throws SQLException {
+    public static String checkAndRegisterTimeOfLoan(String inputTime){
         //String inputTime = "1403-01-15 08:30:00";
         LocalDateTime currentTime = LocalDateTime.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        LocalDateTime firstStartDate = LocalDateTime.parse("1402-10-27 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime firstStartDate = LocalDateTime.parse("1402-10-27 00:00:00",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (currentTime.isAfter(firstStartDate)) {
             return inputTime;
         } else {
@@ -139,7 +145,7 @@ public class SubDutyServiceImpl implements SubDutyService {
         }
     }
 
-    public static String checkAndRegisterDurationTimeOfWork(String inputTime) throws SQLException {
+    public static String checkAndRegisterDurationTimeOfWork(String inputTime) {
         LocalTime currentTime = LocalTime.parse(inputTime, DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         if (currentTime.isBefore(LocalTime.of(7, 0)) || currentTime.isAfter(LocalTime.of(22, 0))) {

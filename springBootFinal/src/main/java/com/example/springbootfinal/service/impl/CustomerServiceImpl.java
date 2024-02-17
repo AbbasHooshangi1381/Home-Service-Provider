@@ -1,57 +1,30 @@
 package com.example.springbootfinal.service.impl;
-
-import com.example.springbootfinal.domain.other.Wallet;
 import com.example.springbootfinal.domain.userEntity.Customer;
-import com.example.springbootfinal.domain.userEntity.Expert;
-import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
-import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.CustomerRepository;
-import com.example.springbootfinal.repository.WalletRepository;
 import com.example.springbootfinal.service.CustomerService;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.springbootfinal.validation.Validation.generateRandomPassword;
-
 @Transactional
 @Service
+@SuppressWarnings("unused")
 public class CustomerServiceImpl implements CustomerService {
-    @Autowired
     CustomerRepository customerRepository;
-    @Autowired
-    CustomerOrderRepository customerOrderRepository;
-    @Autowired
-    WalletRepository walletRepository;
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
 
-    @Override
-    public Customer saveCustomer(String firstName, String lastName, String email, String userName) {
-        String password = generateRandomPassword();
-        String hashCode=passwordEncoder.encode(password);
-        LocalDate timeOfSignIn = LocalDate.now();
-         Optional<Customer> byEmail = customerRepository.findByEmail(email);
-        if (byEmail.isPresent()) {
-            throw new DuplicateException("ایمیل تکراری است.");
-        }
-        Wallet wallet = new Wallet(500.00);
-        Wallet save = walletRepository.save(wallet);
-        Customer customer = new Customer(firstName, lastName, email, userName, hashCode, timeOfSignIn, save);
-        customerRepository.save(customer);
-        return customer;
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
+
     @Override
     public String changePassword(String oldPassword,String newPassword) {
          boolean present = customerRepository.findByPassword(newPassword).isPresent();
@@ -87,6 +60,12 @@ public class CustomerServiceImpl implements CustomerService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
         return customerRepository.findAll(specification);
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return customerRepository.findByEmail(email).orElseThrow(()->new NotFoundException("i can not found this email!"));
     }
 }
 

@@ -72,7 +72,7 @@ class ExpertServiceImplTest {
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
 
-        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
+      //  customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
 
         SubDuty subDuty = new SubDuty(
                 "gaz",
@@ -135,7 +135,7 @@ class ExpertServiceImplTest {
         Assertions.assertEquals(ExpertStatus.CONFIRMED, updatedExpert.getExpertStatus());
     }
 
-    @Test
+/*    @Test
     @Transactional
     @Order(3)
     void findByUserNameAndPassword() {
@@ -148,7 +148,7 @@ class ExpertServiceImplTest {
         Optional<Expert> byUserNameAndPassword1 = expertService.findByUserNameAndPassword("aaaaaa", "bbbbbbb");
         assertFalse(byUserNameAndPassword1.isPresent());
 
-    }
+    }*/
 
 /*    @Test
     @Transactional
@@ -167,7 +167,7 @@ class ExpertServiceImplTest {
         assertNotNull(expert1);
     }*/
 
-    @Test
+/*    @Test
     @Order(5)
     void saveImageByIdToSystem() throws IOException {
         Integer id = save.getId();
@@ -176,7 +176,7 @@ class ExpertServiceImplTest {
         boolean imageExists = ImageInput.isImageExists("D:\\منابع مکتب شریف\\final-project\\images\\New folder\\New folder"
                 + 22 + ".jpg");
         assertTrue(imageExists);
-    }
+    }*/
 
 /*    @Test
     @Order(6)

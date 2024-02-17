@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,15 +41,6 @@ public class ExpertController {
     @Autowired
     SuggestionService suggestionService;
 
-    @PostMapping("/register-Expert")
-    public ResponseEntity<BaseResponseDto> saveExpert(@Valid @RequestBody ExpertSaveDto expertSaveDto) throws IOException {
-        Expert savedExpert = expertService.saveExpert(expertSaveDto.getFirstName(), expertSaveDto.getLastName(),
-                expertSaveDto.getEmail(), expertSaveDto.getUserName(), expertSaveDto.getFilePath());
-
-        BaseResponseDto map = modelMapper.map(savedExpert, BaseResponseDto.class);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(map);
-    }
 
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkExpert(@PathVariable String username, @PathVariable String password) {
@@ -102,6 +94,7 @@ public class ExpertController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(criteriaSearchDtoList);
     }
+
     @GetMapping("/findExpertsByStar")
     public ResponseEntity<List<CriteriaSearchDto>> findExpertsByStar(@RequestParam Map<String, String> params) {
         List<Expert> allExpertsByCriteria = expertService.findExpertByStar(params);
@@ -121,9 +114,10 @@ public class ExpertController {
     @PostMapping("/sendOffer")
     public ResponseEntity<String> sendOfferForSubDuty(@Valid @RequestBody SendOfferRequestDto request) throws SQLException {
         suggestionService.sendOfferForSubDuty(request.getExpertId(), request.getCustomerOrderId(),
-                request.getSuggestionPrice(), request.getTimeOfWork(),request.getDurationTimeOfWork());
+                request.getSuggestionPrice(), request.getTimeOfWork(), request.getDurationTimeOfWork());
         return ResponseEntity.ok("send");
     }
+
     @GetMapping("/cusromerOrderList")
     public ResponseEntity<List<CustomerOrder>> getCustomerOrderList() {
         List<CustomerOrder> customerOrders = suggestionService.customerOrderList();

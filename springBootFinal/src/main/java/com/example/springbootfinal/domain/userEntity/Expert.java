@@ -1,6 +1,7 @@
 package com.example.springbootfinal.domain.userEntity;
 
 import com.example.springbootfinal.domain.enumurations.ExpertStatus;
+import com.example.springbootfinal.domain.enumurations.Role;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.other.Wallet;
 
@@ -24,7 +25,6 @@ import java.util.List;
 public class Expert extends BaseUser  {
 
     @Lob
-    //@Type(type = "org.hibernate.type.ImageType")
     byte[] personalPhoto;
 
     @Max(5)
@@ -44,21 +44,24 @@ public class Expert extends BaseUser  {
     List<Suggestion>suggestionList;
 
     public Expert(String firstName, String lastName, String email, String userName, String password,
-                  LocalDate dateOfSigningIn, byte[] personalPhoto, Integer stars, ExpertStatus expertStatus,Wallet wallet) {
-        super(firstName, lastName, email, userName, password, dateOfSigningIn);
+                  LocalDate dateOfSigningIn, byte[] personalPhoto, Integer stars, ExpertStatus expertStatus,
+                  Wallet wallet,Boolean enabled,Role role) {
+        super(firstName, lastName, email, userName, password, dateOfSigningIn,enabled,role);
         this.personalPhoto = personalPhoto;
         this.stars = stars;
         this.expertStatus = expertStatus;
         this.wallet=wallet;
     }
     public Expert(String firstName, String lastName, String email, String userName, String password,
-                  LocalDate dateOfSigningIn,ExpertStatus expertStatus, byte[] personalPhoto) {
-        super(firstName, lastName, email, userName, password, dateOfSigningIn);
+                  LocalDate dateOfSigningIn, ExpertStatus expertStatus, byte[] personalPhoto, Boolean enabled, Role role) {
+        super(firstName, lastName, email, userName, password, dateOfSigningIn,enabled,role);
         this.expertStatus=expertStatus;
         this.personalPhoto=personalPhoto;
+    }
 
-
-
+    @Override
+    public boolean isEnabled() {
+        return super.isEnabled();
     }
 
 }

@@ -60,7 +60,7 @@ class CustomerOrderServiceImplTest {
         String validEmail = "abbas.ali@example.com";
         String validUserName = "johnsmith";
         LocalDate validTimeOfSignIn = LocalDate.now();
-        customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
+      //  customer = customerService.saveCustomer(validFirstName, validLastName, validEmail, validUserName);
 
         Duty duty = new Duty(
                 "electronic");

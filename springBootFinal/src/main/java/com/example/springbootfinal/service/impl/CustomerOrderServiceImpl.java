@@ -10,28 +10,32 @@ import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.CustomerOrderService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.springbootfinal.service.impl.SubDutyServiceImpl.checkAndRegisterTimeOfLoan;
 
 @Service
 @Transactional
+@SuppressWarnings("unused")
 public class CustomerOrderServiceImpl implements CustomerOrderService {
-    @Autowired
     CustomerRepository customerRepository;
-    @Autowired
     SubDutyRepository subDutyRepository;
-    @Autowired
     CustomerOrderRepository customerOrderRepository;
-    @Autowired
     DutyRepository dutyRepository;
-    @Autowired
     ExpertRepository expertRepository;
+
+    public CustomerOrderServiceImpl(CustomerRepository customerRepository, SubDutyRepository subDutyRepository,
+                                    CustomerOrderRepository customerOrderRepository, DutyRepository dutyRepository,
+                                    ExpertRepository expertRepository) {
+        this.customerRepository = customerRepository;
+        this.subDutyRepository = subDutyRepository;
+        this.customerOrderRepository = customerOrderRepository;
+        this.dutyRepository = dutyRepository;
+        this.expertRepository = expertRepository;
+    }
 
     @Override
     public CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
@@ -73,7 +77,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     public static Double validatePrice(Double proposedPrice, Double fixPrice) {
-        Double validatedPrice = null;
+        Double validatedPrice;
         if (proposedPrice >= fixPrice) {
             validatedPrice = proposedPrice;
         } else {

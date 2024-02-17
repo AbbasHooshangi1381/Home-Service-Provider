@@ -3,65 +3,48 @@ package com.example.springbootfinal.controller;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
-import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.*;
 import com.example.springbootfinal.dto.subDity.SubDutyResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutySaveRequestDto;
-import com.example.springbootfinal.exception.NotFoundException;
-import com.example.springbootfinal.repository.AdminRepository;
-import com.example.springbootfinal.repository.ExpertRepository;
-import com.example.springbootfinal.repository.SubDutyRepository;
 import com.example.springbootfinal.service.AdminService;
 import com.example.springbootfinal.service.DutyService;
 import com.example.springbootfinal.service.SubDutyService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/admin")
+@SuppressWarnings("unused")
 public class AdminController {
 
-    private AdminService adminService;
-    private AdminRepository adminRepository;
+    private final AdminService adminService;
     private final ModelMapper modelMapper;
-    private SubDutyRepository subDutyRepository;
-    private ExpertRepository expertRepository;
-    private DutyService dutyService;
-    private SubDutyService subDutyService;
+    private final DutyService dutyService;
+    private final SubDutyService subDutyService;
 
-    public AdminController(AdminService adminService, AdminRepository adminRepository,
-                           ModelMapper modelMapper, SubDutyRepository subDutyRepository, ExpertRepository expertRepository
-    ,DutyService dutyService,SubDutyService subDutyService) {
+    public AdminController(AdminService adminService,
+                           ModelMapper modelMapper
+    ,DutyService dutyService,SubDutyService subDutyService ) {
         this.adminService = adminService;
-        this.adminRepository = adminRepository;
         this.modelMapper = modelMapper;
-        this.subDutyRepository = subDutyRepository;
-        this.expertRepository = expertRepository;
         this.dutyService=dutyService;
         this.subDutyService=subDutyService;
     }
 
-    @PostMapping("/register-user")
-    public ResponseEntity<BaseResponseDto> saveAdmin(@Valid @RequestBody BaseSaveDto adminSaveDto) {
-        Admin savedAdmin = adminService.saveAdmin(adminSaveDto.getFirstName(), adminSaveDto.getLastName(),
-                adminSaveDto.getEmail(), adminSaveDto.getUserName());
-        BaseResponseDto adminResponseDto = modelMapper.map(savedAdmin, BaseResponseDto.class);
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminResponseDto);
-    }
+
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkAdmin( @PathVariable String username, @PathVariable String password) {
-        Admin admin = adminService.findByUserNameAndPassword(username, password).get();
+        Admin admin = adminService.findByUserNameAndPassword(username, password).orElseThrow();
+
             BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
             return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
     @PutMapping("/changePassword/{oldPassword}/{newPassword}")
     public ResponseEntity<String> changePassword( @PathVariable String oldPassword, @PathVariable String newPassword) {
+       // return SecurityContextHolder.getContext().getAuthentication().getName();
       adminService.changePassword(oldPassword, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }

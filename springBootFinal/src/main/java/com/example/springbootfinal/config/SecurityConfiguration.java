@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final BaseUserRepository baseUserRepository;
@@ -30,14 +29,15 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("admin/**").hasRole("ADMIN")
-                        .requestMatchers("/customer/**").hasAnyRole("CUSTOMER")
-                         .requestMatchers("/expert/**").hasRole("EXPERT")
-                        .anyRequest().permitAll())
-                .httpBasic(Customizer.withDefaults());
+                        .requestMatchers("/registration/**").permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
+                         .requestMatchers("/expert/**").hasAnyAuthority("EXPERT")
+                        .anyRequest().permitAll()).httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)

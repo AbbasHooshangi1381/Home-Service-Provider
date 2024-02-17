@@ -6,19 +6,14 @@ import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
-import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SuggestionRepository;
 import com.example.springbootfinal.service.SuggestionService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.springbootfinal.domain.enumurations.StatusOfOrder.WAITING_FOR_EXPERT_SUGGESTIONS;
@@ -31,20 +26,23 @@ import static com.example.springbootfinal.service.impl.SubDutyServiceImpl.checkA
 @Transactional
 public class SuggestionServiceImpl implements SuggestionService {
 
-    @Autowired
     SuggestionRepository suggestionRepository;
-    @Autowired
     ExpertRepository expertRepository;
-    @Autowired
-    CustomerRepository customerRepository;
-    @Autowired
     CustomerOrderRepository customerOrderRepository;
+
+    public SuggestionServiceImpl(SuggestionRepository suggestionRepository,
+                                 ExpertRepository expertRepository, CustomerOrderRepository customerOrderRepository) {
+        this.suggestionRepository = suggestionRepository;
+        this.expertRepository = expertRepository;
+        this.customerOrderRepository = customerOrderRepository;
+    }
 
     @Override
     public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, Double suggestionPrice, String timeOfWork
-            , String durationTimeOfWork) throws SQLException {
+            , String durationTimeOfWork) {
         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
+                new NotFoundException("i can not found ir !"));
         Suggestion suggestion = new Suggestion();
         if (expert != null) {
             Double fixPrice = customerOrder.getProposedPrice();
@@ -80,9 +78,11 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public List<Suggestion> showSuggestionOrderByPriceOfSuggestions(Integer customerOrderId) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() -> new NotFoundException("Could not find the customer order"));
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
+                new NotFoundException("Could not find the customer order"));
         Customer customer = customerOrder.getCustomer();
-        List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc = suggestionRepository.showSuggestionOrderByPriceOfSuggestion(customer);
+        List<Suggestion> byCustomerOrderIdOrderByProposedPriceDesc =
+                suggestionRepository.showSuggestionOrderByPriceOfSuggestion(customer);
         if (byCustomerOrderIdOrderByProposedPriceDesc.isEmpty()) {
             throw new NotFoundException("I cannot find suggestions for this customer order");
         } else {
@@ -94,7 +94,8 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
     @Override
     public List<Suggestion> showSuggestionOrderByExpertStars(Integer customerOrderId) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).get();
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(()->
+                new NotFoundException("I can not found this customer order !"));
          Integer id = customerOrder.getCustomer().getId();
         List<Suggestion> expertsByOrderIdOrderByStarDesc =
                 expertRepository.findExpertsByOrderIdOrderByStarDesc(id);

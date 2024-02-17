@@ -25,7 +25,6 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 public class BaseUser extends BaseEntity<Integer> implements UserDetails {
-    @Column(name = "firstName")
     String firstName;
     String lastName;
     String email;
@@ -34,9 +33,11 @@ public class BaseUser extends BaseEntity<Integer> implements UserDetails {
     LocalDate dateOfSigningIn;
     @Enumerated(EnumType.STRING)
     Role role;
+    Boolean enabled;
 
     public BaseUser(String firstName,
-                    String lastName, String email, String userName, String password, LocalDate dateOfSigningIn) {
+                    String lastName, String email, String userName, String password,
+                    LocalDate dateOfSigningIn, Boolean enabled,Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -47,6 +48,8 @@ public class BaseUser extends BaseEntity<Integer> implements UserDetails {
             this.password = password;
         }
         this.dateOfSigningIn = dateOfSigningIn;
+        this.enabled=enabled;
+        this.role=role;
     }
 
     private boolean isValidPassword(String password) {
@@ -61,7 +64,7 @@ public class BaseUser extends BaseEntity<Integer> implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return userName;
     }
 
     @Override
@@ -81,6 +84,11 @@ public class BaseUser extends BaseEntity<Integer> implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
 }

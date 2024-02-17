@@ -1,5 +1,6 @@
 package com.example.springbootfinal.domain.userEntity;
 
+import com.example.springbootfinal.domain.enumurations.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,10 +25,12 @@ public class Admin extends BaseUser {
 
 
     public Admin(String firstName, String lastName, String email, String userName,
-                 String password, LocalDate dateOfSigningIn) {
-        super(firstName, lastName, email, userName, password, dateOfSigningIn);
-
+                 String password, LocalDate dateOfSigningIn, Boolean enabled, Role role) {
+        super(firstName, lastName, email, userName, password, dateOfSigningIn,enabled,role);
     }
 
-
+    @Override
+    public boolean isEnabled() {
+        return super.isEnabled();
+    }
 }

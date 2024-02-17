@@ -4,27 +4,22 @@ import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
-import com.example.springbootfinal.domain.other.Wallet;
-import com.example.springbootfinal.domain.userEntity.Customer;
+
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
-import com.example.springbootfinal.image.ImageInput;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.ExpertService;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -34,45 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.springbootfinal.validation.Validation.generateRandomPassword;
-
 @Service
 @Transactional
-
 @SuppressWarnings("unused")
 public class ExpertServiceImpl implements ExpertService {
-    @Autowired
     ExpertRepository expertRepository;
-    @Autowired
     CustomerOrderRepository customerOrderRepository;
-    @Autowired
     SubDutyRepository subDutyRepository;
-    @Autowired
     SuggestionRepository suggestionRepository;
-    @Autowired
-    WalletRepository walletRepository;
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
-
-    @Override
-    public Expert saveExpert(String firstName, String lastName, String email, String userName, String filePath) throws IOException {
-        String password = generateRandomPassword();
-        String hashCode=passwordEncoder.encode(password);
-
-        boolean present = expertRepository.findByEmail(email).isPresent();
-        if (present) {
-            throw new DuplicateException("ایمیل تکراری است.");
-        }
-        Wallet wallet = new Wallet(500.00);
-        Wallet save = walletRepository.save(wallet);
-        byte[] imageData = ImageInput.uploadProfilePicture(filePath);
-        ExpertStatus expertStatus = ExpertStatus.NEW;
-        Integer star = 0;
-        LocalDate timeOfSignIn = LocalDate.now();
-        Expert expertSave = new Expert(firstName, lastName, email,
-                userName, hashCode, timeOfSignIn, imageData, star, expertStatus, save);
-        return expertRepository.save(expertSave);
-    }
 
     @Override
     public Optional<Expert> findByUserNameAndPassword(String username, String password) {
@@ -97,8 +61,8 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public Expert changePassword(String oldPassword, String newPassword) {
-         boolean present = expertRepository.findByPassword(newPassword).isPresent();
-        if (present){
+        boolean present = expertRepository.findByPassword(newPassword).isPresent();
+        if (present) {
             throw new NotValidException(" you have this password in database");
         }
         Expert expert = expertRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
@@ -119,7 +83,7 @@ public class ExpertServiceImpl implements ExpertService {
     @Override
     public void changeStatusOfOrderByExpertStarted(Integer orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("i can not found this order"));
-        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.STARTED)){
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.STARTED)) {
             throw new DuplicateException("you started this order");
         }
         customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
@@ -159,13 +123,12 @@ public class ExpertServiceImpl implements ExpertService {
             }
         }
         CustomerOrder customerOrder = suggestion.getCustomerOrder();
-        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)){
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)) {
             throw new DuplicateException("you done this work at past");
         }
         customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
-
 
 
     public List<Expert> findAllExpertsByCriteria(Map<String, String> param) {
@@ -190,7 +153,6 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
 
-
     public List<Expert> findExpertByStar(Map<String, String> params) {
 
         Specification<Expert> specification = buildSpecification(params);
@@ -212,6 +174,11 @@ public class ExpertServiceImpl implements ExpertService {
         };
     }
 
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return expertRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("i can not found this email!"));
+    }
 }
 
 
