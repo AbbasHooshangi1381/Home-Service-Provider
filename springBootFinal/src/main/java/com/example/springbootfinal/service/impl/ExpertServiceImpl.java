@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -159,6 +160,16 @@ public class ExpertServiceImpl implements ExpertService {
         return expertRepository.findAll(specification);
     }
 
+    @Override
+    public List<CustomerOrder> customerOrderListOfExpert(Integer expertId, String statusOfOrder) {
+        String upper = statusOfOrder.toUpperCase();
+         List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expertId, upper);
+         if (customerOrders.isEmpty()){
+             throw new NotFoundException("i can not found this customer order");
+         }
+         return customerOrders;
+    }
+
     private Specification<Expert> buildSpecification(Map<String, String> params) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -179,6 +190,8 @@ public class ExpertServiceImpl implements ExpertService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return expertRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("i can not found this email!"));
     }
+
+
 }
 
 

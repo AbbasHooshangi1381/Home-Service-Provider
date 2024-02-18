@@ -9,11 +9,15 @@ import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.CustomerOrderService;
+import com.example.springbootfinal.speicification.Specifications;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.springbootfinal.service.impl.SubDutyServiceImpl.checkAndRegisterTimeOfLoan;
 
@@ -76,6 +80,25 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
          return ordersByExpertId;
     }
 
+    @Override
+    public List<CustomerOrder> customerOrderListOfCustomer(Integer customerId, String statusOfOrder) {
+         String upperCased = statusOfOrder.toUpperCase();
+        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOfCustomer(customerId, upperCased);
+        if (customerOrders.isEmpty()){
+            throw new NotFoundException(" i can not found this customerOrder");
+        }
+        return customerOrders;
+    }
+    @Override
+    public List<CustomerOrder> customerOrderListOfExpert(Integer expertId, String statusOfOrder) {
+        String upperCased = statusOfOrder.toUpperCase();
+        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expertId, upperCased);
+        if (customerOrders.isEmpty()){
+            throw new NotFoundException(" i can not found this customerOrder");
+        }
+        return customerOrders;
+    }
+
     public static Double validatePrice(Double proposedPrice, Double fixPrice) {
         Double validatedPrice;
         if (proposedPrice >= fixPrice) {
@@ -84,5 +107,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             throw new NotValidException("your price is under the fix price");
         }
         return validatedPrice;
+    }
+    public List<CustomerOrder> orderByCriteria(Map<String, Object> filterParams) {
+         Specification<CustomerOrder> customerOrderSpecification = Specifications.orderByCriteria(filterParams);
+        return customerOrderRepository.findAll((Sort) customerOrderSpecification);
     }
 }

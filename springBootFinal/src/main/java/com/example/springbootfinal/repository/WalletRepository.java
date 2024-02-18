@@ -15,4 +15,15 @@ public interface WalletRepository extends JpaRepository<Wallet,Integer> {
     Wallet findCreditAmountByCustomerOrderId(@Param("customerOrderId") Integer customerOrderId);
 
     @Query("SELECT w FROM Wallet w WHERE w.expert.id = :expertId")
-    Optional<Wallet> findWalletByExpertId(@Param("expertId") Integer expertId);}
+    Optional<Wallet> findWalletByExpertId(@Param("expertId") Integer expertId);
+
+    @Query("SELECT w.creditAmount FROM Wallet w WHERE w.expert.id = :expertId")
+    Double findCreditOfWalletByExpertId(@Param("expertId") Integer expertId);
+
+    @Query("SELECT w.creditAmount FROM Wallet w WHERE w.customer.id = :customerId")
+    Double findCreditOfWalletByCustomerId(@Param("customerId") Integer customerId);
+
+
+}
+
+

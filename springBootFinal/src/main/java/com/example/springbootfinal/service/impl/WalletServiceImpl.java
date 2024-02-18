@@ -77,4 +77,21 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.saveAndFlush(wallet1);
         customerOrderRepository.saveAndFlush(customerOrder);
     }
+
+    @Override
+    public Double findCreditOfWalletByCustomerId(Integer customerId) {
+         Double creditOfWalletByCustomerId = walletRepository.findCreditOfWalletByCustomerId(customerId);
+         if (creditOfWalletByCustomerId==null){
+             throw new NotFoundException(" i can not found this customer");
+         }
+         return creditOfWalletByCustomerId;
+    }
+
+    @Override
+    public Double findCreditOfWalletByExpertId(Integer expertId) {
+        Double creditOfWalletByExpertId = walletRepository.findCreditOfWalletByExpertId(expertId);
+        if (creditOfWalletByExpertId==null){
+            throw new NotFoundException(" i can not found this customer");
+        }
+        return creditOfWalletByExpertId;    }
 }

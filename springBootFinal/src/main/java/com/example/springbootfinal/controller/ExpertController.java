@@ -11,6 +11,7 @@ import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.CustomerOrderService;
 import com.example.springbootfinal.service.ExpertService;
 import com.example.springbootfinal.service.SuggestionService;
+import com.example.springbootfinal.service.WalletService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ public class ExpertController {
     CustomerOrderService customerOrderService;
     @Autowired
     SuggestionService suggestionService;
+    @Autowired
+    WalletService walletService;
 
 
     @GetMapping("/login/{username}/{password}")
@@ -127,5 +130,20 @@ public class ExpertController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    ///////////////////////////not save in insomnia /////////////////////
+    @GetMapping("/historyOfOrderOfExpert/{expertId}/{statusOfOrder}")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@PathVariable Integer expertId,
+                                                                        @PathVariable String statusOfOrder) {
+        List<CustomerOrder> customerOrders = customerOrderService.customerOrderListOfExpert(expertId, statusOfOrder);
+        return ResponseEntity.ok(customerOrders);
+    }
+
+    @GetMapping("/creditOfExpert/{expertId}}")
+    public ResponseEntity<Double> creditOfExpert(@PathVariable Integer expertId) {
+        Double creditOfWalletByExpertId = walletService.findCreditOfWalletByExpertId(expertId);
+        return ResponseEntity.ok(creditOfWalletByExpertId);
+    }
+
 
 }

@@ -115,5 +115,17 @@ public class CustomerController {
         walletService.payByCard(952,855);
         return ResponseEntity.ok("paid!");
     }
+///////////////////////////////////new for insomnia/////////////////////////
+    @GetMapping("/historyOfOrderOfCustomer/{customerId}/{statusOfOrder}")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@PathVariable Integer customerId,
+                                                                        @PathVariable String statusOfOrder) {
+         List<CustomerOrder> customerOrders = customerOrderService.customerOrderListOfCustomer(customerId, statusOfOrder);
+        return ResponseEntity.ok(customerOrders);
+    }
+    @GetMapping("/creditOfCustomer/{customerId}}")
+    public ResponseEntity<Double> creditOfCustomer(@PathVariable Integer customerId) {
+        Double creditOfWalletByCustomerId = walletService.findCreditOfWalletByCustomerId(customerId);
+        return ResponseEntity.ok(creditOfWalletByCustomerId);
+    }
 }
 

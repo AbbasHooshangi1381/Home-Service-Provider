@@ -1,19 +1,22 @@
 package com.example.springbootfinal.controller;
 
+import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Admin;
+import com.example.springbootfinal.domain.userEntity.BaseUser;
 import com.example.springbootfinal.dto.Admin.*;
 import com.example.springbootfinal.dto.subDity.SubDutyResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutySaveRequestDto;
-import com.example.springbootfinal.service.AdminService;
-import com.example.springbootfinal.service.DutyService;
-import com.example.springbootfinal.service.SubDutyService;
+import com.example.springbootfinal.service.*;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -24,16 +27,19 @@ public class AdminController {
     private final ModelMapper modelMapper;
     private final DutyService dutyService;
     private final SubDutyService subDutyService;
+    private final BaseUserService baseUserService;
+    private final CustomerOrderService customerOrderService;
 
-    public AdminController(AdminService adminService,
-                           ModelMapper modelMapper
-    ,DutyService dutyService,SubDutyService subDutyService ) {
+    public AdminController(AdminService adminService, ModelMapper modelMapper, DutyService dutyService,
+                           SubDutyService subDutyService, BaseUserService baseUserService,
+                           CustomerOrderService customerOrderService) {
         this.adminService = adminService;
         this.modelMapper = modelMapper;
-        this.dutyService=dutyService;
-        this.subDutyService=subDutyService;
+        this.dutyService = dutyService;
+        this.subDutyService = subDutyService;
+        this.baseUserService = baseUserService;
+        this.customerOrderService = customerOrderService;
     }
-
 
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkAdmin( @PathVariable String username, @PathVariable String password) {
@@ -94,5 +100,30 @@ public class AdminController {
         subDutyService.deleteExpertInSubDutyField(subServiceId,expertId);
         return ResponseEntity.ok(" subDuty with ID"+subServiceId+"has deleted ");
     }
+
+    /////////////////////////////new to insomnia///////////////////////////
+    @PostMapping("/report")
+    public List<CustomerOrder> orderByCriteria(@RequestBody Map<String, Object> criteria) {
+        return customerOrderService.orderByCriteria(criteria);
+    }
+    /*{
+    "startDate": "2024-01-01T00:00:00",
+    "endDate": "2024-01-31T23:59:59",
+    "status": "DONE",
+    "subDuty": 5,
+    "expertIdWithDone": 10,
+    "customerIdWithDone": 20
+}*/
+
+    @PostMapping("/report")
+    public List<BaseUser> generateReport(@RequestBody Map<String, Object> criteria) {
+        return baseUserService.generateReport(criteria);
+    }
+    /*{
+    "userId": 123,
+    "dateOfSigningInAfter": "2024-01-01",
+    "minOrdersCount": 5,
+    "minSuggestionsCount": 2
+}*/
 
 }
