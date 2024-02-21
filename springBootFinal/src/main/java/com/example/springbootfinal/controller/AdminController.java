@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,23 +42,18 @@ public class AdminController {
         this.customerOrderService = customerOrderService;
     }
 
-    @GetMapping("/login/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkAdmin( @PathVariable String username, @PathVariable String password) {
-        Admin admin = adminService.findByUserNameAndPassword(username, password).orElseThrow();
-
-            BaseResponseDto baseResponseDto = modelMapper.map(admin, BaseResponseDto.class);
-            return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
-    }
-    @PutMapping("/changePassword/{oldPassword}/{newPassword}")
-    public ResponseEntity<String> changePassword( @PathVariable String oldPassword, @PathVariable String newPassword) {
-       // return SecurityContextHolder.getContext().getAuthentication().getName();
-      adminService.changePassword(oldPassword, newPassword);
+    @PutMapping("/changePassword//{newPassword}")
+    public ResponseEntity<String> changePassword(@PathVariable String newPassword) {
+         String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        adminService.changePassword(name, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }
 
     //////////////////////////////////////////////////////////////////
     @PostMapping("saveDuty/{saveDuty}")
     public ResponseEntity<String> saveExpert(@PathVariable String saveDuty) {
+      //  String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Duty duty = dutyService.saveServiceByAdmin(saveDuty);
 
         if (duty == null) {
@@ -102,7 +98,7 @@ public class AdminController {
     }
 
     /////////////////////////////new to insomnia///////////////////////////
-    @PostMapping("/report")
+    @PostMapping("/reportOrder")
     public List<CustomerOrder> orderByCriteria(@RequestBody Map<String, Object> criteria) {
         return customerOrderService.orderByCriteria(criteria);
     }
@@ -115,7 +111,7 @@ public class AdminController {
     "customerIdWithDone": 20
 }*/
 
-    @PostMapping("/report")
+    @PostMapping("/reportUsers")
     public List<BaseUser> generateReport(@RequestBody Map<String, Object> criteria) {
         return baseUserService.generateReport(criteria);
     }

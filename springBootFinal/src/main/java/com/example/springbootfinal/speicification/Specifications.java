@@ -6,6 +6,8 @@ import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.BaseUser;
 import jakarta.persistence.criteria.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -13,9 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDateTime;
-
 public class Specifications {
-
     public static Specification<CustomerOrder> orderByCriteria(Map<String, Object> criteria) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -56,7 +56,6 @@ public class Specifications {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
-
         public static Specification<BaseUser> reportCustomerExpert(Map<String, Object> criteria) {
             return (root, query, cb) -> {
                 List<Predicate> predicates = new ArrayList<>();

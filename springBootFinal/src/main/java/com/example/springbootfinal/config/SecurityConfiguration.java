@@ -18,11 +18,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfiguration {
     private final BaseUserRepository baseUserRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    public SecurityConfiguration(BaseUserRepository baseUserRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.baseUserRepository = baseUserRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -30,15 +33,23 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/registration/**").permitAll()
-                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/customer/**").hasAnyAuthority("CUSTOMER")
-                         .requestMatchers("/expert/**").hasAnyAuthority("EXPERT")
-                        .anyRequest().permitAll()).httpBasic(Customizer.withDefaults());
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                         .requestMatchers("/expert/**").hasRole("EXPERT")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()).httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
+/*    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers("/registration/**").permitAll()).httpBasic(Customizer.withDefaults());
 
-
+        return http.build();
+    }*/
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {

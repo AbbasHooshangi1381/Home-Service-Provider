@@ -12,10 +12,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
 public class CaptchaController {
 
     private CaptchaService captchaService;
+
+    public CaptchaController(CaptchaService captchaService) {
+        this.captchaService = captchaService;
+    }
 
     @GetMapping("/captcha")
     public ResponseEntity<String> getCaptcha(HttpSession session) {

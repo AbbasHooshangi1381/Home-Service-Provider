@@ -4,7 +4,7 @@ import com.example.springbootfinal.email.email.EmailSender;
 import com.example.springbootfinal.email.security.token.ConfirmationToken;
 import com.example.springbootfinal.email.security.token.ConfirmationTokenService;
 import com.example.springbootfinal.exception.NotFoundException;
-import com.example.springbootfinal.registeration.RegistrationRequest;
+import com.example.springbootfinal.dto.registeration.RegistrationRequest;
 import com.example.springbootfinal.service.RegistrationServices;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class BeforeRegistration {
 
     private final ConfirmationTokenService confirmTokenService;
     private final EmailSender emailSender;
-    RegistrationServices registrationService;
+    private final RegistrationServices registrationService;
 
     public BeforeRegistration( ConfirmationTokenService confirmTokenService,
                               EmailSender emailSender,RegistrationServices registrationService) {
@@ -34,7 +34,7 @@ public class BeforeRegistration {
                     request.getEmail(),
                     request.getUserName(),
                     request.getPassword());
-            String link = "http://localhost:8089/registration/confirm?token=" + registrations;
+            String link = "http://localhost:8090/registration/confirm?token=" + registrations;
             emailSender.sendEmail(request.getEmail(), buildEmail(request.getFirstName(), link));
             return registrations;
         }
@@ -46,7 +46,7 @@ public class BeforeRegistration {
                     request.getEmail(),
                     request.getUserName(),
                     request.getPassword());
-            String link = "http://localhost:8089/registration/confirm?token=" + registrations;
+            String link = "http://localhost:8090/registration/confirm?token=" + registrations;
             emailSender.sendEmail(request.getEmail(), buildEmail(request.getFirstName(), link));
             return registrations;
     }
@@ -56,9 +56,9 @@ public class BeforeRegistration {
                     expertSaveDto.getLastName(),
                     expertSaveDto.getEmail(),
                     expertSaveDto.getUserName(),
-                   expertSaveDto.getFile(),
+                   expertSaveDto.getFilePath(),
                     expertSaveDto.getPassword());
-            String link = "http://localhost:8089/registration/confirm?token=" + registrations;
+            String link = "http://localhost:8090/registration/confirm?token=" + registrations;
             emailSender.sendEmail(expertSaveDto.getEmail(), buildEmail(expertSaveDto.getFirstName(), link));
             return registrations;
     }

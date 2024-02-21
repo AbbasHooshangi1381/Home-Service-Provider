@@ -1,5 +1,8 @@
 package com.example.springbootfinal.service.impl;
+
 import com.example.springbootfinal.domain.userEntity.Admin;
+import com.example.springbootfinal.domain.userEntity.BaseUser;
+import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.*;
@@ -23,38 +26,28 @@ public class AdminServiceImpl implements AdminService {
     SubDutyRepository subDutyRepository;
     ExpertRepository expertRepository;
     BCryptPasswordEncoder passwordEncoder;
+    BaseUserRepository baseUserRepository;
 
     public AdminServiceImpl(AdminRepository adminRepository, DutyRepository dutyRepository,
                             SubDutyRepository subDutyRepository, ExpertRepository expertRepository
-            , BCryptPasswordEncoder passwordEncoder ) {
+            , BCryptPasswordEncoder passwordEncoder,BaseUserRepository baseUserRepository) {
         this.adminRepository = adminRepository;
         this.dutyRepository = dutyRepository;
         this.subDutyRepository = subDutyRepository;
         this.expertRepository = expertRepository;
         this.passwordEncoder = passwordEncoder;
+        this.baseUserRepository = baseUserRepository;
     }
 
-    @Override
-    public Optional<Admin> findByUserNameAndPassword(String username, String password) {
-        Admin admin = adminRepository.findByUserNameAndPassword(username, password).orElseThrow(() -> new NotFoundException(" i can not found this admin"));
-        if (admin != null) {
-            System.out.println("you are in system ");
-        } else {
-            System.out.println("you are not in system ");
-        }
-        return Optional.ofNullable(admin);
-    }
 
     @Override
-    public Admin changePassword(String oldPassword, String newPassword) {
-        boolean present = adminRepository.findByPassword(newPassword).isPresent();
-        if (present) {
-            throw new NotValidException(" you have this password in database");
-        }
-        Admin admin = adminRepository.findByPassword(oldPassword).orElseThrow(() -> new NotFoundException(" i can not found this password"));
-        admin.setPassword(newPassword);
-        return admin;
-
+    public BaseUser changePassword(String userName, String newPassword) {
+        BaseUser baseUser = baseUserRepository.findByUserName(userName).orElseThrow(() ->
+                new NotFoundException("i can not found this userName"));
+        String encode = passwordEncoder.encode(newPassword);
+        baseUser.setPassword(encode);
+        baseUserRepository.save(baseUser);
+        return baseUser;
     }
 
     @Override

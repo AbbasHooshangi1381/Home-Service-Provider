@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -51,27 +52,21 @@ public class RegistrationServiceImp implements RegistrationServices {
     @Override
     public String saveAdmin(String firstName, String lastName, String email, String userName, String password) {
 
-        boolean userExists = baseUserRepository.findByEmail(email).isPresent();
-        if (userExists) {
-
-            BaseUser baseUser = baseUserRepository.findByEmail(email).get();
-            Boolean isEnabled = baseUser.getEnabled();
-
-            if (!isEnabled) {
-                String token = UUID.randomUUID().toString();
-
-                saveConfirmationToken(baseUser, token);
-
-                return token;
-            }
+         Optional<BaseUser> byEmail = baseUserRepository.findByEmail(email);
+        if (byEmail.isPresent()) {
             throw new DuplicateException(String.format("User with email %s already exists and able!", email));
         }
-        String encodedPassword = passwordEncoder.encode(password);
+        Optional<BaseUser> byUserName = baseUserRepository.findByUserName(userName);
+        if (byUserName.isPresent()) {
+            throw new DuplicateException(String.format("User with userName %s already exists and able!", userName));
+        }
+         String encode = passwordEncoder.encode(password);
 
         LocalDate timeOfSignIn = LocalDate.now();
         Boolean enabled = false;
         String token = UUID.randomUUID().toString();
-        Admin admin = new Admin(firstName, lastName, email, userName, encodedPassword, timeOfSignIn, enabled, Role.ROLE_ADMIN);
+        Admin admin = new Admin(firstName, lastName, email, userName, encode, timeOfSignIn, enabled, Role.ROLE_ADMIN);
+        admin.setPassword(encode);
         adminRepository.save(admin);
         saveConfirmationToken(admin, token);
         return token;
@@ -79,55 +74,62 @@ public class RegistrationServiceImp implements RegistrationServices {
 
     @Override
     public String saveCustomer(String firstName, String lastName, String email, String userName, String password) {
-        boolean userExists = baseUserRepository.findByEmail(email).isPresent();
-        if (userExists) {
-            BaseUser baseUser = baseUserRepository.findByEmail(email).get();
-            Boolean isEnabled = baseUser.getEnabled();
-
-            if (!isEnabled) {
-                String token = UUID.randomUUID().toString();
-                saveConfirmationToken(baseUser, token);
-                return token;
-            }
-            throw new DuplicateException(String.format("User with email %s already exists and able!", email));
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be null or empty");
         }
-        String encodedPassword = passwordEncoder.encode(password);
 
+        Optional<BaseUser> byEmail = baseUserRepository.findByEmail(email);
+
+        if (byEmail.isPresent()) {
+            throw new DuplicateException(String.format("User with email %s already exists!", email));
+        }
+        Optional<BaseUser> byUserName = baseUserRepository.findByUserName(userName);
+        if (byUserName.isPresent()) {
+            throw new DuplicateException(String.format("User with userName %s already exists and able!", userName));
+        }
+
+        String encode = passwordEncoder.encode(password);
+        if (encode == null || encode.isEmpty()) {
+            throw new IllegalArgumentException("Hashed password cannot be null or empty");
+        }
         LocalDate timeOfSignIn = LocalDate.now();
         Boolean enabled = false;
         Wallet wallet = new Wallet(500.00);
         Wallet save = walletRepository.save(wallet);
         String token = UUID.randomUUID().toString();
-        Customer customer = new Customer(firstName, lastName, email, userName, encodedPassword, timeOfSignIn, save, enabled, Role.ROLE_CUSTOMER);
+        Customer customer = new Customer(firstName, lastName, email, userName, encode, timeOfSignIn, save, enabled, Role.ROLE_CUSTOMER);
+        customer.setPassword(encode);
         Customer customer2 = customerRepository.save(customer);
         saveConfirmationToken(customer2, token);
-        return "ok!";
-    }
 
+        return token;
+    }
     @Override
-    public String saveExpert(String firstName, String lastName, String email, String userName, File file, String password) throws IOException {
-        boolean userExists = baseUserRepository.findByEmail(email).isPresent();
-        if (userExists) {
-            BaseUser baseUser = baseUserRepository.findByEmail(email).get();
-            Boolean isEnabled = baseUser.getEnabled();
-            if (!isEnabled) {
-                String token = UUID.randomUUID().toString();
-                saveConfirmationToken(baseUser, token);
-                return token;
-            }
-            throw new DuplicateException(String.format("User with email %s already exists and able!", email));
+    public String saveExpert(String firstName, String lastName, String email, String userName, String filePath, String password) throws IOException {
+         Optional<BaseUser> byEmail = baseUserRepository.findByEmail(email);
+        if (byEmail.isPresent()) {
+            throw new DuplicateException(String.format("User with email %s already exists!", email));
         }
-        String encodedPassword = passwordEncoder.encode(password);
+        Optional<BaseUser> byUserName = baseUserRepository.findByUserName(userName);
+        if (byUserName.isPresent()) {
+            throw new DuplicateException(String.format("User with userName %s already exists and able!", userName));
+        }
+         String encode = passwordEncoder.encode(password);
+        if (encode == null || encode.isEmpty()) {
+            throw new IllegalArgumentException("Hashed password cannot be null or empty");
+        }
         String token = UUID.randomUUID().toString();
         Wallet wallet = new Wallet(500.00);
         Wallet save = walletRepository.save(wallet);
-        byte[] imageData = ImageInput.uploadProfilePicture(file);
+        byte[] imageData = ImageInput.uploadProfilePicture(filePath);
         ExpertStatus expertStatus = ExpertStatus.NEW;
         Integer star = 0;
         LocalDate timeOfSignIn = LocalDate.now();
         Boolean enabled = false;
-        Expert expert = new Expert(firstName, lastName, email, userName, encodedPassword, timeOfSignIn, imageData
+        System.out.println(encode);
+        Expert expert = new Expert(firstName, lastName, email, userName, encode, timeOfSignIn, imageData
                 , star, expertStatus, save, enabled, Role.ROLE_EXPERT);
+        expert.setPassword(encode);
         expertRepository.save(expert);
 
         saveConfirmationToken(expert, token);

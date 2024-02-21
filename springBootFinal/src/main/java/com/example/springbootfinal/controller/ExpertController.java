@@ -31,19 +31,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/expert")
 public class ExpertController {
-    @Autowired
     ExpertService expertService;
-    @Autowired
     ExpertRepository expertRepository;
-    @Autowired
     ModelMapper modelMapper;
-    @Autowired
     CustomerOrderService customerOrderService;
-    @Autowired
     SuggestionService suggestionService;
-    @Autowired
     WalletService walletService;
 
+    public ExpertController(ExpertService expertService, ExpertRepository expertRepository, ModelMapper modelMapper,
+                            CustomerOrderService customerOrderService, SuggestionService suggestionService,
+                            WalletService walletService) {
+        this.expertService = expertService;
+        this.expertRepository = expertRepository;
+        this.modelMapper = modelMapper;
+        this.customerOrderService = customerOrderService;
+        this.suggestionService = suggestionService;
+        this.walletService = walletService;
+    }
 
     @GetMapping("/login/{username}/{password}")
     public ResponseEntity<BaseResponseDto> checkExpert(@PathVariable String username, @PathVariable String password) {

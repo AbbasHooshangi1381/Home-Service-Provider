@@ -1,4 +1,4 @@
-package com.example.springbootfinal.registeration;
+package com.example.springbootfinal.dto.registeration;
 
 import com.example.springbootfinal.domain.enumurations.Role;
 import jakarta.persistence.EnumType;

@@ -160,16 +160,6 @@ public class ExpertServiceImpl implements ExpertService {
         return expertRepository.findAll(specification);
     }
 
-    @Override
-    public List<CustomerOrder> customerOrderListOfExpert(Integer expertId, String statusOfOrder) {
-        String upper = statusOfOrder.toUpperCase();
-         List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expertId, upper);
-         if (customerOrders.isEmpty()){
-             throw new NotFoundException("i can not found this customer order");
-         }
-         return customerOrders;
-    }
-
     private Specification<Expert> buildSpecification(Map<String, String> params) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

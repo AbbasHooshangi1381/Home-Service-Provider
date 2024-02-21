@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 @SuppressWarnings("unused")
 public class CardServiceImpl implements CardService {
-    @Autowired
     CardRepository cardRepository;
+
+    public CardServiceImpl(CardRepository cardRepository) {
+        this.cardRepository = cardRepository;
+    }
 
     @Override
     public void saveCard(String cardNumber, String cvv2, String month, String password, String year) {

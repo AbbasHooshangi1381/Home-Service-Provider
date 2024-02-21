@@ -1,4 +1,5 @@
 package com.example.springbootfinal.controller;
+
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,39 +25,39 @@ import java.util.Map;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
-    @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private CustomerOrderService customerOrderService;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    CommentService commentService;
-    @Autowired
-    SuggestionService suggestionService;
-    @Autowired
-    WalletService walletService;
-    @Autowired
-    RegistrationServices registrationService;
 
-/*    @PostMapping("/register-user")
-    public ResponseEntity<String> saveCustomer(@Valid @RequestBody BaseSaveDto adminSaveDto) {
-          registrationService.saveCustomer(adminSaveDto.getFirstName(), adminSaveDto.getLastName(),
-                adminSaveDto.getEmail(), adminSaveDto.getUserName(), adminSaveDto.getPassword());
-        return ResponseEntity.status(HttpStatus.CREATED).body("ok!");
-    }*/
+    CustomerService customerService;
+    CustomerOrderService customerOrderService;
+    ModelMapper modelMapper;
+    CommentService commentService;
+    SuggestionService suggestionService;
+    WalletService walletService;
+
+    public CustomerController(CustomerService customerService, CustomerOrderService customerOrderService,
+                              ModelMapper modelMapper, CommentService commentService,
+                              SuggestionService suggestionService, WalletService walletService) {
+        this.customerService = customerService;
+        this.customerOrderService = customerOrderService;
+        this.modelMapper = modelMapper;
+        this.commentService = commentService;
+        this.suggestionService = suggestionService;
+        this.walletService = walletService;
+    }
+
     @GetMapping("/logins/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkCustomer( @PathVariable String username, @PathVariable String password) {
+    public ResponseEntity<BaseResponseDto> checkCustomer(@PathVariable String username, @PathVariable String password) {
         Customer customer = customerService.findByUserNameAndPassword(username, password).get();
 
         BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
         return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
     }
+
     @PutMapping("/changePassword/{oldPassword}/{password}")
-    public ResponseEntity<String> changePassword( @PathVariable String oldPassword, @PathVariable String password) {
+    public ResponseEntity<String> changePassword(@PathVariable String oldPassword, @PathVariable String password) {
         customerService.changePassword(oldPassword, password);
         return ResponseEntity.ok("pasword changed !");
     }
+
     @GetMapping("/findAllCustomertByCriteria")
     public List<CriteriaSearchDtoOfCustomer> findAllCustomerByCriteria(@Valid @RequestBody Map<String, String> param) {
         List<CriteriaSearchDtoOfCustomer> criteriaSearchDtoOfCustomerList = new ArrayList<>();
@@ -66,6 +68,7 @@ public class CustomerController {
         }
         return criteriaSearchDtoOfCustomerList;
     }
+
     //////////////////////////////////////////////////////////////////
     @PostMapping("/register-comments")
     public ResponseEntity<Integer> saveComments(@Valid @RequestBody CommentsRequestDto commentsRequestDto) {
@@ -73,6 +76,7 @@ public class CustomerController {
                 commentsRequestDto.getComments(), commentsRequestDto.getStar());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentsRequestDto.getStar());
     }
+
     @PostMapping("/saveOrder")
     public ResponseEntity<CustomerOrderResponseDto> saveOrder(@Valid @RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
         String descriptionOfOrder = customerOrderDto.getDescriptionOfOrder();
@@ -83,12 +87,12 @@ public class CustomerController {
         Integer customerId = customerOrderDto.getCustomerId();
         Integer subDutyId = customerOrderDto.getSubDutyId();
         CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, statusOfOrder, customerId, subDutyId);
-        CustomerOrderResponseDto responseDto = modelMapper.map(customerOrder,CustomerOrderResponseDto.class);
+        CustomerOrderResponseDto responseDto = modelMapper.map(customerOrder, CustomerOrderResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/changeStatusOfOrderByCustomerToWaitingToCome/{orderId}")
-    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome( @PathVariable Integer orderId) {
+    public ResponseEntity<String> changeStatusOfOrderByCustomerToWaitingToCome(@PathVariable Integer orderId) {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
     }
@@ -98,6 +102,7 @@ public class CustomerController {
         List<Suggestion> byCustomerIdOrderByProposedPriceDesc = suggestionService.showSuggestionOrderByPriceOfSuggestions(customerOrderId);
         return ResponseEntity.ok(byCustomerIdOrderByProposedPriceDesc);
     }
+
     @GetMapping("/showSuggestionsByExpertStar/{customerOrderId}")
     public ResponseEntity<List<Suggestion>> findByCustomerOrderIdOrderByExpertStarsDesc(@PathVariable Integer customerOrderId) {
         List<Suggestion> byCustomerOrderIdOrderByExpertStarsDesc = suggestionService.showSuggestionOrderByExpertStars(customerOrderId);
@@ -105,23 +110,26 @@ public class CustomerController {
     }
 
     @PutMapping("/payByCreditOfAccount/{customerOrderId}/{expertId}")
-    public ResponseEntity<String> payByCreditOfAccount( @PathVariable Integer customerOrderId, @PathVariable Integer expertId) {
-        walletService.payByCreditOfAccount(customerOrderId,expertId);
+    public ResponseEntity<String> payByCreditOfAccount(@PathVariable Integer customerOrderId, @PathVariable Integer expertId) {
+        walletService.payByCreditOfAccount(customerOrderId, expertId);
         return ResponseEntity.ok("send");
     }
+
     @PutMapping("/payByCard")
     @CrossOrigin
-    public ResponseEntity<String> payByCard( @RequestBody CardRequestDto cardRequestDto) {
-        walletService.payByCard(952,855);
+    public ResponseEntity<String> payByCard(@RequestBody CardRequestDto cardRequestDto) {
+        walletService.payByCard(952, 855);
         return ResponseEntity.ok("paid!");
     }
-///////////////////////////////////new for insomnia/////////////////////////
+
+    ///////////////////////////////////new for insomnia/////////////////////////
     @GetMapping("/historyOfOrderOfCustomer/{customerId}/{statusOfOrder}")
     public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@PathVariable Integer customerId,
                                                                         @PathVariable String statusOfOrder) {
-         List<CustomerOrder> customerOrders = customerOrderService.customerOrderListOfCustomer(customerId, statusOfOrder);
+        List<CustomerOrder> customerOrders = customerOrderService.customerOrderListOfCustomer(customerId, statusOfOrder);
         return ResponseEntity.ok(customerOrders);
     }
+
     @GetMapping("/creditOfCustomer/{customerId}}")
     public ResponseEntity<Double> creditOfCustomer(@PathVariable Integer customerId) {
         Double creditOfWalletByCustomerId = walletService.findCreditOfWalletByCustomerId(customerId);
