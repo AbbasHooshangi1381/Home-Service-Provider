@@ -7,4 +7,6 @@ import java.util.Map;
 
 public interface BaseUserService {
     List<BaseUser> generateReport(Map<String, Object> criteria);
+    BaseUser changePassword(String userName, String newPassword);
+
 }

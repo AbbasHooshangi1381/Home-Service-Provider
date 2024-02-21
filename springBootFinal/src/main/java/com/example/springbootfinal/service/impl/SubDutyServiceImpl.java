@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -44,17 +45,21 @@ public class SubDutyServiceImpl implements SubDutyService {
         if (duty == null) {
             throw new NotFoundException(" i dont this Duty");
         } else {
-            SubDuty subDuty = new SubDuty();
-            subDuty.setSubServiceName(subServiceName);
-            subDuty.setPrice(priceOfSubDuty);
-            subDuty.setService(duty);
-            subDuty.setDescription(description);
-            subDutyRepository.save(subDuty);
-            System.out.println("subDuty added to database !");
-            return subDuty;
+            Optional<SubDuty> bySubServiceName = subDutyRepository.findBySubServiceName(subServiceName);
+            if (subServiceName.isEmpty()) {
+                SubDuty subDuty = new SubDuty();
+                subDuty.setSubServiceName(subServiceName);
+                subDuty.setPrice(priceOfSubDuty);
+                subDuty.setService(duty);
+                subDuty.setDescription(description);
+                subDutyRepository.save(subDuty);
+                System.out.println("subDuty added to database !");
+                return subDuty;
 
-    }
-
+            } else {
+                throw new DuplicateException("i have this sub service");
+            }
+        }
 
     }
 
@@ -111,11 +116,11 @@ public class SubDutyServiceImpl implements SubDutyService {
     }
 
     @Override
-    public void deleteExpertInSubDutyField(Integer subDutyId, Integer expertId) {
+    public void deleteExpertInSubDutyField(Integer expertId, Integer subDutyId) {
             SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
                     new NotFoundException("SubDuty with ID not found"));
              List<Expert> experts = subDuty.getExperts();
-        if (experts != null) {
+        if (!experts.isEmpty()) {
             experts.removeIf(expert -> Objects.equals(expert.getId(), expertId));
             subDutyRepository.save(subDuty);
 
@@ -136,12 +141,12 @@ public class SubDutyServiceImpl implements SubDutyService {
     public static String checkAndRegisterTimeOfLoan(String inputTime){
         //String inputTime = "1403-01-15 08:30:00";
         LocalDateTime currentTime = LocalDateTime.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        LocalDateTime firstStartDate = LocalDateTime.parse("1402-10-27 00:00:00",
+        LocalDateTime firstStartDate = LocalDateTime.parse("1402-11-22 00:00:00",
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (currentTime.isAfter(firstStartDate)) {
             return inputTime;
         } else {
-            throw new InvalidDateException("You should choose a date after 1402-10-27");
+            throw new InvalidDateException("You should choose a date after 1402-11-22");
         }
     }
 

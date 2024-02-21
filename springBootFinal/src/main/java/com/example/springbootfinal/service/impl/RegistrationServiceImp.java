@@ -100,6 +100,8 @@ public class RegistrationServiceImp implements RegistrationServices {
         Customer customer = new Customer(firstName, lastName, email, userName, encode, timeOfSignIn, save, enabled, Role.ROLE_CUSTOMER);
         customer.setPassword(encode);
         Customer customer2 = customerRepository.save(customer);
+        wallet.setCustomer(customer2);
+        walletRepository.save(wallet);
         saveConfirmationToken(customer2, token);
 
         return token;
@@ -126,11 +128,15 @@ public class RegistrationServiceImp implements RegistrationServices {
         Integer star = 0;
         LocalDate timeOfSignIn = LocalDate.now();
         Boolean enabled = false;
-        System.out.println(encode);
         Expert expert = new Expert(firstName, lastName, email, userName, encode, timeOfSignIn, imageData
                 , star, expertStatus, save, enabled, Role.ROLE_EXPERT);
+        wallet.setExpert(expert);
+        walletRepository.save(wallet);
         expert.setPassword(encode);
-        expertRepository.save(expert);
+         Expert save1 = expertRepository.save(expert);
+        wallet.setExpert(save1);
+        walletRepository.save(wallet);
+
 
         saveConfirmationToken(expert, token);
         return token;

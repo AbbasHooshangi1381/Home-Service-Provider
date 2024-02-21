@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface CustomerService extends UserDetailsService {
     String changePassword(String oldPassword,String newPassword);
-    Optional<Customer> findByUserNameAndPassword(String username, String password);
     List<Customer> findAllCustomersByCriteria(Map<String, String> param);
 }

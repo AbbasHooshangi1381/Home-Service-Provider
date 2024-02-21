@@ -33,7 +33,7 @@ public class WalletServiceImpl implements WalletService {
             throw new NotFoundException("i can not found this wallet");
         }
         Double creditAmount = wallet.getCreditAmount();
-        Double price = customerOrder.getSubService().getPrice();
+        Double price = customerOrder.getSuggestionList().get(0).getSuggestionPrice();
         Double seventyPercentPrice = price * 0.7;
         if (creditAmount<price) {
             throw new NotEnoughCreditException("you dont have enough credit");
@@ -42,6 +42,7 @@ public class WalletServiceImpl implements WalletService {
             if (newCredit<0){
                 throw new NotEnoughCreditException("you do not have enough credit to pay");
             }
+            Integer id = wallet.getId();
             wallet.setCreditAmount(newCredit);
             customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
             Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));

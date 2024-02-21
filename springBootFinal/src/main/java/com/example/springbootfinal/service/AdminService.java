@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 @SuppressWarnings("unused")
 public interface AdminService extends UserDetailsService {
-    BaseUser changePassword(String userName, String newPassword);
+    //BaseUser changePassword(String userName, String newPassword);
 
 }

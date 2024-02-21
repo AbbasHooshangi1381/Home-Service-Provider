@@ -33,6 +33,7 @@ public class Customer extends BaseUser {
     List<Comments> commentsList;
 
     @ManyToOne
+    @JsonIgnore
     Admin admin;
 
 

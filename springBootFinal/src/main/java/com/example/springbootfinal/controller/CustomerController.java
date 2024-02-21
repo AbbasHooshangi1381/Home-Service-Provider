@@ -8,6 +8,8 @@ import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.card.CardRequestDto;
 import com.example.springbootfinal.dto.comments.CommentsRequestDto;
 import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
+import com.example.springbootfinal.dto.customer.FinishedDto;
+import com.example.springbootfinal.dto.customer.StartedDto;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderDTO;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderResponseDto;
 import com.example.springbootfinal.service.*;
@@ -16,8 +18,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,42 +37,30 @@ public class CustomerController {
     CommentService commentService;
     SuggestionService suggestionService;
     WalletService walletService;
+    BaseUserService baseUserService;
+    CardService cardService;
 
     public CustomerController(CustomerService customerService, CustomerOrderService customerOrderService,
                               ModelMapper modelMapper, CommentService commentService,
-                              SuggestionService suggestionService, WalletService walletService) {
+                              SuggestionService suggestionService, WalletService walletService,
+                              BaseUserService baseUserService,CardService cardService) {
         this.customerService = customerService;
         this.customerOrderService = customerOrderService;
         this.modelMapper = modelMapper;
         this.commentService = commentService;
         this.suggestionService = suggestionService;
         this.walletService = walletService;
+        this.baseUserService=baseUserService;
+        this.cardService=cardService;
     }
 
-    @GetMapping("/logins/{username}/{password}")
-    public ResponseEntity<BaseResponseDto> checkCustomer(@PathVariable String username, @PathVariable String password) {
-        Customer customer = customerService.findByUserNameAndPassword(username, password).get();
-
-        BaseResponseDto baseResponseDto = modelMapper.map(customer, BaseResponseDto.class);
-        return new ResponseEntity<>(baseResponseDto, HttpStatus.OK);
-    }
-
-    @PutMapping("/changePassword/{oldPassword}/{password}")
-    public ResponseEntity<String> changePassword(@PathVariable String oldPassword, @PathVariable String password) {
-        customerService.changePassword(oldPassword, password);
+    @PutMapping("/changePassword/{password}")
+    public ResponseEntity<String> changePassword( @PathVariable String password) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        baseUserService.changePassword(name, password);
         return ResponseEntity.ok("pasword changed !");
     }
 
-    @GetMapping("/findAllCustomertByCriteria")
-    public List<CriteriaSearchDtoOfCustomer> findAllCustomerByCriteria(@Valid @RequestBody Map<String, String> param) {
-        List<CriteriaSearchDtoOfCustomer> criteriaSearchDtoOfCustomerList = new ArrayList<>();
-        List<Customer> allSpecialistsByCriteria = customerService.findAllCustomersByCriteria(param);
-        for (Customer s : allSpecialistsByCriteria) {
-            CriteriaSearchDtoOfCustomer map = modelMapper.map(s, CriteriaSearchDtoOfCustomer.class);
-            criteriaSearchDtoOfCustomerList.add(map);
-        }
-        return criteriaSearchDtoOfCustomerList;
-    }
 
     //////////////////////////////////////////////////////////////////
     @PostMapping("/register-comments")
@@ -96,6 +89,17 @@ public class CustomerController {
         customerOrderService.changeStatusOfOrderByCustomerToWaitingToCome(orderId);
         return ResponseEntity.ok("Order status changed to WAITING_FOR_COMING_EXPERT");
     }
+    @PutMapping("/changeStatusOfOrderTostarted")
+    public ResponseEntity<String> startOrder(@RequestBody StartedDto startedDto) {
+        customerOrderService.changeStatusOfOrderByExpertStarted(startedDto.getOrderId(),startedDto.getLocalDateTime());
+        return ResponseEntity.ok("Order " + startedDto.getOrderId() + " has been started.");
+    }
+    @PutMapping("/changeStatusOfOrderToFinish")
+    public ResponseEntity<String> finishOrder(@RequestBody FinishedDto finishedDto) {
+        //"yyyy/MM/dd HH:mm:ss"
+        customerOrderService.changeStatusOfOrderByCustomerToFinish(finishedDto.getOrderId(), finishedDto.getLocalDateTime());
+        return ResponseEntity.ok("Order " + finishedDto.getOrderId() + " has been marked as finished.");
+    }
 
     @GetMapping("/showSuggestionByPrice/{customerOrderId}")
     public ResponseEntity<List<Suggestion>> findByCustomerIdOrderByProposedPriceDesc(@PathVariable Integer customerOrderId) {
@@ -118,7 +122,13 @@ public class CustomerController {
     @PutMapping("/payByCard")
     @CrossOrigin
     public ResponseEntity<String> payByCard(@RequestBody CardRequestDto cardRequestDto) {
-        walletService.payByCard(952, 855);
+        walletService.payByCard(1102, 2952);
+        return ResponseEntity.ok("paid!");
+    }
+    @PutMapping("/saveCard")
+    public ResponseEntity<String> saveCard(@RequestBody CardRequestDto cardRequestDto) {
+        cardService.saveCard(cardRequestDto.getCardNumber(),cardRequestDto.getCvv2(),cardRequestDto.getMonth()
+        ,cardRequestDto.getPassword(),cardRequestDto.getYear());
         return ResponseEntity.ok("paid!");
     }
 

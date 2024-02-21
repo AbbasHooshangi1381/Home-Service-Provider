@@ -1,10 +1,12 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.repository.SuggestionRepository;
@@ -38,27 +40,33 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public void sendOfferForSubDuty(Integer expertId, Integer customerOrderId, Double suggestionPrice, String timeOfWork
+    public void sendSuggestionForOrder(Integer expertId, Integer customerOrderId, Double suggestionPrice, String timeOfWork
             , String durationTimeOfWork) {
         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException("i can not found ir !"));
         Suggestion suggestion = new Suggestion();
         if (expert != null) {
-            Double fixPrice = customerOrder.getProposedPrice();
-            Double validatedPrice = validatePrice(suggestionPrice, fixPrice);
-            suggestion.setSuggestionPrice(validatedPrice);
-            String time = checkAndRegisterTimeOfLoan(timeOfWork);
-            suggestion.setTimeOfStartingWork(time);
-            suggestion.setTimeOfSendSuggestion(String.valueOf(LocalDate.now()));
-            String time1 = checkAndRegisterDurationTimeOfWork(durationTimeOfWork);
-            suggestion.setExpert(expert);
-            suggestion.setDurationTimeOfWork(time1);
-            suggestion.setCustomerOrder(customerOrder);
+            StatusOfOrder statusOfOrder = customerOrder.getStatusOfOrder();
+            if (statusOfOrder.equals(WAITING_FOR_SELECT_EXPERT) || statusOfOrder.equals(WAITING_FOR_EXPERT_SUGGESTIONS)) {
+                Double fixPrice = customerOrder.getProposedPrice();
+                Double validatedPrice = validatePrice(suggestionPrice, fixPrice);
+                suggestion.setSuggestionPrice(validatedPrice);
+                String time = checkAndRegisterTimeOfLoan(timeOfWork);
+                suggestion.setTimeOfStartingWork(time);
+                suggestion.setTimeOfSendSuggestion(String.valueOf(LocalDate.now()));
+                String time1 = checkAndRegisterDurationTimeOfWork(durationTimeOfWork);
+                suggestion.setExpert(expert);
+                suggestion.setDurationTimeOfWork(time1);
+                suggestion.setCustomerOrder(customerOrder);
 
-            suggestionRepository.save(suggestion);
-            customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
-            customerOrderRepository.save(customerOrder);
+                suggestionRepository.save(suggestion);
+                customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
+                customerOrderRepository.save(customerOrder);
+            }
+            else {
+                throw new NotValidException(" your status of order is not true !");
+            }
         }
     }
 
@@ -92,11 +100,12 @@ public class SuggestionServiceImpl implements SuggestionService {
         }
         return byCustomerOrderIdOrderByProposedPriceDesc;
     }
+
     @Override
     public List<Suggestion> showSuggestionOrderByExpertStars(Integer customerOrderId) {
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(()->
+        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException("I can not found this customer order !"));
-         Integer id = customerOrder.getCustomer().getId();
+        Integer id = customerOrder.getCustomer().getId();
         List<Suggestion> expertsByOrderIdOrderByStarDesc =
                 expertRepository.findExpertsByOrderIdOrderByStarDesc(id);
         if (expertsByOrderIdOrderByStarDesc.isEmpty()) {

@@ -26,20 +26,20 @@ public class SecurityConfiguration {
         this.baseUserRepository = baseUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
-    @Bean
+/*    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("/registration/**").permitAll()
+                       // .requestMatchers("/registration/**").permitAll()
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
                          .requestMatchers("/expert/**").hasRole("EXPERT")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()).httpBasic(Customizer.withDefaults());
 
         return http.build();
-    }
+    }*/
 /*    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -50,6 +50,19 @@ public class SecurityConfiguration {
 
         return http.build();
     }*/
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth
+                    .anyRequest().permitAll()
+            )
+            .httpBasic(Customizer.withDefaults());
+
+    return http.build();
+}
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {

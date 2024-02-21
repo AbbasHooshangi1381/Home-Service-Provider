@@ -54,7 +54,7 @@ public class ApiExceptionHandler {
     }
     @ExceptionHandler(value = NotEnoughCreditException.class)
     public ResponseEntity<Object>handleNotEnoughCreditException(NotEnoughCreditException n){
-        HttpStatus notValid=HttpStatus.BAD_REQUEST;
+        HttpStatus notValid=HttpStatus.NOT_ACCEPTABLE;
         ApiException apiException=new ApiException(
                 n.getMessage(),
                 notValid

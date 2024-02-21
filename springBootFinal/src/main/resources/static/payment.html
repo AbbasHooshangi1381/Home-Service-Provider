@@ -72,7 +72,7 @@
 
 <script>
     function loadCaptcha() {
-        fetch('http://localhost:8088/api/captcha')
+        fetch('http://localhost:8090/api/captcha')
             .then(response => response.text())
             .then(captchaText => {
                 document.getElementById('captchaLoad').value = captchaText;
@@ -92,16 +92,16 @@
             "year": document.getElementById("yy").value,
             "password": document.getElementById("password").value,
         }
-        fetch('http://localhost:8088/api/verify-captcha', {
+        fetch('http://localhost:8090/api/verify-captcha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({captchaAnswer: data.captchaAnswer})
         })
-/*            .then(response => {
+            .then(response => {
                 if (response.ok) {
-                    return fetch('http://localhost:8088/card/saveCard', {
+                    return fetch('http://localhost:8090/customer/saveCard', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -111,10 +111,10 @@
                 } else {
                     throw new Error("Invalid CAPTCHA");
                 }
-            })*/
+            })
             .then(response => {
                 if (response.ok) {
-                    return fetch('http://localhost:8088/wallet/payByCard', {
+                    return fetch('http://localhost:8090/customer/payByCard', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'

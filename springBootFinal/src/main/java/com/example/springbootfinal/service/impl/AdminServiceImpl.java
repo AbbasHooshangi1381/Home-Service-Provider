@@ -40,7 +40,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
 
-    @Override
+/*    @Override
     public BaseUser changePassword(String userName, String newPassword) {
         BaseUser baseUser = baseUserRepository.findByUserName(userName).orElseThrow(() ->
                 new NotFoundException("i can not found this userName"));
@@ -48,7 +48,7 @@ public class AdminServiceImpl implements AdminService {
         baseUser.setPassword(encode);
         baseUserRepository.save(baseUser);
         return baseUser;
-    }
+    }*/
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

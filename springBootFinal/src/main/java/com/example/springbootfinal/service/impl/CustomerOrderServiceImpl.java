@@ -1,9 +1,12 @@
 package com.example.springbootfinal.service.impl;
 
+import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
+import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.Customer;
+import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.exception.NotValidException;
@@ -16,6 +19,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +74,73 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         subDuty.setPrice(proposedPrice);
         customerOrder.setStatusOfOrder(StatusOfOrder.WAITING_FOR_COMING_EXPERT);
         subDutyRepository.save(subDuty);
+        customerOrderRepository.save(customerOrder);
+    }
+    @Override
+    public void changeStatusOfOrderByExpertStarted(Integer orderId, LocalDateTime startedTime) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("I cannot find this order"));
+
+        if (customerOrder.getStatusOfOrder() == StatusOfOrder.STARTED) {
+            throw new DuplicateException("You already started this order.");
+        }
+
+        Suggestion suggestionByExpert = customerOrder.getSuggestionList().stream()
+                .filter(suggestion -> suggestion.getExpert() != null)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("No suggestion made by an expert for this order."));
+
+        LocalDateTime suggestionTimeStamp = LocalDateTime.parse(suggestionByExpert.getTimeOfStartingWork(),
+                DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+
+        if (startedTime.isBefore(suggestionTimeStamp)) {
+            throw new NotValidException("Selected time cannot be earlier than the expert's suggestion time.");
+        }
+
+        customerOrder.setStatusOfOrder(StatusOfOrder.STARTED);
+        customerOrderRepository.save(customerOrder);
+    }
+
+    @Override
+    @Transactional
+    public void changeStatusOfOrderByCustomerToFinish(Integer orderId, String timeOfFinishingWork) {
+        CustomerOrder customerOrder = customerOrderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("I cannot find this order"));
+
+        Suggestion suggestionByExpert = customerOrder.getSuggestionList().stream()
+                .filter(suggestion -> suggestion.getExpert() != null)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("No suggestion made by an expert for this order."));
+
+        String timeOfStartingWork = suggestionByExpert.getTimeOfStartingWork();
+        String durationTimeOfWork = suggestionByExpert.getDurationTimeOfWork();
+        LocalDateTime startWorkTime = LocalDateTime.parse(timeOfStartingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        LocalTime durationTime = LocalTime.parse(durationTimeOfWork, DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalDateTime expectedFinishTime = startWorkTime
+                .plusHours(durationTime.getHour())
+                .plusMinutes(durationTime.getMinute())
+                .plusSeconds(durationTime.getSecond());
+        LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        if (actualFinishTime.isAfter(expectedFinishTime)) {
+            long delayHours = ChronoUnit.HOURS.between(expectedFinishTime, actualFinishTime);
+            Integer ratingReduction = (int) delayHours;
+            Expert expert = suggestionByExpert.getExpert();
+            Integer currentRating = expert.getStars();
+            Integer updatedRating = currentRating - ratingReduction;
+            if (updatedRating <= 0) {
+                expert.setEnabled(false);
+                expert.setStars(updatedRating);
+                expertRepository.save(expert);
+            } else {
+                expert.setStars(updatedRating);
+                expertRepository.save(expert);
+            }
+        }
+
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)) {
+            throw new DuplicateException("you done this work at past");
+        }
+        customerOrder.setStatusOfOrder(StatusOfOrder.DONE);
         customerOrderRepository.save(customerOrder);
     }
 

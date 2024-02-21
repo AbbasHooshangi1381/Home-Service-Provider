@@ -6,6 +6,7 @@ import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.other.Wallet;
 
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -37,7 +38,14 @@ public class Expert extends BaseUser  {
     Wallet wallet;
 
     @ManyToOne
+    @JsonIgnore
     Admin admin;
+
+    @ManyToMany
+    @JoinTable(name = "expert_subduty",
+            joinColumns = @JoinColumn(name = "expert_id"),
+            inverseJoinColumns = @JoinColumn(name = "subduty_id"))
+    List<SubDuty>subDutyList;
 
 
     @OneToMany(mappedBy = "expert")

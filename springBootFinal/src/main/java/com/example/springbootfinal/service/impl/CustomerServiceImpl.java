@@ -36,14 +36,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPassword(newPassword);
         return "you changed the password";
     }
-    @Override
-    public Optional<Customer> findByUserNameAndPassword(String username, String password) {
-         Customer customer = customerRepository.findByUserNameAndPassword(username, password).orElseThrow(() -> new NotFoundException(" i can not found this user"));
-        if (customer != null) {
-            System.out.println("you are in system ");
-        }
-        return Optional.ofNullable(customer);
-    }
     public List<Customer> findAllCustomersByCriteria(Map<String, String> param) {
         Specification<Customer> specification = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

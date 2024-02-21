@@ -9,6 +9,6 @@ public interface SubDutyService {
     void changeDescriptionOfSubDuty(Integer subDutyId, String newDescription);
     void changePriceOfSubDutyByAdmin(Integer subDutyId, Double newPrice);
     void registerExpertInOneSubDuty(Integer expertId, Integer subServiceId);
-    void deleteExpertInSubDutyField(Integer subDutyId, Integer expertId);
+    void deleteExpertInSubDutyField(Integer expertId, Integer subDutyId);
     List<SubDuty> showSubDutyOfOneDuty(String dutyName);
 }

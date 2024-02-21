@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface SuggestionService  {
-    void sendOfferForSubDuty(Integer expertId, Integer customerOrderId,Double suggestionPrice,String timeOfWork, String durationTimeOfWork) throws SQLException;
+    void sendSuggestionForOrder(Integer expertId, Integer customerOrderId,Double suggestionPrice,String timeOfWork, String durationTimeOfWork) throws SQLException;
     List<CustomerOrder> customerOrderList();
     List<Suggestion> showSuggestionOrderByPriceOfSuggestions(Integer customerOrderId);
     List<Suggestion> showSuggestionOrderByExpertStars(Integer customerOrderId);

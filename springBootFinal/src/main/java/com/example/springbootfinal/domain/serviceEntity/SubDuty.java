@@ -26,6 +26,7 @@ public class SubDuty extends BaseEntity<Integer> {
 
     @ManyToOne
     @ToString.Exclude
+    @JsonIgnore
     Duty service;
 
     @ManyToMany
