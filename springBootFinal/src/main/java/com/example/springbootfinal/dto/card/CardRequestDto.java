@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class CardRequestDto {
 
     @Pattern(regexp = "^\\d{16}$", message = "Please enter a 16-digit number")
-    private String cardNumber;
+    private String bankAccountNumber;
     @Pattern(regexp = "^\\d{3}$", message = "Please enter 3 number")
     private String cvv2;
 

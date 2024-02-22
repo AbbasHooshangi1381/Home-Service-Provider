@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 
-public interface ExpertRepository extends JpaRepository<Expert,Integer>,JpaSpecificationExecutor {
+public interface ExpertRepository extends JpaRepository<Expert,Integer>,JpaSpecificationExecutor<Expert> {
      Optional<Expert> findByEmail(String email);
      Optional<Expert> findByUserNameAndPassword(String username, String password);
      Optional<Expert> findByPassword(String password);

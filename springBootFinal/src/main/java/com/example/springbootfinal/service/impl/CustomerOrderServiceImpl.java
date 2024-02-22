@@ -156,8 +156,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Override
     public List<CustomerOrder> customerOrderListOfCustomer(Integer customerId, String statusOfOrder) {
-         String upperCased = statusOfOrder.toUpperCase();
-        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOfCustomer(customerId, upperCased);
+        StatusOfOrder inputStatus = StatusOfOrder.valueOf(statusOfOrder.toUpperCase());
+        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOfCustomer(customerId, inputStatus);
         if (customerOrders.isEmpty()){
             throw new NotFoundException(" i can not found this customerOrder");
         }
@@ -165,8 +165,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
     @Override
     public List<CustomerOrder> customerOrderListOfExpert(Integer expertId, String statusOfOrder) {
-        String upperCased = statusOfOrder.toUpperCase();
-        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expertId, upperCased);
+        StatusOfOrder inputStatus = StatusOfOrder.valueOf(statusOfOrder.toUpperCase());
+        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expertId, inputStatus);
         if (customerOrders.isEmpty()){
             throw new NotFoundException(" i can not found this customerOrder");
         }

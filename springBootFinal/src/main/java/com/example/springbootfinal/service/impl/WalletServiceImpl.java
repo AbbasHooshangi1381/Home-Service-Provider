@@ -42,7 +42,6 @@ public class WalletServiceImpl implements WalletService {
             if (newCredit<0){
                 throw new NotEnoughCreditException("you do not have enough credit to pay");
             }
-            Integer id = wallet.getId();
             wallet.setCreditAmount(newCredit);
             customerOrder.setStatusOfOrder(StatusOfOrder.PAID);
             Wallet wallet1 = walletRepository.findWalletByExpertId(expertId).orElseThrow(() -> new NotFoundException(" i can not found this Expert id"));

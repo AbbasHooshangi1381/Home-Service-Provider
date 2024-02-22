@@ -9,6 +9,7 @@ import com.example.springbootfinal.dto.card.CardRequestDto;
 import com.example.springbootfinal.dto.comments.CommentsRequestDto;
 import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
 import com.example.springbootfinal.dto.customer.FinishedDto;
+import com.example.springbootfinal.dto.customer.HistoryOfOrderDto;
 import com.example.springbootfinal.dto.customer.StartedDto;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderDTO;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderResponseDto;
@@ -119,28 +120,24 @@ public class CustomerController {
         return ResponseEntity.ok("send");
     }
 
-    @PutMapping("/payByCard")
+    @PutMapping("/saveCardAndPay")
     @CrossOrigin
-    public ResponseEntity<String> payByCard(@RequestBody CardRequestDto cardRequestDto) {
-        walletService.payByCard(1102, 2952);
-        return ResponseEntity.ok("paid!");
-    }
-    @PutMapping("/saveCard")
     public ResponseEntity<String> saveCard(@RequestBody CardRequestDto cardRequestDto) {
-        cardService.saveCard(cardRequestDto.getCardNumber(),cardRequestDto.getCvv2(),cardRequestDto.getMonth()
+        cardService.saveCard(cardRequestDto.getBankAccountNumber(),cardRequestDto.getCvv2(),cardRequestDto.getMonth()
         ,cardRequestDto.getPassword(),cardRequestDto.getYear());
+        walletService.payByCard(1102, 2952);
         return ResponseEntity.ok("paid!");
     }
 
     ///////////////////////////////////new for insomnia/////////////////////////
-    @GetMapping("/historyOfOrderOfCustomer/{customerId}/{statusOfOrder}")
-    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@PathVariable Integer customerId,
-                                                                        @PathVariable String statusOfOrder) {
-        List<CustomerOrder> customerOrders = customerOrderService.customerOrderListOfCustomer(customerId, statusOfOrder);
+    @GetMapping("/historyOfOrderOfCustomer")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
+        List<CustomerOrder> customerOrders = customerOrderService.
+                customerOrderListOfCustomer(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
         return ResponseEntity.ok(customerOrders);
     }
 
-    @GetMapping("/creditOfCustomer/{customerId}}")
+    @GetMapping("/creditOfCustomer/{customerId}")
     public ResponseEntity<Double> creditOfCustomer(@PathVariable Integer customerId) {
         Double creditOfWalletByCustomerId = walletService.findCreditOfWalletByCustomerId(customerId);
         return ResponseEntity.ok(creditOfWalletByCustomerId);

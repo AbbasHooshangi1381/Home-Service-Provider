@@ -7,6 +7,7 @@ import com.example.springbootfinal.domain.other.Wallet;
 
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -23,6 +24,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 @Entity
+@JsonIgnoreProperties({"admin", "wallet","suggestionList","personalPhoto"})
+
 public class Expert extends BaseUser  {
 
     @Lob
@@ -46,7 +49,6 @@ public class Expert extends BaseUser  {
             joinColumns = @JoinColumn(name = "expert_id"),
             inverseJoinColumns = @JoinColumn(name = "subduty_id"))
     List<SubDuty>subDutyList;
-
 
     @OneToMany(mappedBy = "expert")
     List<Suggestion>suggestionList;

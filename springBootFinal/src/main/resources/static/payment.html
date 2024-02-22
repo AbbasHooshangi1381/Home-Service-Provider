@@ -101,20 +101,7 @@
         })
             .then(response => {
                 if (response.ok) {
-                    return fetch('http://localhost:8090/customer/saveCard', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(paymentData)
-                    });
-                } else {
-                    throw new Error("Invalid CAPTCHA");
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return fetch('http://localhost:8090/customer/payByCard', {
+                    return fetch('http://localhost:8090/customer/saveCardAndPay', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -128,7 +115,7 @@
                         })
                     });
                 } else {
-                    throw new Error('Failed to save card');
+                    throw new Error('Failed to pay by card');
                 }
             })
             .then(response => {

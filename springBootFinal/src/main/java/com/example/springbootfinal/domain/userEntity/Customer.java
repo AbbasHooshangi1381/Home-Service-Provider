@@ -6,6 +6,7 @@ import com.example.springbootfinal.domain.other.Comments;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Wallet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +20,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ToString
 @Entity
-
+@JsonIgnoreProperties({"admin", "wallet","commentsList"})
+//if has error comment up.
 public class Customer extends BaseUser {
 
     @OneToMany(mappedBy = "customer")

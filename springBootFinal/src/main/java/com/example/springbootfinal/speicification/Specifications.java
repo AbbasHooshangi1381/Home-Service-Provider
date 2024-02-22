@@ -26,7 +26,7 @@ public class Specifications {
             }
             if (criteria.containsKey("status")) {
                 StatusOfOrder status = StatusOfOrder.valueOf((String) criteria.get("status"));
-                predicates.add(criteriaBuilder.equal(root.get("statusOfOrder"), status));
+                predicates.add(criteriaBuilder.equal(root.get("status_of_order"), status));
             }
             if (criteria.containsKey("subDuty")) {
                 Integer subDutyId = (Integer) criteria.get("subDuty");

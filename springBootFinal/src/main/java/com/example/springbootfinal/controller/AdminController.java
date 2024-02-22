@@ -10,12 +10,19 @@ import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.*;
 import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
+import com.example.springbootfinal.dto.specification.RequestSpecificationDto;
 import com.example.springbootfinal.dto.subDity.SubDutyResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutySaveRequestDto;
+import com.example.springbootfinal.repository.BaseUserRepository;
+import com.example.springbootfinal.repository.CustomerOrderRepository;
+import com.example.springbootfinal.repository.CustomerRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.*;
+import com.example.springbootfinal.service.impl.FilterSpecificationImpl;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +35,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
+@AllArgsConstructor
 @SuppressWarnings("unused")
 public class AdminController {
 
@@ -39,21 +47,29 @@ public class AdminController {
     private final CustomerOrderService customerOrderService;
     private final ExpertService expertService;
     private final ExpertRepository expertRepository;
+    private final BaseUserRepository baseUserRepository;
     private final CustomerService  customerService;
+    private final FilterSpecificationImpl<Expert> filterSpecification;
+    private final FilterSpecificationImpl<Customer> filterSpecificationCustomer;
+    private final CustomerRepository customerRepository;
+    private final CustomerOrderRepository customerOrderRepository;
+    private final FilterSpecificationImpl<CustomerOrder> filterSpecificationCustomerOrder;
 
-    public AdminController(AdminService adminService, ModelMapper modelMapper, DutyService dutyService,
-                           SubDutyService subDutyService, BaseUserService baseUserService,
-                           CustomerOrderService customerOrderService,
-                           ExpertService expertService,ExpertRepository expertRepository,CustomerService customerService) {
-        this.adminService = adminService;
-        this.modelMapper = modelMapper;
-        this.dutyService = dutyService;
-        this.subDutyService = subDutyService;
-        this.baseUserService = baseUserService;
-        this.customerOrderService = customerOrderService;
-        this.expertService=expertService;
-        this.expertRepository=expertRepository;
-        this.customerService=customerService;
+
+    @PostMapping("/specificationExpert")
+    public List<Expert> getExpert(@RequestBody RequestSpecificationDto requestSpecificationDto){
+
+         Specification<Expert> searchSpecificationDto = filterSpecification.getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
+                , requestSpecificationDto.getGlobalOperator());
+        return expertRepository.findAll(searchSpecificationDto);
+    }
+
+    @PostMapping("/specificationCustomer")
+    public List<Customer> getCustomer(@RequestBody RequestSpecificationDto requestSpecificationDto){
+
+        Specification<Customer> searchSpecificationDto = filterSpecificationCustomer.getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
+                , requestSpecificationDto.getGlobalOperator());
+        return customerRepository.findAll(searchSpecificationDto);
     }
 
     @PutMapping("/changePassword//{newPassword}")
@@ -148,9 +164,13 @@ public class AdminController {
     }
 
     /////////////////////////////new to insomnia///////////////////////////
-    @PostMapping("/reportOrder")
-    public List<CustomerOrder> orderByCriteria(@RequestBody Map<String, Object> criteria) {
-        return customerOrderService.orderByCriteria(criteria);
+    @PostMapping("/specificationCustomerOrder")
+    public List<CustomerOrder> getCustomerOrder(@RequestBody RequestSpecificationDto requestSpecificationDto){
+
+        Specification<CustomerOrder> searchSpecificationDto = filterSpecificationCustomerOrder.
+                getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
+                , requestSpecificationDto.getGlobalOperator());
+        return customerOrderRepository.findAll(searchSpecificationDto);
     }
     /*{
     "startDate": "2024-01-01T00:00:00",

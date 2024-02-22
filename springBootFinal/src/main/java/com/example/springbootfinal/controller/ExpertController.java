@@ -8,6 +8,7 @@ import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.Expert.CriteriaSearchDto;
 import com.example.springbootfinal.dto.Expert.ExpertSaveDto;
 import com.example.springbootfinal.dto.Expert.SendOfferRequestDto;
+import com.example.springbootfinal.dto.customer.HistoryOfOrderDto;
 import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.*;
 import jakarta.validation.Valid;
@@ -91,14 +92,14 @@ public class ExpertController {
     }
 
     ///////////////////////////not save in insomnia /////////////////////
-    @GetMapping("/historyOfOrderOfExpert/{expertId}/{statusOfOrder}")
-    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@PathVariable Integer expertId,
-                                                                        @PathVariable String statusOfOrder) {
-        List<CustomerOrder> customerOrders = customerOrderService.customerOrderListOfExpert(expertId, statusOfOrder);
+    @GetMapping("/historyOfOrderOfExpert")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
+        List<CustomerOrder> customerOrders =
+                customerOrderService.customerOrderListOfExpert(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
         return ResponseEntity.ok(customerOrders);
     }
 
-    @GetMapping("/creditOfExpert/{expertId}}")
+    @GetMapping("/creditOfExpert/{expertId}")
     public ResponseEntity<Double> creditOfExpert(@PathVariable Integer expertId) {
         Double creditOfWalletByExpertId = walletService.findCreditOfWalletByExpertId(expertId);
         return ResponseEntity.ok(creditOfWalletByExpertId);
