@@ -18,9 +18,8 @@ public interface CustomerOrderService {
     @Transactional
     void changeStatusOfOrderByCustomerToFinish(Integer orderId, String timeOfFinishingWork);
 
-    List<CustomerOrder> findOrdersByExpertId(Integer expertId);
-    List<CustomerOrder> customerOrderListOfCustomer(Integer customerId,String statusOfOrder);
-    List<CustomerOrder> customerOrderListOfExpert(Integer expertId,String statusOfOrder);
-    List<CustomerOrder> orderByCriteria(Map<String, Object> filterParams);
+    List<CustomerOrder> findOrdersByExpertUserName(String userName);
+    List<CustomerOrder> customerOrderListOfCustomer(String userName,String statusOfOrder);
+    List<CustomerOrder> customerOrderListOfExpert(String userName,String statusOfOrder);
     void changeStatusOfOrderByExpertStarted(Integer orderId, LocalDateTime startedTime);
 }

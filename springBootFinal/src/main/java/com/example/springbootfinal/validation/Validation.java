@@ -20,8 +20,7 @@ public class Validation {
             char randomChar = lowercaseLettersAndNumbers.charAt(randomIndex);
             password.append(randomChar);
         }
-        String shuffledPassword = shuffleString(password.toString());
-        return shuffledPassword;
+        return shuffleString(password.toString());
     }
     private static String shuffleString(String input) {
         List<Character> characters = input.chars().mapToObj(e -> (char)e).collect(Collectors.toList());

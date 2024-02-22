@@ -69,10 +69,6 @@ public class BeforeRegistration {
         if (confirmToken.isEmpty()) {
             throw new NotFoundException("Token not found!");
         }
-/*
-        if (confirmToken.get().getConfirmedAt() != false) {
-            throw new IllegalStateException("Email is already confirmed");
-        }*/
         LocalDateTime expiresAt = confirmToken.get().getExpiresAt();
         if (expiresAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("Token is already expired!");

@@ -24,6 +24,7 @@ public interface WalletRepository extends JpaRepository<Wallet,Integer> {
     Double findCreditOfWalletByCustomerId(@Param("customerId") Integer customerId);
 
 
+
 }
 
 

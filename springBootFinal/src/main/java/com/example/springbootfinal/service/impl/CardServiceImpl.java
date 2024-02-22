@@ -4,7 +4,6 @@ import com.example.springbootfinal.domain.other.Card;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.repository.CardRepository;
 import com.example.springbootfinal.service.CardService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

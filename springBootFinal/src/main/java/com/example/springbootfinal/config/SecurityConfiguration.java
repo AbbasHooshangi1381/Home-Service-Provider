@@ -1,14 +1,11 @@
 package com.example.springbootfinal.config;
 
-import com.example.springbootfinal.repository.AdminRepository;
 import com.example.springbootfinal.repository.BaseUserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,20 +23,21 @@ public class SecurityConfiguration {
         this.baseUserRepository = baseUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
-/*    @Bean
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(a -> a
-                       // .requestMatchers("/registration/**").permitAll()
+                        .requestMatchers("/registration/**").permitAll()
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
-                         .requestMatchers("/expert/**").hasRole("EXPERT")
+                        .requestMatchers("/expert/**").hasRole("EXPERT")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()).httpBasic(Customizer.withDefaults());
 
         return http.build();
-    }*/
+    }
 /*    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -50,7 +48,7 @@ public class SecurityConfiguration {
 
         return http.build();
     }*/
-@Bean
+/*@Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
             .csrf(AbstractHttpConfigurer::disable)
@@ -61,13 +59,13 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .httpBasic(Customizer.withDefaults());
 
     return http.build();
-}
+}*/
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.userDetailsService((username) -> baseUserRepository
-                .findByUserName(username)
+                        .findByUserName(username)
                         .orElseThrow(() -> new UsernameNotFoundException(String.format("This %s notFound!", username))))
                 .passwordEncoder(passwordEncoder);
     }

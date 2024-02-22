@@ -1,8 +1,6 @@
 package com.example.springbootfinal.repository;
 
 import com.example.springbootfinal.domain.other.Suggestion;
-import com.example.springbootfinal.domain.userEntity.Admin;
-import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -17,8 +15,7 @@ import java.util.Optional;
 
 public interface ExpertRepository extends JpaRepository<Expert,Integer>,JpaSpecificationExecutor<Expert> {
      Optional<Expert> findByEmail(String email);
-     Optional<Expert> findByUserNameAndPassword(String username, String password);
-     Optional<Expert> findByPassword(String password);
+     Optional<Expert> findByUsername(String userName);
 
      @Query("SELECT s FROM Suggestion s WHERE s.customerOrder.customer.id= :customerId ORDER BY s.expert.stars DESC ")
      List<Suggestion> findExpertsByOrderIdOrderByStarDesc(@Param("customerId") Integer customerId);

@@ -3,30 +3,21 @@ package com.example.springbootfinal.controller;
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
-import com.example.springbootfinal.domain.userEntity.Customer;
-import com.example.springbootfinal.dto.Admin.BaseResponseDto;
 import com.example.springbootfinal.dto.card.CardRequestDto;
 import com.example.springbootfinal.dto.comments.CommentsRequestDto;
-import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
 import com.example.springbootfinal.dto.customer.FinishedDto;
-import com.example.springbootfinal.dto.customer.HistoryOfOrderDto;
 import com.example.springbootfinal.dto.customer.StartedDto;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderDTO;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderResponseDto;
 import com.example.springbootfinal.service.*;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
@@ -63,15 +54,14 @@ public class CustomerController {
     }
 
 
-    //////////////////////////////////////////////////////////////////
-    @PostMapping("/register-comments")
+    @PostMapping("/saveComments")
     public ResponseEntity<Integer> saveComments(@Valid @RequestBody CommentsRequestDto commentsRequestDto) {
         commentService.writCommentForExpert(commentsRequestDto.getCustomerOrderId(), commentsRequestDto.getExpertId(),
                 commentsRequestDto.getComments(), commentsRequestDto.getStar());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentsRequestDto.getStar());
     }
 
-    @PostMapping("/saveOrder")
+    @PostMapping("/saveCustomerOrder")
     public ResponseEntity<CustomerOrderResponseDto> saveOrder(@Valid @RequestBody CustomerOrderDTO customerOrderDto) throws Exception {
         String descriptionOfOrder = customerOrderDto.getDescriptionOfOrder();
         Double proposedPrice = customerOrderDto.getProposedPrice();
@@ -129,17 +119,10 @@ public class CustomerController {
         return ResponseEntity.ok("paid!");
     }
 
-    ///////////////////////////////////new for insomnia/////////////////////////
-    @GetMapping("/historyOfOrderOfCustomer")
-    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
-        List<CustomerOrder> customerOrders = customerOrderService.
-                customerOrderListOfCustomer(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
-        return ResponseEntity.ok(customerOrders);
-    }
-
-    @GetMapping("/creditOfCustomer/{customerId}")
-    public ResponseEntity<Double> creditOfCustomer(@PathVariable Integer customerId) {
-        Double creditOfWalletByCustomerId = walletService.findCreditOfWalletByCustomerId(customerId);
+    @GetMapping("/creditOfCustomer")
+    public ResponseEntity<Double> creditOfCustomer() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Double creditOfWalletByCustomerId = walletService.findCreditOfWalletByCustomerId(name);
         return ResponseEntity.ok(creditOfWalletByCustomerId);
     }
 }

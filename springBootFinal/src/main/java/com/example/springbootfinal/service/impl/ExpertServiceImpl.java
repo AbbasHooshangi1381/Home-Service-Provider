@@ -1,17 +1,13 @@
 package com.example.springbootfinal.service.impl;
 
 import com.example.springbootfinal.domain.enumurations.ExpertStatus;
-import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.ExpertRating;
-import com.example.springbootfinal.domain.other.Suggestion;
 
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
-import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
-import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.ExpertService;
 import jakarta.persistence.criteria.*;
@@ -20,14 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -45,6 +33,18 @@ public class ExpertServiceImpl implements ExpertService {
         this.customerOrderRepository = customerOrderRepository;
         this.subDutyRepository = subDutyRepository;
         this.suggestionRepository = suggestionRepository;
+    }
+
+    @Override
+    public List<CustomerOrder> showOrderToExpert(String username) {
+        Expert expert = expertRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("i can not found this expert"));
+        List<SubDuty> expertSubDuties = expert.getSubDutyList();
+        List<CustomerOrder> ordersForExpert = new ArrayList<>();
+        for (SubDuty subDuty : expertSubDuties) {
+            List<CustomerOrder> orders = subDuty.getCustomerOrderList();
+            ordersForExpert.addAll(orders);
+        }
+        return ordersForExpert;
     }
 
     @Override

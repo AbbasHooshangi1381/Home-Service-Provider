@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.springbootfinal.domain.enumurations.StatusOfOrder.WAITING_FOR_EXPERT_SUGGESTIONS;
 import static com.example.springbootfinal.domain.enumurations.StatusOfOrder.WAITING_FOR_SELECT_EXPERT;
@@ -40,9 +39,9 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public void sendSuggestionForOrder(Integer expertId, Integer customerOrderId, Double suggestionPrice, String timeOfWork
+    public void sendSuggestionForOrder(String userName, Integer customerOrderId, Double suggestionPrice, String timeOfWork
             , String durationTimeOfWork) {
-        Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("i can not found ir !"));
+        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException("i can not found user !"));
         CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
                 new NotFoundException("i can not found ir !"));
         Suggestion suggestion = new Suggestion();
@@ -70,8 +69,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         }
     }
 
-    @Override
-    public List<CustomerOrder> customerOrderList() {
+/*    @Override
+    public List<CustomerOrder> showOrderToExpert() {
         List<CustomerOrder> all = customerOrderRepository.findAll();
         List<CustomerOrder> filteredOrders = all.stream()
                 .filter(order ->
@@ -82,7 +81,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             System.out.println(order);
         }
         return filteredOrders;
-    }
+    }*/
 
     @Override
     public List<Suggestion> showSuggestionOrderByPriceOfSuggestions(Integer customerOrderId) {

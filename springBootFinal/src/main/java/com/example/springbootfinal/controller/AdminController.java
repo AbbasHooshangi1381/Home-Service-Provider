@@ -4,12 +4,10 @@ import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.ExpertRating;
 import com.example.springbootfinal.domain.serviceEntity.Duty;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
-import com.example.springbootfinal.domain.userEntity.Admin;
-import com.example.springbootfinal.domain.userEntity.BaseUser;
 import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.Admin.*;
-import com.example.springbootfinal.dto.customer.CriteriaSearchDtoOfCustomer;
+import com.example.springbootfinal.dto.customer.HistoryOfOrderDto;
 import com.example.springbootfinal.dto.specification.RequestSpecificationDto;
 import com.example.springbootfinal.dto.subDity.SubDutyResponseDto;
 import com.example.springbootfinal.dto.subDity.SubDutySaveRequestDto;
@@ -22,16 +20,12 @@ import com.example.springbootfinal.service.impl.FilterSpecificationImpl;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -48,7 +42,7 @@ public class AdminController {
     private final ExpertService expertService;
     private final ExpertRepository expertRepository;
     private final BaseUserRepository baseUserRepository;
-    private final CustomerService  customerService;
+    private final CustomerService customerService;
     private final FilterSpecificationImpl<Expert> filterSpecification;
     private final FilterSpecificationImpl<Customer> filterSpecificationCustomer;
     private final CustomerRepository customerRepository;
@@ -56,38 +50,33 @@ public class AdminController {
     private final FilterSpecificationImpl<CustomerOrder> filterSpecificationCustomerOrder;
 
 
-    @PostMapping("/specificationExpert")
-    public List<Expert> getExpert(@RequestBody RequestSpecificationDto requestSpecificationDto){
+    @PostMapping("/expertCriteria")
+    public List<Expert> getExpert(@RequestBody RequestSpecificationDto requestSpecificationDto) {
 
-         Specification<Expert> searchSpecificationDto = filterSpecification.getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
+        Specification<Expert> searchSpecificationDto = filterSpecification.getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
                 , requestSpecificationDto.getGlobalOperator());
         return expertRepository.findAll(searchSpecificationDto);
+        //firstName,lastName,email
     }
 
-    @PostMapping("/specificationCustomer")
-    public List<Customer> getCustomer(@RequestBody RequestSpecificationDto requestSpecificationDto){
+    @PostMapping("/customerCriteria")
+    public List<Customer> getCustomer(@RequestBody RequestSpecificationDto requestSpecificationDto) {
 
         Specification<Customer> searchSpecificationDto = filterSpecificationCustomer.getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
                 , requestSpecificationDto.getGlobalOperator());
         return customerRepository.findAll(searchSpecificationDto);
     }
 
-    @PutMapping("/changePassword//{newPassword}")
+    @PutMapping("/changePassword/{newPassword}")
     public ResponseEntity<String> changePassword(@PathVariable String newPassword) {
-         String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         baseUserService.changePassword(name, newPassword);
         return ResponseEntity.ok("password changed ! ");
     }
 
-    //////////////////////////////////////////////////////////////////
     @PostMapping("/saveDuty/{saveDuty}")
     public ResponseEntity<String> saveExpert(@PathVariable String saveDuty) {
         Duty duty = dutyService.saveServiceByAdmin(saveDuty);
-
-        if (duty == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-        }
-
         return new ResponseEntity<>("saved!", HttpStatus.CREATED);
     }
 
@@ -98,48 +87,42 @@ public class AdminController {
         String description = subDutySaveDto.getDescription();
         String subServiceName = subDutySaveDto.getSubServiceName();
         SubDuty subDuty = subDutyService.saveSubDutyByAdmin(dutyId, subServiceName, priceOfSubDuty, description);
-        if (subDuty==null){
+        if (subDuty == null) {
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
         SubDutyResponseDto map = modelMapper.map(subDuty, SubDutyResponseDto.class);
         return ResponseEntity.status(HttpStatus.CREATED).body(map);
     }
+
     @PutMapping("/changeDescriptionOfSubDuty/{subDutyId}/{newDescription}")
-    public ResponseEntity<String> changeDescriptionOfSubDuty( @PathVariable Integer subDutyId, @PathVariable String newDescription) {
+    public ResponseEntity<String> changeDescriptionOfSubDuty(@PathVariable Integer subDutyId, @PathVariable String newDescription) {
         subDutyService.changeDescriptionOfSubDuty(subDutyId, newDescription);
         return ResponseEntity.ok("Description of SubDuty with ID " + subDutyId + " has been changed.");
     }
+
     @PutMapping("/changePriceOfSubDuty/{subDutyId}/{newPrice}")
-    public ResponseEntity<String> changePriceOfSubDuty( @PathVariable Integer subDutyId, @PathVariable Double newPrice){
-        subDutyService.changePriceOfSubDutyByAdmin(subDutyId,newPrice);
-        return ResponseEntity.ok("price of subDuty with ID"+subDutyId+"has been changed");
+    public ResponseEntity<String> changePriceOfSubDuty(@PathVariable Integer subDutyId, @PathVariable Double newPrice) {
+        subDutyService.changePriceOfSubDutyByAdmin(subDutyId, newPrice);
+        return ResponseEntity.ok("price of subDuty with ID" + subDutyId + "has been changed");
     }
+
     @PutMapping("/registerExpertInOneSubDuty/{expertId}/{subServiceId}")
-    public ResponseEntity<String> registerExpertInOneSubDuty( @PathVariable Integer expertId, @PathVariable Integer subServiceId) {
+    public ResponseEntity<String> registerExpertInOneSubDuty(@PathVariable Integer expertId, @PathVariable Integer subServiceId) {
         subDutyService.registerExpertInOneSubDuty(expertId, subServiceId);
         return ResponseEntity.ok("Expert with ID " + expertId + " added to SubService with ID " + subServiceId);
     }
+
     @PutMapping("/deleteExpertInSubDutyField/{expertId}/{subServiceId}")
-    public ResponseEntity<String> deleteExpertInSubDutyField( @PathVariable Integer expertId,@PathVariable Integer subServiceId){
-        subDutyService.deleteExpertInSubDutyField(expertId,subServiceId);
-        return ResponseEntity.ok(" subDuty with ID"+subServiceId+"has deleted ");
-    }
-    @PutMapping("/confirmExpertStatusByAdmin/{id}")
-    public ResponseEntity<BaseResponseDto> confirmExpertStatusByAdmin(@PathVariable Integer id) {
-        Expert expert = expertService.changeStatusOfExpertByAdmin(id);
-        BaseResponseDto map = modelMapper.map(expert, BaseResponseDto.class);
-        return ResponseEntity.ok(map);
+    public ResponseEntity<String> deleteExpertInSubDutyField(@PathVariable Integer expertId, @PathVariable Integer subServiceId) {
+        subDutyService.deleteExpertInSubDutyField(expertId, subServiceId);
+        return ResponseEntity.ok(" subDuty with ID" + subServiceId + "has deleted ");
     }
 
-    @GetMapping("/findAllExpertByCriteria")
-    public List<CriteriaSearchDtoOfCustomer> findAllExpertByCriteria(@Valid @RequestBody Map<String, String> param) {
-        List<CriteriaSearchDtoOfCustomer> criteriaSearchDtoOfCustomerList = new ArrayList<>();
-        List<Expert> allSpecialistsByCriteria = expertService.findAllExpertByCriteria(param);
-        for (Expert s : allSpecialistsByCriteria) {
-            CriteriaSearchDtoOfCustomer map = modelMapper.map(s, CriteriaSearchDtoOfCustomer.class);
-            criteriaSearchDtoOfCustomerList.add(map);
-        }
-        return criteriaSearchDtoOfCustomerList;
+    @PutMapping("/confirmExpertStatusByAdmin/{idOfExpert}")
+    public ResponseEntity<BaseResponseDto> confirmExpertStatusByAdmin(@PathVariable Integer idOfExpert) {
+        Expert expert = expertService.changeStatusOfExpertByAdmin(idOfExpert);
+        BaseResponseDto map = modelMapper.map(expert, BaseResponseDto.class);
+        return ResponseEntity.ok(map);
     }
 
     @GetMapping("/findExpertsBySubDuty/{subDutyName}")
@@ -152,44 +135,35 @@ public class AdminController {
         return expertService.findExpertRatings();
     }
 
-    @GetMapping("/findAllCustomertByCriteria")
-    public List<CriteriaSearchDtoOfCustomer> findAllCustomerByCriteria(@Valid @RequestBody Map<String, String> param) {
-        List<CriteriaSearchDtoOfCustomer> criteriaSearchDtoOfCustomerList = new ArrayList<>();
-        List<Customer> allSpecialistsByCriteria = customerService.findAllCustomersByCriteria(param);
-        for (Customer s : allSpecialistsByCriteria) {
-            CriteriaSearchDtoOfCustomer map = modelMapper.map(s, CriteriaSearchDtoOfCustomer.class);
-            criteriaSearchDtoOfCustomerList.add(map);
-        }
-        return criteriaSearchDtoOfCustomerList;
-    }
-
-    /////////////////////////////new to insomnia///////////////////////////
-    @PostMapping("/specificationCustomerOrder")
-    public List<CustomerOrder> getCustomerOrder(@RequestBody RequestSpecificationDto requestSpecificationDto){
+    @PostMapping("/CustomerOrderCriteria")
+    public List<CustomerOrder> getCustomerOrder(@RequestBody RequestSpecificationDto requestSpecificationDto) {
 
         Specification<CustomerOrder> searchSpecificationDto = filterSpecificationCustomerOrder.
                 getSearchSpecificationDto(requestSpecificationDto.getSearchSpecificationDto()
-                , requestSpecificationDto.getGlobalOperator());
+                        , requestSpecificationDto.getGlobalOperator());
         return customerOrderRepository.findAll(searchSpecificationDto);
-    }
-    /*{
-    "startDate": "2024-01-01T00:00:00",
-    "endDate": "2024-01-31T23:59:59",
-    "status": "DONE",
-    "subDuty": 5,
-    "expertIdWithDone": 10,
-    "customerIdWithDone": 20
+        /*{
+            "startDate": "2024-01-01T00:00:00 , endDate": "2024-01-31T23:59:59",
+            "status": "DONE",
+            "JoinBySubDutyName":"....
 }*/
+    }
 
-    @PostMapping("/reportUsers")
-    public List<BaseUser> generateReport(@RequestBody Map<String, Object> criteria) {
-        return baseUserService.generateReport(criteria);
+    @GetMapping("/historyOfOrderOfCustomer")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<CustomerOrder> customerOrders = customerOrderService.
+                customerOrderListOfCustomer(name, historyOfOrderDto.getStatusOfOrder());
+        return ResponseEntity.ok(customerOrders);
     }
-    /*{
-    "userId": 123,
-    "dateOfSigningInAfter": "2024-01-01",
-    "minOrdersCount": 5,
-    "minSuggestionsCount": 2
-}*/
+
+    @GetMapping("/historyOfOrderOfExpert")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfExpert(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<CustomerOrder> customerOrders =
+                customerOrderService.customerOrderListOfExpert(name, historyOfOrderDto.getStatusOfOrder());
+        return ResponseEntity.ok(customerOrders);
+    }
+
 
 }

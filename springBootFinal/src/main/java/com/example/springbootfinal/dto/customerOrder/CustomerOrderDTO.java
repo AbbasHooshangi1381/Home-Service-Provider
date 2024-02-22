@@ -4,7 +4,6 @@ import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -43,17 +42,11 @@ public class CustomerOrderDTO {
         return descriptionOfOrder;
     }
 
-    public void setDescriptionOfOrder(String descriptionOfOrder) {
-        this.descriptionOfOrder = descriptionOfOrder;
-    }
 
     public double getProposedPrice() {
         return proposedPrice;
     }
 
-    public void setProposedPrice(double proposedPrice) {
-        this.proposedPrice = proposedPrice;
-    }
 
     public String getTimeOfWork() {
         return timeOfWork;
@@ -75,17 +68,11 @@ public class CustomerOrderDTO {
         return customerId;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
 
     public Integer getSubDutyId() {
         return subDutyId;
     }
 
-    public void setSubDutyId(Integer subDutyId) {
-        this.subDutyId = subDutyId;
-    }
 
     public StatusOfOrder getStatusOfOrder() {
         return statusOfOrder;

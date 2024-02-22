@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 public interface WalletService{
     void payByCreditOfAccount(Integer customerOrderId,Integer expertId);
     void payByCard(Integer customerOrderId, Integer expertId);
-    Double findCreditOfWalletByCustomerId(Integer customerId);
-    Double findCreditOfWalletByExpertId(Integer expertId);
+    Double findCreditOfWalletByCustomerId(String userName);
+    Double findCreditOfWalletByExpertId(String userName);
 }

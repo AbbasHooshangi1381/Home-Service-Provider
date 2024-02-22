@@ -30,8 +30,5 @@ public class ImageInput {
         return Files.readAllBytes(file.toPath());
     }
 
-    public static boolean isImageExists(File file) {
-        return file.exists() && file.isFile();
-    }
 }
 

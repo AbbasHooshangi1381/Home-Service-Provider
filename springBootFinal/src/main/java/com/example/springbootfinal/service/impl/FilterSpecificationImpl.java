@@ -6,19 +6,15 @@ import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.dto.specification.RequestSpecificationDto;
 import com.example.springbootfinal.dto.specification.SearchSpecificationDto;
 import com.example.springbootfinal.exception.NotFoundException;
-import com.example.springbootfinal.exception.NotValidException;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -100,23 +96,16 @@ public class FilterSpecificationImpl<T> {
                         Subquery<Long> subquery = query.subquery(Long.class);
                         Root<CustomerOrder> subRoot = subquery.from(CustomerOrder.class);
 
-                        // براساس فرض شما که مشتری به وسیله ایدی یکتا شناخته می‌شود
                         subquery.select(criteriaBuilder.count(subRoot));
                         subquery.where(criteriaBuilder.equal(subRoot.get("customer").get("id"), Integer.parseInt(search.getValue())));
 
-                        // Get the resulting count as a selectable expression (scalar selection)
                         Expression<Long> customerOrdersCount = subquery.getSelection();
 
-                        // We create a predicate to return a boolean condition that checks
-                        // if the customer has orders greater than 0, meaning at least one order exists
                         Predicate hasOrders = criteriaBuilder.greaterThan(customerOrdersCount, 0L);
 
-                        // Add the predicate to the list of predicates
                         predicates.add(hasOrders);
                         break;
                     }
-
-
 
                     case EXPERT_ORDER_COUNT -> {
                         Subquery<Long> subquery = query.subquery(Long.class);
@@ -130,11 +119,10 @@ public class FilterSpecificationImpl<T> {
 
                         Expression<Long> ordersCount = subquery.getSelection();
 
-                        predicates.add(criteriaBuilder.equal(criteriaBuilder.literal(1), 1)); // فقط یک شرط نمونه
+                        predicates.add(criteriaBuilder.equal(criteriaBuilder.literal(1), 1));
 
                         break;
                     }
-
 
 
 

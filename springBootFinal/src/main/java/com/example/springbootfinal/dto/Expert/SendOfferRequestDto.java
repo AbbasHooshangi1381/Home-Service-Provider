@@ -12,9 +12,6 @@ import lombok.experimental.FieldDefaults;
 public class SendOfferRequestDto {
     @NotNull
     @Min(0)
-    Integer expertId;
-    @NotNull
-    @Min(0)
     Integer customerOrderId;
     @NotNull
     @Min(0)
@@ -24,28 +21,13 @@ public class SendOfferRequestDto {
     @NotNull
     String durationTimeOfWork;
 
-    public Integer getExpertId() {
-        return expertId;
-    }
-
-    public void setExpertId(Integer expertId) {
-        this.expertId = expertId;
-    }
-
     public Integer getCustomerOrderId() {
         return customerOrderId;
     }
 
-    public void setCustomerOrderId(Integer customerOrderId) {
-        this.customerOrderId = customerOrderId;
-    }
 
     public Double getSuggestionPrice() {
         return suggestionPrice;
-    }
-
-    public void setSuggestionPrice(Double suggestionPrice) {
-        this.suggestionPrice = suggestionPrice;
     }
 
     public String getTimeOfWork() {
@@ -60,7 +42,4 @@ public class SendOfferRequestDto {
         return durationTimeOfWork;
     }
 
-    public void setDurationTimeOfWork(String durationTimeOfWork) {
-        this.durationTimeOfWork = durationTimeOfWork;
-    }
 }

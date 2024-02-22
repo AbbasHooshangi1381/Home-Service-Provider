@@ -23,47 +23,24 @@ public class CustomerOrderResponseDto {
     public Integer getId() {
         return Id;
     }
-
     public void setId(Integer id) {
         Id = id;
     }
-
-    public String getDescriptionOfOrder() {
-        return descriptionOfOrder;
-    }
-
-    public void setDescriptionOfOrder(String descriptionOfOrder) {
-        this.descriptionOfOrder = descriptionOfOrder;
-    }
-
-    public Double getProposedPrice() {
-        return proposedPrice;
-    }
-
-    public void setProposedPrice(Double proposedPrice) {
-        this.proposedPrice = proposedPrice;
-    }
-
     public String getTimeOfWork() {
         return timeOfWork;
     }
-
     public void setTimeOfWork(String timeOfWork) {
         this.timeOfWork = timeOfWork;
     }
-
     public String getAddress() {
         return address;
     }
-
     public void setAddress(String address) {
         this.address = address;
     }
-
     public StatusOfOrder getStatusOfOrder() {
         return statusOfOrder;
     }
-
     public void setStatusOfOrder(StatusOfOrder statusOfOrder) {
         this.statusOfOrder = statusOfOrder;
     }

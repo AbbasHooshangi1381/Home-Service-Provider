@@ -3,7 +3,6 @@ package com.example.springbootfinal.controller;
 import com.example.springbootfinal.service.impl.CaptchaService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class CaptchaController {
 
-    private CaptchaService captchaService;
+    private final CaptchaService captchaService;
 
     public CaptchaController(CaptchaService captchaService) {
         this.captchaService = captchaService;

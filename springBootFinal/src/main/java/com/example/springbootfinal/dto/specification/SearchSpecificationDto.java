@@ -1,7 +1,6 @@
 package com.example.springbootfinal.dto.specification;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter

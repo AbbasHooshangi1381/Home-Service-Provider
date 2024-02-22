@@ -6,8 +6,6 @@ import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.domain.serviceEntity.SubDuty;
 import com.example.springbootfinal.domain.userEntity.BaseUser;
 import jakarta.persistence.criteria.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;

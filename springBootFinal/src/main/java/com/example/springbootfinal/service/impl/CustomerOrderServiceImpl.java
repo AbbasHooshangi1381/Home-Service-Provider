@@ -1,6 +1,5 @@
 package com.example.springbootfinal.service.impl;
 
-import com.example.springbootfinal.domain.enumurations.ExpertStatus;
 import com.example.springbootfinal.domain.enumurations.StatusOfOrder;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Suggestion;
@@ -145,9 +144,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public List<CustomerOrder> findOrdersByExpertId(Integer expertId) {
-        expertRepository.findById(expertId).orElseThrow(()->new NotFoundException(" I CAN NOT FOUND THIS EXPERT"));
-         List<CustomerOrder> ordersByExpertId = customerOrderRepository.findOrdersByExpertId(expertId);
+    public List<CustomerOrder> findOrdersByExpertUserName(String userName) {
+        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException(" i can not found this user"));
+         List<CustomerOrder> ordersByExpertId = customerOrderRepository.findOrdersByExpertId(expert.getId());
          if (ordersByExpertId.isEmpty()){
              throw new NotFoundException(" i can not found this order");
          }
@@ -155,18 +154,21 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public List<CustomerOrder> customerOrderListOfCustomer(Integer customerId, String statusOfOrder) {
+    public List<CustomerOrder> customerOrderListOfCustomer(String userName, String statusOfOrder) {
+         Customer customer = customerRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("i can not found this user"));
+
         StatusOfOrder inputStatus = StatusOfOrder.valueOf(statusOfOrder.toUpperCase());
-        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOfCustomer(customerId, inputStatus);
+        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOfCustomer(customer.getId(), inputStatus);
         if (customerOrders.isEmpty()){
             throw new NotFoundException(" i can not found this customerOrder");
         }
         return customerOrders;
     }
     @Override
-    public List<CustomerOrder> customerOrderListOfExpert(Integer expertId, String statusOfOrder) {
+    public List<CustomerOrder> customerOrderListOfExpert(String userName, String statusOfOrder) {
+        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException("i can not found this user"));
         StatusOfOrder inputStatus = StatusOfOrder.valueOf(statusOfOrder.toUpperCase());
-        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expertId, inputStatus);
+        List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expert.getId(), inputStatus);
         if (customerOrders.isEmpty()){
             throw new NotFoundException(" i can not found this customerOrder");
         }

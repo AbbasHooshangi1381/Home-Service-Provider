@@ -28,9 +28,6 @@ public class SubDutySaveRequestDto {
         return dutyId;
     }
 
-    public void setDutyId(Integer dutyId) {
-        this.dutyId = dutyId;
-    }
 
     public String getSubServiceName() {
         return subServiceName;
@@ -44,15 +41,9 @@ public class SubDutySaveRequestDto {
         return priceOfSubDuty;
     }
 
-    public void setPriceOfSubDuty(Double priceOfSubDuty) {
-        this.priceOfSubDuty = priceOfSubDuty;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

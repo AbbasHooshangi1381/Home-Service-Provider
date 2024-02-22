@@ -15,8 +15,6 @@ import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.RegistrationServices;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

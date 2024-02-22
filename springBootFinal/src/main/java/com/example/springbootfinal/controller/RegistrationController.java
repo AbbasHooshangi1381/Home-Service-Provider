@@ -6,10 +6,8 @@ import com.example.springbootfinal.dto.registeration.RegistrationRequest;
 import com.example.springbootfinal.service.AdminService;
 import com.example.springbootfinal.service.CustomerService;
 import com.example.springbootfinal.service.ExpertService;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

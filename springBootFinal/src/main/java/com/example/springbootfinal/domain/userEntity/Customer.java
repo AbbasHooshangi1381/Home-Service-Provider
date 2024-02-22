@@ -1,7 +1,6 @@
 package com.example.springbootfinal.domain.userEntity;
 
 import com.example.springbootfinal.domain.enumurations.Role;
-import com.example.springbootfinal.domain.other.Card;
 import com.example.springbootfinal.domain.other.Comments;
 import com.example.springbootfinal.domain.other.CustomerOrder;
 import com.example.springbootfinal.domain.other.Wallet;
