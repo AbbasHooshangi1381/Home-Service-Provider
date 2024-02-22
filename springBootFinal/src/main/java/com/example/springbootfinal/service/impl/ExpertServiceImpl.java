@@ -37,7 +37,7 @@ public class ExpertServiceImpl implements ExpertService {
 
     @Override
     public List<CustomerOrder> showOrderToExpert(String username) {
-        Expert expert = expertRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("i can not found this expert"));
+        Expert expert = expertRepository.findByUserName(username).orElseThrow(() -> new NotFoundException("i can not found this expert"));
         List<SubDuty> expertSubDuties = expert.getSubDutyList();
         List<CustomerOrder> ordersForExpert = new ArrayList<>();
         for (SubDuty subDuty : expertSubDuties) {

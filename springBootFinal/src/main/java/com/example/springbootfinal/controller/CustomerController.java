@@ -115,7 +115,7 @@ public class CustomerController {
     public ResponseEntity<String> saveCard(@RequestBody CardRequestDto cardRequestDto) {
         cardService.saveCard(cardRequestDto.getBankAccountNumber(),cardRequestDto.getCvv2(),cardRequestDto.getMonth()
         ,cardRequestDto.getPassword(),cardRequestDto.getYear());
-        walletService.payByCard(1102, 2952);
+        walletService.payByCard(1152, 3452);
         return ResponseEntity.ok("paid!");
     }
 

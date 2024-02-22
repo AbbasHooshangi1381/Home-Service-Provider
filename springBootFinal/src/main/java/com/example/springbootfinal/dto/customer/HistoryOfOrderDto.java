@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HistoryOfOrderDto {
+    Integer id;
     String statusOfOrder;
 
 }

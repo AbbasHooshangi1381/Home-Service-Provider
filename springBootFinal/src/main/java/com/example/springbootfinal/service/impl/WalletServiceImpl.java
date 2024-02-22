@@ -95,7 +95,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Double findCreditOfWalletByExpertId(String userName) {
-        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException("i can not found this user"));
+        Expert expert = expertRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("i can not found this user"));
         Double creditOfWalletByExpertId = walletRepository.findCreditOfWalletByExpertId(expert.getId());
         if (creditOfWalletByExpertId == null) {
             throw new NotFoundException(" i can not found this customer");

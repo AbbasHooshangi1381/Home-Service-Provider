@@ -41,47 +41,35 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public void sendSuggestionForOrder(String userName, Integer customerOrderId, Double suggestionPrice, String timeOfWork
             , String durationTimeOfWork) {
-        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException("i can not found user !"));
-        CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
-                new NotFoundException("i can not found ir !"));
-        Suggestion suggestion = new Suggestion();
-        if (expert != null) {
-            StatusOfOrder statusOfOrder = customerOrder.getStatusOfOrder();
-            if (statusOfOrder.equals(WAITING_FOR_SELECT_EXPERT) || statusOfOrder.equals(WAITING_FOR_EXPERT_SUGGESTIONS)) {
-                Double fixPrice = customerOrder.getProposedPrice();
-                Double validatedPrice = validatePrice(suggestionPrice, fixPrice);
-                suggestion.setSuggestionPrice(validatedPrice);
-                String time = checkAndRegisterTimeOfLoan(timeOfWork);
-                suggestion.setTimeOfStartingWork(time);
-                suggestion.setTimeOfSendSuggestion(String.valueOf(LocalDate.now()));
-                String time1 = checkAndRegisterDurationTimeOfWork(durationTimeOfWork);
-                suggestion.setExpert(expert);
-                suggestion.setDurationTimeOfWork(time1);
-                suggestion.setCustomerOrder(customerOrder);
+        Expert expert = expertRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("i can not found user !"));
+        Boolean enabled = expert.getEnabled();
+        if (enabled == true) {
+            CustomerOrder customerOrder = customerOrderRepository.findById(customerOrderId).orElseThrow(() ->
+                    new NotFoundException("i can not found ir !"));
+            Suggestion suggestion = new Suggestion();
+            if (expert != null) {
+                StatusOfOrder statusOfOrder = customerOrder.getStatusOfOrder();
+                if (statusOfOrder.equals(WAITING_FOR_SELECT_EXPERT) || statusOfOrder.equals(WAITING_FOR_EXPERT_SUGGESTIONS)) {
+                    Double fixPrice = customerOrder.getProposedPrice();
+                    Double validatedPrice = validatePrice(suggestionPrice, fixPrice);
+                    suggestion.setSuggestionPrice(validatedPrice);
+                    String time = checkAndRegisterTimeOfLoan(timeOfWork);
+                    suggestion.setTimeOfStartingWork(time);
+                    suggestion.setTimeOfSendSuggestion(String.valueOf(LocalDate.now()));
+                    String time1 = checkAndRegisterDurationTimeOfWork(durationTimeOfWork);
+                    suggestion.setExpert(expert);
+                    suggestion.setDurationTimeOfWork(time1);
+                    suggestion.setCustomerOrder(customerOrder);
 
-                suggestionRepository.save(suggestion);
-                customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
-                customerOrderRepository.save(customerOrder);
-            }
-            else {
-                throw new NotValidException(" your status of order is not true !");
+                    suggestionRepository.save(suggestion);
+                    customerOrder.setStatusOfOrder(WAITING_FOR_SELECT_EXPERT);
+                    customerOrderRepository.save(customerOrder);
+                } else {
+                    throw new NotValidException(" your status of order is not true !");
+                }
             }
         }
     }
-
-/*    @Override
-    public List<CustomerOrder> showOrderToExpert() {
-        List<CustomerOrder> all = customerOrderRepository.findAll();
-        List<CustomerOrder> filteredOrders = all.stream()
-                .filter(order ->
-                        order.getStatusOfOrder().equals(WAITING_FOR_EXPERT_SUGGESTIONS) ||
-                                order.getStatusOfOrder().equals(WAITING_FOR_SELECT_EXPERT))
-                .collect(Collectors.toList());
-        for (CustomerOrder order : filteredOrders) {
-            System.out.println(order);
-        }
-        return filteredOrders;
-    }*/
 
     @Override
     public List<Suggestion> showSuggestionOrderByPriceOfSuggestions(Integer customerOrderId) {

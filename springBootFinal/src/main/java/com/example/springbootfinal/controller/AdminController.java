@@ -18,7 +18,6 @@ import com.example.springbootfinal.repository.ExpertRepository;
 import com.example.springbootfinal.service.*;
 import com.example.springbootfinal.service.impl.FilterSpecificationImpl;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-@AllArgsConstructor
 @SuppressWarnings("unused")
 public class AdminController {
 
@@ -49,6 +47,30 @@ public class AdminController {
     private final CustomerOrderRepository customerOrderRepository;
     private final FilterSpecificationImpl<CustomerOrder> filterSpecificationCustomerOrder;
 
+    public AdminController(AdminService adminService, ModelMapper modelMapper, DutyService dutyService,
+                           SubDutyService subDutyService, BaseUserService baseUserService,
+                           CustomerOrderService customerOrderService, ExpertService expertService,
+                           ExpertRepository expertRepository, BaseUserRepository baseUserRepository,
+                           CustomerService customerService, FilterSpecificationImpl<Expert> filterSpecification,
+                           FilterSpecificationImpl<Customer> filterSpecificationCustomer,
+                           CustomerRepository customerRepository, CustomerOrderRepository customerOrderRepository,
+                           FilterSpecificationImpl<CustomerOrder> filterSpecificationCustomerOrder) {
+        this.adminService = adminService;
+        this.modelMapper = modelMapper;
+        this.dutyService = dutyService;
+        this.subDutyService = subDutyService;
+        this.baseUserService = baseUserService;
+        this.customerOrderService = customerOrderService;
+        this.expertService = expertService;
+        this.expertRepository = expertRepository;
+        this.baseUserRepository = baseUserRepository;
+        this.customerService = customerService;
+        this.filterSpecification = filterSpecification;
+        this.filterSpecificationCustomer = filterSpecificationCustomer;
+        this.customerRepository = customerRepository;
+        this.customerOrderRepository = customerOrderRepository;
+        this.filterSpecificationCustomerOrder = filterSpecificationCustomerOrder;
+    }
 
     @PostMapping("/expertCriteria")
     public List<Expert> getExpert(@RequestBody RequestSpecificationDto requestSpecificationDto) {
@@ -151,17 +173,15 @@ public class AdminController {
 
     @GetMapping("/historyOfOrderOfCustomer")
     public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         List<CustomerOrder> customerOrders = customerOrderService.
-                customerOrderListOfCustomer(name, historyOfOrderDto.getStatusOfOrder());
+                customerOrderListOfCustomer(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
         return ResponseEntity.ok(customerOrders);
     }
 
     @GetMapping("/historyOfOrderOfExpert")
     public ResponseEntity<List<CustomerOrder>> historyOfOrderOfExpert(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         List<CustomerOrder> customerOrders =
-                customerOrderService.customerOrderListOfExpert(name, historyOfOrderDto.getStatusOfOrder());
+                customerOrderService.customerOrderListOfExpert(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
         return ResponseEntity.ok(customerOrders);
     }
 

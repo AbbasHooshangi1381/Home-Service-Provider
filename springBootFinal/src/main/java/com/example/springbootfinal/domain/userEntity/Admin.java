@@ -23,6 +23,11 @@ public class Admin extends BaseUser {
     @OneToMany(mappedBy = "admin")
     List<Expert> expertList;
 
+    @Override
+    public String getUsername() {
+        return super.getUsername();
+    }
+
 
     public Admin(String firstName, String lastName, String email, String userName,
                  String password, LocalDate dateOfSigningIn, Boolean enabled, Role role) {

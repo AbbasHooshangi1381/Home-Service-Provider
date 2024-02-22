@@ -10,6 +10,7 @@ import com.example.springbootfinal.repository.*;
 import com.example.springbootfinal.service.SubDutyService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -45,22 +46,21 @@ public class SubDutyServiceImpl implements SubDutyService {
         if (duty == null) {
             throw new NotFoundException(" i dont this Duty");
         } else {
-            Optional<SubDuty> bySubServiceName = subDutyRepository.findBySubServiceName(subServiceName);
-            if (subServiceName.isEmpty()) {
-                SubDuty subDuty = new SubDuty();
-                subDuty.setSubServiceName(subServiceName);
-                subDuty.setPrice(priceOfSubDuty);
-                subDuty.setService(duty);
-                subDuty.setDescription(description);
-                subDutyRepository.save(subDuty);
-                System.out.println("subDuty added to database !");
-                return subDuty;
-
-            } else {
-                throw new DuplicateException("i have this sub service");
+             Optional<SubDuty> bySubServiceName = subDutyRepository.findBySubServiceName(subServiceName);
+            if (bySubServiceName.isPresent()){
+                throw new DuplicateException(" it is duplicate");
             }
-        }
+            SubDuty subDuty = new SubDuty();
+            subDuty.setSubServiceName(subServiceName);
+            subDuty.setPrice(priceOfSubDuty);
+            subDuty.setService(duty);
+            subDuty.setDescription(description);
+            subDutyRepository.save(subDuty);
+            System.out.println("subDuty added to database !");
+            return subDuty;
 
+
+        }
     }
 
 
@@ -69,10 +69,10 @@ public class SubDutyServiceImpl implements SubDutyService {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
                 new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
         if (subDuty != null) {
-             boolean present = subDutyRepository.findByDescription(newDescription).isPresent();
-             if (present){
-                 throw new DuplicateException("i have this description");
-             }
+            boolean present = subDutyRepository.findByDescription(newDescription).isPresent();
+            if (present) {
+                throw new DuplicateException("i have this description");
+            }
             subDuty.setDescription(newDescription);
             subDutyRepository.save(subDuty);
         } else {
@@ -85,10 +85,10 @@ public class SubDutyServiceImpl implements SubDutyService {
         SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
                 new NotFoundException("SubDuty with ID " + subDutyId + " not found"));
         if (subDuty != null) {
-             boolean present = subDutyRepository.findByPrice(newPrice).isPresent();
-             if (present){
-                 throw new DuplicateException("i have this price now");
-             }
+            boolean present = subDutyRepository.findByPrice(newPrice).isPresent();
+            if (present) {
+                throw new DuplicateException("i have this price now");
+            }
             subDuty.setPrice(newPrice);
             subDutyRepository.save(subDuty);
         } else {
@@ -117,9 +117,9 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public void deleteExpertInSubDutyField(Integer expertId, Integer subDutyId) {
-            SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
-                    new NotFoundException("SubDuty with ID not found"));
-             List<Expert> experts = subDuty.getExperts();
+        SubDuty subDuty = subDutyRepository.findById(subDutyId).orElseThrow(() ->
+                new NotFoundException("SubDuty with ID not found"));
+        List<Expert> experts = subDuty.getExperts();
         if (!experts.isEmpty()) {
             experts.removeIf(expert -> Objects.equals(expert.getId(), expertId));
             subDutyRepository.save(subDuty);
@@ -138,7 +138,7 @@ public class SubDutyServiceImpl implements SubDutyService {
         return subDuties;
     }
 
-    public static String checkAndRegisterTimeOfLoan(String inputTime){
+    public static String checkAndRegisterTimeOfLoan(String inputTime) {
         //String inputTime = "1403-01-15 08:30:00";
         LocalDateTime currentTime = LocalDateTime.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
         LocalDateTime firstStartDate = LocalDateTime.parse("1402-11-22 00:00:00",

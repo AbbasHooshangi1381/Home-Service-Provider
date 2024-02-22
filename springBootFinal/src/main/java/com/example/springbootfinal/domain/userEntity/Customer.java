@@ -50,4 +50,8 @@ public class Customer extends BaseUser {
     public boolean isEnabled() {
         return super.isEnabled();
     }
+    @Override
+    public String getUsername() {
+        return super.getUsername();
+    }
 }

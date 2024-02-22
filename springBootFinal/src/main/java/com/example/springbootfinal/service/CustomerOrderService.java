@@ -19,7 +19,7 @@ public interface CustomerOrderService {
     void changeStatusOfOrderByCustomerToFinish(Integer orderId, String timeOfFinishingWork);
 
     List<CustomerOrder> findOrdersByExpertUserName(String userName);
-    List<CustomerOrder> customerOrderListOfCustomer(String userName,String statusOfOrder);
-    List<CustomerOrder> customerOrderListOfExpert(String userName,String statusOfOrder);
+    List<CustomerOrder> customerOrderListOfCustomer(Integer id,String statusOfOrder);
+    List<CustomerOrder> customerOrderListOfExpert(Integer id,String statusOfOrder);
     void changeStatusOfOrderByExpertStarted(Integer orderId, LocalDateTime startedTime);
 }

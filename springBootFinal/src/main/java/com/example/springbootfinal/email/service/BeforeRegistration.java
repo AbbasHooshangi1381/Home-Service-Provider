@@ -3,8 +3,10 @@ import com.example.springbootfinal.dto.Expert.ExpertSaveDto;
 import com.example.springbootfinal.email.email.EmailSender;
 import com.example.springbootfinal.email.security.token.ConfirmationToken;
 import com.example.springbootfinal.email.security.token.ConfirmationTokenService;
+import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
 import com.example.springbootfinal.dto.registeration.RegistrationRequest;
+import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.service.RegistrationServices;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +73,10 @@ public class BeforeRegistration {
         }
         LocalDateTime expiresAt = confirmToken.get().getExpiresAt();
         if (expiresAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Token is already expired!");
+            throw new NotValidException("Token is already expired!");
+        }
+        if (confirmToken.get().getConfirmedAt() != null) {
+            throw new DuplicateException("Email is already confirmed");
         }
         confirmTokenService.setConfirmedAt(token);
         registrationService.enableAppUser(confirmToken.get().getBaseUser().getEmail());

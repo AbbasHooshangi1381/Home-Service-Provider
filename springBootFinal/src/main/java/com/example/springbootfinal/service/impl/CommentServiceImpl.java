@@ -7,6 +7,7 @@ import com.example.springbootfinal.domain.userEntity.Customer;
 import com.example.springbootfinal.domain.userEntity.Expert;
 import com.example.springbootfinal.exception.DuplicateException;
 import com.example.springbootfinal.exception.NotFoundException;
+import com.example.springbootfinal.exception.NotValidException;
 import com.example.springbootfinal.repository.CommentsRepository;
 import com.example.springbootfinal.repository.CustomerOrderRepository;
 import com.example.springbootfinal.repository.ExpertRepository;
@@ -35,7 +36,10 @@ public class CommentServiceImpl implements CommentService {
         }
         Customer customer = customerOrder.getCustomer();
         Expert expert = expertRepository.findById(expertId).orElseThrow(() -> new NotFoundException("I cannot find this expert"));
-        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)) {
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.PAID)) {
+            if (star>5||star<0){
+                throw new NotValidException("your star should be between 0 to 5 ");
+            }
             Comments comment = new Comments();
             comment.setComments(comments);
             comment.setCustomer(customer);

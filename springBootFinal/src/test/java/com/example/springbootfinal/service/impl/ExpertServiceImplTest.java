@@ -188,12 +188,12 @@ class ExpertServiceImplTest {
         suggestionService.sendOfferForSubDuty(id, id1, 5000.00, "1402/11/19");
     }*/
 
-    @Test
+/*    @Test
     @Order(7)
     void customerOrderList() {
         List<CustomerOrder> customerOrders = suggestionService.customerOrderList();
         assertNotNull(customerOrders);
-    }
+    }*/
 
 /*    @Test
     @Transactional

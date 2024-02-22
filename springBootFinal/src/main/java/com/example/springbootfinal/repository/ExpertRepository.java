@@ -15,8 +15,7 @@ import java.util.Optional;
 
 public interface ExpertRepository extends JpaRepository<Expert,Integer>,JpaSpecificationExecutor<Expert> {
      Optional<Expert> findByEmail(String email);
-     Optional<Expert> findByUsername(String userName);
-
+     Optional<Expert> findByUserName(String userName);
      @Query("SELECT s FROM Suggestion s WHERE s.customerOrder.customer.id= :customerId ORDER BY s.expert.stars DESC ")
      List<Suggestion> findExpertsByOrderIdOrderByStarDesc(@Param("customerId") Integer customerId);
 }

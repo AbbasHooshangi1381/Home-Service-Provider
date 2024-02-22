@@ -72,4 +72,8 @@ public class Expert extends BaseUser  {
         return super.isEnabled();
     }
 
+    @Override
+    public String getUsername() {
+        return super.getUsername();
+    }
 }

@@ -145,7 +145,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Override
     public List<CustomerOrder> findOrdersByExpertUserName(String userName) {
-        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException(" i can not found this user"));
+        Expert expert = expertRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException(" i can not found this user"));
          List<CustomerOrder> ordersByExpertId = customerOrderRepository.findOrdersByExpertId(expert.getId());
          if (ordersByExpertId.isEmpty()){
              throw new NotFoundException(" i can not found this order");
@@ -154,8 +154,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public List<CustomerOrder> customerOrderListOfCustomer(String userName, String statusOfOrder) {
-         Customer customer = customerRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("i can not found this user"));
+    public List<CustomerOrder> customerOrderListOfCustomer(Integer id, String statusOfOrder) {
+         Customer customer = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("i can not found this user"));
 
         StatusOfOrder inputStatus = StatusOfOrder.valueOf(statusOfOrder.toUpperCase());
         List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOfCustomer(customer.getId(), inputStatus);
@@ -165,8 +165,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         return customerOrders;
     }
     @Override
-    public List<CustomerOrder> customerOrderListOfExpert(String userName, String statusOfOrder) {
-        Expert expert = expertRepository.findByUsername(userName).orElseThrow(() -> new NotFoundException("i can not found this user"));
+    public List<CustomerOrder> customerOrderListOfExpert(Integer id, String statusOfOrder) {
+        Expert expert = expertRepository.findById(id).orElseThrow(() -> new NotFoundException("i can not found this user"));
         StatusOfOrder inputStatus = StatusOfOrder.valueOf(statusOfOrder.toUpperCase());
         List<CustomerOrder> customerOrders = customerOrderRepository.customerOrderListOExpert(expert.getId(), inputStatus);
         if (customerOrders.isEmpty()){

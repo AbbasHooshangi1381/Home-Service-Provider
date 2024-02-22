@@ -128,12 +128,8 @@ public class RegistrationServiceImp implements RegistrationServices {
         Boolean enabled = false;
         Expert expert = new Expert(firstName, lastName, email, userName, encode, timeOfSignIn, imageData
                 , star, expertStatus, save, enabled, Role.ROLE_EXPERT);
-        wallet.setExpert(expert);
-        walletRepository.save(wallet);
         expert.setPassword(encode);
          Expert save1 = expertRepository.save(expert);
-        wallet.setExpert(save1);
-        walletRepository.save(wallet);
 
 
         saveConfirmationToken(expert, token);
