@@ -48,8 +48,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
-                                   StatusOfOrder waitingForSuggestExpert, Integer customerId, Integer subDutyId) throws SQLException {
+    public CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address
+            , Integer customerId, Integer subDutyId) throws SQLException {
         dutyRepository.findAll().forEach(System.out::println);
         subDutyRepository.findAll().forEach(System.out::println);
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found with ID: " + customerId));
@@ -57,7 +57,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         Double fixPrice = subDuty.getPrice();
         Double validatedPrice = validatePrice(proposedPrice, fixPrice);
         String time = checkAndRegisterTimeOfLoan(timeOfWork);
-        CustomerOrder customerOrder = new CustomerOrder(descriptionOfOrder, validatedPrice, time, address, subDuty, customer, waitingForSuggestExpert);
+         StatusOfOrder waitingForExpertSuggestions = StatusOfOrder.WAITING_FOR_EXPERT_SUGGESTIONS;
+        CustomerOrder customerOrder = new CustomerOrder(descriptionOfOrder, validatedPrice, time, address, subDuty, customer
+                , waitingForExpertSuggestions);
 
         return customerOrderRepository.save(customerOrder);
     }
@@ -65,7 +67,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     public void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId) {
         CustomerOrder customerOrder = customerOrderRepository.findById(orderId).orElseThrow(() -> new NotFoundException(" i can not find customerOrder"));
-        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.DONE)){
+        if (customerOrder.getStatusOfOrder().equals(StatusOfOrder.WAITING_FOR_COMING_EXPERT)){
             throw new DuplicateException("you changed this customer order");
         }
         SubDuty subDuty = customerOrder.getSubService();
@@ -112,6 +114,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 .orElseThrow(() -> new NotFoundException("No suggestion made by an expert for this order."));
 
         String timeOfStartingWork = suggestionByExpert.getTimeOfStartingWork();
+
         String durationTimeOfWork = suggestionByExpert.getDurationTimeOfWork();
         LocalDateTime startWorkTime = LocalDateTime.parse(timeOfStartingWork, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
         LocalTime durationTime = LocalTime.parse(durationTimeOfWork, DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -120,6 +123,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 .plusMinutes(durationTime.getMinute())
                 .plusSeconds(durationTime.getSecond());
         LocalDateTime actualFinishTime = LocalDateTime.parse(timeOfFinishingWork, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        if (actualFinishTime.isBefore(startWorkTime)){
+            throw new NotValidException("you should write the true date(after start date)");
+        }
         if (actualFinishTime.isAfter(expectedFinishTime)) {
             long delayHours = ChronoUnit.HOURS.between(expectedFinishTime, actualFinishTime);
             Integer ratingReduction = (int) delayHours;

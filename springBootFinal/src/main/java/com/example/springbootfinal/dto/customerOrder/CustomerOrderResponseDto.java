@@ -16,7 +16,6 @@ public class CustomerOrderResponseDto {
     private Integer Id;
     private String descriptionOfOrder;
     private Double proposedPrice;
-    private String timeOfWork;
     private String address;
     private StatusOfOrder statusOfOrder;
 
@@ -25,12 +24,6 @@ public class CustomerOrderResponseDto {
     }
     public void setId(Integer id) {
         Id = id;
-    }
-    public String getTimeOfWork() {
-        return timeOfWork;
-    }
-    public void setTimeOfWork(String timeOfWork) {
-        this.timeOfWork = timeOfWork;
     }
     public String getAddress() {
         return address;

@@ -18,4 +18,7 @@ public interface ExpertRepository extends JpaRepository<Expert,Integer>,JpaSpeci
      Optional<Expert> findByUserName(String userName);
      @Query("SELECT s FROM Suggestion s WHERE s.customerOrder.customer.id= :customerId ORDER BY s.expert.stars DESC ")
      List<Suggestion> findExpertsByOrderIdOrderByStarDesc(@Param("customerId") Integer customerId);
+
+
+
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ExpertService extends UserDetailsService {
      Expert changeStatusOfExpertByAdmin(Integer expertId);
+    Integer showStarOfExpert(String userName);
     List<Expert> findExpertsBySubDuty(String subDutyName);
     ExpertRating findExpertRatings();
     List<CustomerOrder> showOrderToExpert(String username);

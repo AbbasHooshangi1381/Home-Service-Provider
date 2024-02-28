@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/registration/**").permitAll()).httpBasic(Customizer.withDefaults());
 
         return http.build();
-    }*/
+    }
 /*@Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http

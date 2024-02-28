@@ -171,19 +171,5 @@ public class AdminController {
 }*/
     }
 
-    @GetMapping("/historyOfOrderOfCustomer")
-    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
-        List<CustomerOrder> customerOrders = customerOrderService.
-                customerOrderListOfCustomer(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
-        return ResponseEntity.ok(customerOrders);
-    }
-
-    @GetMapping("/historyOfOrderOfExpert")
-    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfExpert(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
-        List<CustomerOrder> customerOrders =
-                customerOrderService.customerOrderListOfExpert(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
-        return ResponseEntity.ok(customerOrders);
-    }
-
 
 }

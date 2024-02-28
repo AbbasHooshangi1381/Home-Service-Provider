@@ -12,7 +12,7 @@ import java.util.Map;
 public interface CustomerOrderService {
 
     CustomerOrder saveOrder(String descriptionOfOrder, Double proposedPrice, String timeOfWork, String address,
-                            StatusOfOrder waitingForSuggestExpert, Integer customerId, Integer subDutyId) throws SQLException;
+                             Integer customerId, Integer subDutyId) throws SQLException;
     void changeStatusOfOrderByCustomerToWaitingToCome(Integer orderId);
 
     @Transactional

@@ -141,12 +141,12 @@ public class SubDutyServiceImpl implements SubDutyService {
     public static String checkAndRegisterTimeOfLoan(String inputTime) {
         //String inputTime = "1403-01-15 08:30:00";
         LocalDateTime currentTime = LocalDateTime.parse(inputTime, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        LocalDateTime firstStartDate = LocalDateTime.parse("1402-11-22 00:00:00",
+        LocalDateTime firstStartDate = LocalDateTime.parse("2024-01-01 00:00:00",
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (currentTime.isAfter(firstStartDate)) {
             return inputTime;
         } else {
-            throw new InvalidDateException("You should choose a date after 1402-11-22");
+            throw new InvalidDateException("You should choose a date after 2024-01-01");
         }
     }
 

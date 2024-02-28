@@ -35,9 +35,6 @@ public class CustomerOrderDTO {
     @NotNull
     @Positive
     private Integer subDutyId;
-    @NotNull
-    private StatusOfOrder statusOfOrder;
-
     public String getDescriptionOfOrder() {
         return descriptionOfOrder;
     }
@@ -73,12 +70,4 @@ public class CustomerOrderDTO {
         return subDutyId;
     }
 
-
-    public StatusOfOrder getStatusOfOrder() {
-        return statusOfOrder;
-    }
-
-    public void setStatusOfOrder(StatusOfOrder statusOfOrder) {
-        this.statusOfOrder = statusOfOrder;
-    }
 }

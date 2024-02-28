@@ -6,6 +6,7 @@ import com.example.springbootfinal.domain.other.Suggestion;
 import com.example.springbootfinal.dto.card.CardRequestDto;
 import com.example.springbootfinal.dto.comments.CommentsRequestDto;
 import com.example.springbootfinal.dto.customer.FinishedDto;
+import com.example.springbootfinal.dto.customer.HistoryOfOrderDto;
 import com.example.springbootfinal.dto.customer.StartedDto;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderDTO;
 import com.example.springbootfinal.dto.customerOrder.CustomerOrderResponseDto;
@@ -67,10 +68,9 @@ public class CustomerController {
         Double proposedPrice = customerOrderDto.getProposedPrice();
         String timeOfWork = customerOrderDto.getTimeOfWork();
         String address = customerOrderDto.getAddress();
-        StatusOfOrder statusOfOrder = customerOrderDto.getStatusOfOrder();
         Integer customerId = customerOrderDto.getCustomerId();
         Integer subDutyId = customerOrderDto.getSubDutyId();
-        CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, statusOfOrder, customerId, subDutyId);
+        CustomerOrder customerOrder = customerOrderService.saveOrder(descriptionOfOrder, proposedPrice, timeOfWork, address, customerId, subDutyId);
         CustomerOrderResponseDto responseDto = modelMapper.map(customerOrder, CustomerOrderResponseDto.class);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -124,6 +124,13 @@ public class CustomerController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Double creditOfWalletByCustomerId = walletService.findCreditOfWalletByCustomerId(name);
         return ResponseEntity.ok(creditOfWalletByCustomerId);
+    }
+
+    @GetMapping("/historyOfOrderOfCustomer")
+    public ResponseEntity<List<CustomerOrder>> historyOfOrderOfCustomer(@RequestBody HistoryOfOrderDto historyOfOrderDto) {
+        List<CustomerOrder> customerOrders = customerOrderService.
+                customerOrderListOfCustomer(historyOfOrderDto.getId(), historyOfOrderDto.getStatusOfOrder());
+        return ResponseEntity.ok(customerOrders);
     }
 }
 
